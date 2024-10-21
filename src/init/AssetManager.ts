@@ -15,7 +15,7 @@ class AssetManager {
       this.mStages = stages;
 
       return { stages: this.mStages };
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Faild to load game assets: ' + error.message);
     }
   }

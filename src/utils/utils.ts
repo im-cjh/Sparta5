@@ -3,7 +3,7 @@ import path, { resolve } from 'path';
 
 //최상위 경로 + assets 폴더
 export class Utils {
-  static basePath: string = path.join(__dirname, '../Assets');
+  static basePath: string = path.join(__dirname, '../../Assets');
 
   //비동기 병렬로 파일을 읽기
   static async readFileAsync(filename: string): Promise<any> {

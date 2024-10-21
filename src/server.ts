@@ -1,24 +1,20 @@
 import net, { Server, Socket } from 'net';
+import initServer from './init';
+import { config } from './config/config';
+import { onConnection } from './evnets/onConnection';
 
 const PORT: number = 5555;
 
-const server: Server = net.createServer((socket: Socket): void => {
-  console.log(`Client Connected: ${socket.remoteAddress} : ${socket.remotePort}`);
+const server: Server = net.createServer(onConnection);
 
-  socket.on('data', (data) => {
-    console.log(data);
+initServer()
+  .then(() => {
+    server.listen(config.server.port, config.server.host, () => {
+      console.log(`서버가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
+      console.log(server.address());
+    });
+  })
+  .catch((error: any) => {
+    console.error(error);
+    process.exit(1); // 오류 발생 시 프로세스 종료
   });
-
-  socket.on('end', (): void => {
-    console.log(`Client disconnected: ${socket.remoteAddress} : ${socket.remotePort}`);
-  });
-
-  socket.on('error', (err) => {
-    console.error('Socket error:', err);
-  });
-});
-
-server.listen(PORT, (): void => {
-  console.log(`Echo Server listening on port ${PORT}`);
-  console.log(server.address());
-});
