@@ -2,7 +2,7 @@ import { Socket } from 'net';
 import { config } from '../config/config';
 import { PacketHeader } from './packet';
 import { Utils } from '../utils/utils';
-import handlerMappings from '../Handlers/handlerMapping';
+//import handlerMappings from '../Handlers/handlerMapping';
 import { ePacketId } from '../constants/header';
 
 export class Session {
@@ -46,7 +46,7 @@ export class Session {
 ---------------------------------------------*/
   private onData(buffer: Buffer): void {
     this.buffer = Buffer.concat([this.buffer, buffer]);
-
+    console.log('onData');
     while (true) {
       //최소한 헤더는 파싱할 수 있어야 한다
       if (this.buffer.length < config.packet.sizeOfHeader) break;
@@ -58,6 +58,7 @@ export class Session {
       const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
       this.buffer = buffer.subarray(header.size);
       //패킷 조립 성공
+      console.log('패킷 조립 성공');
       this.handlePacket(packet, header.id);
     }
   }
@@ -89,17 +90,13 @@ export class Session {
   private async handlePacket(packet: Buffer, packetId: ePacketId) {
     // [TODO]
     // 1. 클라이언트 버전이 지원되는지 확인
-
     // [TODO];
     //2. 패킷 ID에 해당하는 핸들러 확인
-    const handler = handlerMappings[packetId];
-
+    //const handler = handlerMappings[packetId];
     // [TODO];
     //2-1. 핸들러가 존재하지 않을 경우 오류 처리
-
     //3. 핸들러를 호출하여 응답 생성
-    const response = await handler(packet);
-
+    //const response = await handler(packet);
     // [TODO];
     //4. 클라이언트에 결과 전송
   }
