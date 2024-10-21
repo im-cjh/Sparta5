@@ -1,7 +1,7 @@
 import net, { Server, Socket } from 'net';
 import initServer from './init';
 import { config } from './config/config';
-import { onConnection } from './evnets/onConnection';
+import { onConnection } from './events/onConnection';
 
 const PORT: number = 5555;
 

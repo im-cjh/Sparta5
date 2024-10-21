@@ -9,8 +9,7 @@ class SessionManager {
   }
 
   addSession(socket: Socket): void {
-    let session = new Session(socket);
-    this.sessions.add(session);
+    this.sessions.add(new Session(socket));
   }
 }
 
