@@ -1,8 +1,9 @@
 import { Socket } from 'net';
 import { config } from '../config/config';
-import { ePacketId, PacketHeader } from './packet';
+import { PacketHeader } from './packet';
 import { Utils } from '../utils/utils';
 import handlerMappings from '../Handlers/handlerMapping';
+import { ePacketId } from '../constants/header';
 
 export class Session {
   /*---------------------------------------------
