@@ -8,20 +8,26 @@
     "start": "tsc && node ./dist/server.js",
     "start2": "nodemon --exec ts-node src/server.ts",
     "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "protoc": "npx buf generate ./src/protobuf"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@bufbuild/buf": "^1.45.0",
+    "@bufbuild/protoc-gen-es": "^2.2.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.7",
+    "@types/protobufjs": "^6.0.0",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
+    "ts-proto": "^2.2.4",
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.2.0",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
     "long": "^5.2.3",

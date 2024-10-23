@@ -1,9 +1,12 @@
 import { Socket } from 'net';
 import { config } from '../config/config';
-import { PacketHeader } from './packet';
+
 import { Utils } from '../utils/utils';
 //import handlerMappings from '../Handlers/handlerMapping';
-import { ePacketId } from '../constants/header';
+import { ePacketId } from '../constants/packetHeader';
+import { handlerMappings } from '../handlers/handlerMapping';
+import { PacketHeader } from '../types';
+import { ParserUtils } from '../utils/parser/ParserUtils';
 
 export class Session {
   /*---------------------------------------------
@@ -46,19 +49,21 @@ export class Session {
 ---------------------------------------------*/
   private onData(buffer: Buffer): void {
     this.buffer = Buffer.concat([this.buffer, buffer]);
-    console.log('onData');
+    console.log('onData', this.buffer);
     while (true) {
       //최소한 헤더는 파싱할 수 있어야 한다
       if (this.buffer.length < config.packet.sizeOfHeader) break;
 
-      let header: PacketHeader = Utils.readPacketHeader(this.buffer, 0);
+      let header: PacketHeader = ParserUtils.readPacketHeader(this.buffer);
       // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
       if (this.buffer.length < header.size) break;
 
+      console.log('this.buffer.length', this.buffer.length);
       const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
       this.buffer = buffer.subarray(header.size);
       //패킷 조립 성공
       console.log('패킷 조립 성공');
+      console.log(header);
       this.handlePacket(packet, header.id);
     }
   }
@@ -92,11 +97,17 @@ export class Session {
     // 1. 클라이언트 버전이 지원되는지 확인
     // [TODO];
     //2. 패킷 ID에 해당하는 핸들러 확인
-    //const handler = handlerMappings[packetId];
+    const handler = handlerMappings[packetId];
     // [TODO];
     //2-1. 핸들러가 존재하지 않을 경우 오류 처리
+    if (!handler) {
+      console.log('핸들러 없음');
+      console.log(packet, packetId);
+      console.log('------------------------------');
+      return;
+    }
     //3. 핸들러를 호출하여 응답 생성
-    //const response = await handler(packet);
+    const response = await handler(packet);
     // [TODO];
     //4. 클라이언트에 결과 전송
   }
