@@ -1,10 +1,10 @@
-import { Utils } from '../utils/utils';
+import { Utils } from '../../utils/utils';
 
 class AssetManager {
-  private mStages;
+  private stages;
 
   constructor() {
-    this.mStages = new Array();
+    this.stages = new Array();
   }
 
   async loadGameAssets() {
@@ -12,16 +12,16 @@ class AssetManager {
       const [stages] = await Promise.all([Utils.readFileAsync('stage.json')]);
 
       //스테이지 자원 로드
-      this.mStages = stages;
+      this.stages = stages;
 
-      return { stages: this.mStages };
+      return { stages: this.stages };
     } catch (error: any) {
       throw new Error('Faild to load game assets: ' + error.message);
     }
   }
 
   getGameAssets() {
-    return { stages: this.mStages };
+    return { stages: this.stages };
   }
 }
 

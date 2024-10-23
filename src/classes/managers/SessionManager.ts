@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { Session } from './session';
+import { Session } from '../../session/session';
 
 class SessionManager {
   private sessions: Set<Session>;
