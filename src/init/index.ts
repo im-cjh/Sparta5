@@ -1,6 +1,6 @@
 // 서버 초기화 작업
 
-import { serverAssetManager } from './AssetManager';
+import { serverAssetManager } from '../classes/managers/AssetManager';
 
 const initServer = async () => {
   try {

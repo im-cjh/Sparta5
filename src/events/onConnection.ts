@@ -1,8 +1,7 @@
 import { Socket } from 'net';
-import { Session } from '../classes/session';
-import { sessionManager } from '../classes/sessionManager';
+import { sessionManager } from '../classes/managers/SessionManager';
 
-export const onConnection = (socket: Socket) => {
+export const onConnection = (socket: Socket): void => {
   console.log('클라이언트가 연결되었습니다:', socket.remoteAddress, socket.remotePort);
 
   sessionManager.addSession(socket);

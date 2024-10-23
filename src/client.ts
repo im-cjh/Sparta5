@@ -1,22 +1,16 @@
-import net from 'net';
+import { create, toBinary } from '@bufbuild/protobuf';
+import net, { Socket } from 'net';
+import { Packet, PacketSchema } from '../Protocol/request/common_pb';
+import { ParserUtils } from './utils/parser/ParserUtils';
+import { PacketHeader } from './types';
+import { Message } from 'protobufjs';
 import { config } from './config/config';
+import { ePacketId } from './constants/packetHeader';
 
-const TOTAL_LENGTH = 4; // 전체 길이를 나타내는 4바이트
-const PACKET_TYPE_LENGTH = 1; // 패킷타입을 나타내는 1바이트
+const sendPacket = (socket: Socket, packet: Packet) => {
+  const sendBuffer: Buffer = ParserUtils.SerializePacket(packet, ePacketId.NORMAL);
 
-// 헤더 읽기 함수
-const readHeader = (buffer: Buffer): { length: number; packetType: number } => {
-  return {
-    length: buffer.readUInt16BE(0),
-    packetType: buffer.readUInt16BE(config.packet.sizeOfSize),
-  };
-};
-
-const writeHeader = (length: number, packetType: number): Buffer => {
-  const buffer = Buffer.alloc(config.packet.sizeOfHeader);
-  buffer.writeUInt16BE(length + config.packet.sizeOfHeader, 0);
-  buffer.writeUInt16BE(packetType, config.packet.sizeOfId);
-  return buffer;
+  socket.write(sendBuffer);
 };
 
 // 서버에 연결할 호스트와 포트
@@ -25,34 +19,38 @@ const PORT = 3000;
 
 const client = new net.Socket();
 
-client.connect(PORT, HOST, () => {
+client.connect(PORT, HOST, async () => {
   console.log('Connected to server');
 
-  const message = 'Hi, There!';
-  const test = Buffer.from(message);
+  const message = create(PacketSchema, {
+    handlerId: 2,
+    userId: 'xyz',
+    payload: new Uint8Array(),
+    clientVersion: '1.0.0',
+    sequence: 0,
+  });
 
-  const header = writeHeader(test.length, 11);
-  const packet = Buffer.concat([header, test]);
-  client.write(packet);
+  sendPacket(client, message);
 });
 
-client.on('data', (data: Buffer) => {
+client.on('data', (data) => {
   const buffer = Buffer.from(data); // 버퍼 객체의 메서드를 사용하기 위해 변환
 
-  // 헤더 읽기
-  const { packetType, length } = readHeader(buffer);
-  console.log(`packetType: ${packetType}`);
-  console.log(`length: ${length}`);
+  const packetHeadr: PacketHeader = ParserUtils.readPacketHeader(buffer);
+  console.log(`handlerId: ${packetHeadr.id}`);
+  console.log(`length: ${packetHeadr.size}`);
 
+  const headerSize = config.packet.sizeOfHeader;
   // 메시지 추출
-  const message = buffer.slice(config.packet.sizeOfHeader); // 앞의 헤더 부분을 잘라낸다.
-  console.log(`server 에게 받은 메세지: ${message.toString()}`);
+  const message = buffer.slice(headerSize); // 앞의 헤더 부분을 잘라낸다.
+
+  console.log(`server 에게 받은 메세지: ${message}`);
 });
 
 client.on('close', () => {
   console.log('Connection closed');
 });
 
-client.on('error', (err: Error) => {
+client.on('error', (err) => {
   console.error('Client error:', err);
 });
