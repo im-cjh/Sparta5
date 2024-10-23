@@ -3,9 +3,8 @@ import path, { resolve } from 'path';
 
 import { config } from '../../config/config';
 
-import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
+import { fromBinary, toBinary } from '@bufbuild/protobuf';
 import { Packet, PacketSchema } from '../../../Protocol/request/common_pb';
-import { encoder, Message } from 'protobufjs';
 import { PacketHeader } from '../../types';
 import { ePacketId } from '../../constants/packetHeader';
 
@@ -17,25 +16,30 @@ export class ParserUtils {
 ---------------------------------------------*/
   static readPacketHeader(buffer: Buffer): PacketHeader {
     // processLen 위치에서 id와 size를 각각 읽음
+
     const size = buffer.readUInt16BE(0); //2바이트
     const id = buffer.readUInt16BE(config.packet.sizeOfSize); // 2바이트
 
-    return { id, size };
+    console.log('==================');
+    console.log(buffer);
+    console.log(size, id);
+    console.log('==================');
+    return { size, id };
   }
 
   /*---------------------------------------------
     [패킷 파싱]
 ---------------------------------------------*/
   static packetParse(data: Buffer) {
-    console.log(data);
-
-    console.log('dd');
+    const packet = fromBinary(PacketSchema, data);
+    console.log(packet);
+    console.log('ㅇㅇ');
     return data;
   }
 
   static SerializePacket(packet: Packet, id: ePacketId): Buffer {
     const packetBuffer: Uint8Array = toBinary(PacketSchema, packet);
-    encoder;
+
     //헤더 크기 + 가변 길이의 패킷 크기
     const sendBufferSize: number = config.packet.sizeOfHeader + packetBuffer.byteLength;
 
@@ -50,7 +54,7 @@ export class ParserUtils {
     header.writeUInt16BE(ePacketId.NORMAL, config.packet.sizeOfSize);
 
     //packetBuffer랑 합치기
-    sendBuffer.copy(sendBuffer, config.packet.sizeOfHeader);
+    Buffer.from(packetBuffer).copy(sendBuffer, config.packet.sizeOfHeader);
 
     return sendBuffer;
   }

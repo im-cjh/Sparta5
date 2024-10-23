@@ -7,9 +7,10 @@ import { Message } from 'protobufjs';
 import { config } from './config/config';
 import { ePacketId } from './constants/packetHeader';
 
-const sendPacket = (socket: Socket, packet: Packet) => {
-  const sendBuffer: Buffer = ParserUtils.SerializePacket(packet, ePacketId.NORMAL);
-
+const sendPacket = (socket: Socket, packet: Packet, id: ePacketId) => {
+  console.log(packet, id);
+  const sendBuffer: Buffer = ParserUtils.SerializePacket(packet, id);
+  console.log('sendBuffer', sendBuffer);
   socket.write(sendBuffer);
 };
 
@@ -23,14 +24,13 @@ client.connect(PORT, HOST, async () => {
   console.log('Connected to server');
 
   const message = create(PacketSchema, {
-    handlerId: 2,
     userId: 'xyz',
     payload: new Uint8Array(),
     clientVersion: '1.0.0',
     sequence: 0,
   });
 
-  sendPacket(client, message);
+  sendPacket(client, message, ePacketId.NORMAL);
 });
 
 client.on('data', (data) => {

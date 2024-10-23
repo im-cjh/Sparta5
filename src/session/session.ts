@@ -58,6 +58,7 @@ export class Session {
       // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
       if (this.buffer.length < header.size) break;
 
+      console.log('this.buffer.length', this.buffer.length);
       const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
       this.buffer = buffer.subarray(header.size);
       //패킷 조립 성공

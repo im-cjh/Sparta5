@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file request/common.proto.
  */
 export const file_request_common: GenFile = /*@__PURE__*/
-  fileDesc("ChRyZXF1ZXN0L2NvbW1vbi5wcm90bxIGY29tbW9uImUKBlBhY2tldBIRCgloYW5kbGVySWQYASABKA0SDgoGdXNlcklkGAIgASgJEhUKDWNsaWVudFZlcnNpb24YAyABKAkSEAoIc2VxdWVuY2UYBCABKA0SDwoHcGF5bG9hZBgFIAEoDGIGcHJvdG8z");
+  fileDesc("ChRyZXF1ZXN0L2NvbW1vbi5wcm90bxIGY29tbW9uIlIKBlBhY2tldBIOCgZ1c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCRIQCghzZXF1ZW5jZRgDIAEoDRIPCgdwYXlsb2FkGAQgASgMYgZwcm90bzM");
 
 /**
  * 공통 패킷 구조
@@ -19,37 +19,30 @@ export const file_request_common: GenFile = /*@__PURE__*/
  */
 export type Packet = Message<"common.Packet"> & {
   /**
-   * 핸들러 ID (4바이트)
-   *
-   * @generated from field: uint32 handlerId = 1;
-   */
-  handlerId: number;
-
-  /**
    * 유저 ID (UUID, 16바이트)
    *
-   * @generated from field: string userId = 2;
+   * @generated from field: string userId = 1;
    */
   userId: string;
 
   /**
    * 클라이언트 버전 (문자열)
    *
-   * @generated from field: string clientVersion = 3;
+   * @generated from field: string clientVersion = 2;
    */
   clientVersion: string;
 
   /**
    * 유저의 호출 수 (42억)
    *
-   * @generated from field: uint32 sequence = 4;
+   * @generated from field: uint32 sequence = 3;
    */
   sequence: number;
 
   /**
    * 실제 데이터
    *
-   * @generated from field: bytes payload = 5;
+   * @generated from field: bytes payload = 4;
    */
   payload: Uint8Array;
 };
