@@ -1,5 +1,5 @@
 import { Type } from 'protobufjs';
-import { ePacketId } from '../constants/packetHeader';
+import { ePacketId } from '../constants/packetId';
 
 export interface PacketHeader {
   size: number;

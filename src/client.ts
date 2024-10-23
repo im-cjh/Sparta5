@@ -1,16 +1,15 @@
 import { create, toBinary } from '@bufbuild/protobuf';
 import net, { Socket } from 'net';
-import { Packet, PacketSchema } from '../Protocol/request/common_pb';
+
 import { ParserUtils } from './utils/parser/ParserUtils';
 import { PacketHeader } from './types';
 import { Message } from 'protobufjs';
 import { config } from './config/config';
-import { ePacketId } from './constants/packetHeader';
+import { ePacketId } from './constants/packetId';
+import { C2SPos, C2SPosSchema, MetaDataSchema } from '../Protocol/request/common_pb';
 
-const sendPacket = (socket: Socket, packet: Packet, id: ePacketId) => {
-  console.log(packet, id);
-  const sendBuffer: Buffer = ParserUtils.SerializePacket(packet, id);
-  console.log('sendBuffer', sendBuffer);
+//임시 테스트
+const sendPacket = (socket: Socket, sendBuffer: Buffer) => {
   socket.write(sendBuffer);
 };
 
@@ -23,14 +22,23 @@ const client = new net.Socket();
 client.connect(PORT, HOST, async () => {
   console.log('Connected to server');
 
-  const message = create(PacketSchema, {
-    userId: 'xyz',
-    payload: new Uint8Array(),
-    clientVersion: '1.0.0',
-    sequence: 0,
+  const pos = create(C2SPosSchema, {
+    meta: create(MetaDataSchema, {
+      userId: 'im-cjh',
+      clientVersion: '1.0.0',
+      sequence: 0,
+    }),
+    y: 5,
+    x: 10,
   });
 
-  sendPacket(client, message, ePacketId.NORMAL);
+  const sendBuffer: Buffer = ParserUtils.SerializePacket<C2SPos>(
+    pos,
+    C2SPosSchema,
+    ePacketId.NORMAL,
+  );
+
+  sendPacket(client, sendBuffer);
 });
 
 client.on('data', (data) => {

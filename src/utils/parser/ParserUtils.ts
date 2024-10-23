@@ -3,10 +3,11 @@ import path, { resolve } from 'path';
 
 import { config } from '../../config/config';
 
-import { fromBinary, toBinary } from '@bufbuild/protobuf';
-import { Packet, PacketSchema } from '../../../Protocol/request/common_pb';
+import { fromBinary, Message, toBinary } from '@bufbuild/protobuf';
 import { PacketHeader } from '../../types';
-import { ePacketId } from '../../constants/packetHeader';
+import { ePacketId } from '../../constants/packetId';
+import { C2SPosSchema } from '../../../Protocol/request/common_pb';
+import { GenMessage } from '@bufbuild/protobuf/codegenv1';
 
 //import { PacketSchema } from '../../../Protocol/request/common_pb';
 //최상위 경로 + assets 폴더
@@ -27,18 +28,12 @@ export class ParserUtils {
     return { size, id };
   }
 
-  /*---------------------------------------------
-    [패킷 파싱]
----------------------------------------------*/
-  static packetParse(data: Buffer) {
-    const packet = fromBinary(PacketSchema, data);
-    console.log(packet);
-    console.log('ㅇㅇ');
-    return data;
-  }
-
-  static SerializePacket(packet: Packet, id: ePacketId): Buffer {
-    const packetBuffer: Uint8Array = toBinary(PacketSchema, packet);
+  static SerializePacket<T extends Message>(
+    packet: T,
+    packetSchema: GenMessage<T>,
+    id: ePacketId,
+  ): Buffer {
+    const packetBuffer: Uint8Array = toBinary(packetSchema, packet);
 
     //헤더 크기 + 가변 길이의 패킷 크기
     const sendBufferSize: number = config.packet.sizeOfHeader + packetBuffer.byteLength;
@@ -51,7 +46,7 @@ export class ParserUtils {
     //size 삽입
     header.writeUInt16BE(sendBufferSize);
     //id 삽입
-    header.writeUInt16BE(ePacketId.NORMAL, config.packet.sizeOfSize);
+    header.writeUInt16BE(id, config.packet.sizeOfSize);
 
     //packetBuffer랑 합치기
     Buffer.from(packetBuffer).copy(sendBuffer, config.packet.sizeOfHeader);

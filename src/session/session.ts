@@ -3,8 +3,8 @@ import { config } from '../config/config';
 
 import { Utils } from '../utils/utils';
 //import handlerMappings from '../Handlers/handlerMapping';
-import { ePacketId } from '../constants/packetHeader';
-import { handlerMappings } from '../handlers/handlerMapping';
+import { ePacketId } from '../constants/packetId';
+import handlerMappings from '../handlers/user';
 import { PacketHeader } from '../types';
 import { ParserUtils } from '../utils/parser/ParserUtils';
 
@@ -14,14 +14,15 @@ export class Session {
 ---------------------------------------------*/
   private socket: Socket;
   private buffer: Buffer;
+  private id: string;
 
   /*---------------------------------------------
     [생성자]
 ---------------------------------------------*/
-  constructor(socket: Socket) {
+  constructor(socket: Socket, id: string) {
     this.socket = socket;
     this.buffer = Buffer.alloc(0);
-
+    this.id = id;
     this.init();
   }
 

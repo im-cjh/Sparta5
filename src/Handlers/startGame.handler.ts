@@ -1,11 +1,13 @@
 import { UUID } from 'node:crypto';
-import { ePacketId } from '../constants/packetHeader';
+import { ePacketId } from '../constants/packetId';
+import { fromBinary } from '@bufbuild/protobuf';
+import { C2SPosSchema } from '../../Protocol/request/common_pb';
 
-export const startGame = async (buffer: Buffer) => {
-  //임시
-  return {
-    status: 'success',
-    //packetId: ePacketId.RecoverGameState,
-    payload: 'tmp',
-  };
+//임시
+export const handlePos = async (buffer: Buffer) => {
+  const pos = fromBinary(C2SPosSchema, buffer);
+
+  console.log(pos);
+
+  return buffer;
 };

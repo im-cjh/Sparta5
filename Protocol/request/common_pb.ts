@@ -10,14 +10,14 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file request/common.proto.
  */
 export const file_request_common: GenFile = /*@__PURE__*/
-  fileDesc("ChRyZXF1ZXN0L2NvbW1vbi5wcm90bxIGY29tbW9uIlIKBlBhY2tldBIOCgZ1c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCRIQCghzZXF1ZW5jZRgDIAEoDRIPCgdwYXlsb2FkGAQgASgMYgZwcm90bzM");
+  fileDesc("ChRyZXF1ZXN0L2NvbW1vbi5wcm90bxIGY29tbW9uIkMKCE1ldGFEYXRhEg4KBnVzZXJJZBgBIAEoCRIVCg1jbGllbnRWZXJzaW9uGAIgASgJEhAKCHNlcXVlbmNlGAMgASgNIj4KBkMyU1BvcxIeCgRtZXRhGAEgASgLMhAuY29tbW9uLk1ldGFEYXRhEgkKAXkYAiABKAUSCQoBeBgDIAEoBWIGcHJvdG8z");
 
 /**
  * 공통 패킷 구조
  *
- * @generated from message common.Packet
+ * @generated from message common.MetaData
  */
-export type Packet = Message<"common.Packet"> & {
+export type MetaData = Message<"common.MetaData"> & {
   /**
    * 유저 ID (UUID, 16바이트)
    *
@@ -38,19 +38,45 @@ export type Packet = Message<"common.Packet"> & {
    * @generated from field: uint32 sequence = 3;
    */
   sequence: number;
-
-  /**
-   * 실제 데이터
-   *
-   * @generated from field: bytes payload = 4;
-   */
-  payload: Uint8Array;
 };
 
 /**
- * Describes the message common.Packet.
- * Use `create(PacketSchema)` to create a new message.
+ * Describes the message common.MetaData.
+ * Use `create(MetaDataSchema)` to create a new message.
  */
-export const PacketSchema: GenMessage<Packet> = /*@__PURE__*/
+export const MetaDataSchema: GenMessage<MetaData> = /*@__PURE__*/
   messageDesc(file_request_common, 0);
+
+/**
+ * @generated from message common.C2SPos
+ */
+export type C2SPos = Message<"common.C2SPos"> & {
+  /**
+   * 공통 메타 데이터(유저 ID, 버전, 호출 수)
+   *
+   * @generated from field: common.MetaData meta = 1;
+   */
+  meta?: MetaData;
+
+  /**
+   * y축 좌표
+   *
+   * @generated from field: int32 y = 2;
+   */
+  y: number;
+
+  /**
+   * x축 좌표
+   *
+   * @generated from field: int32 x = 3;
+   */
+  x: number;
+};
+
+/**
+ * Describes the message common.C2SPos.
+ * Use `create(C2SPosSchema)` to create a new message.
+ */
+export const C2SPosSchema: GenMessage<C2SPos> = /*@__PURE__*/
+  messageDesc(file_request_common, 1);
 
