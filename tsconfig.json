@@ -13,6 +13,8 @@
   },
   "include": [
     "src/**/*", // src 디렉토리 내 파일 포함
-    "Protocol/**/*" // pb.ts 파일의 경로를 명시적으로 포함
+    "Protocol/**/*", // pb.ts 파일의 경로를 명시적으로 포함
+    "client.ts",
+    "protobuf"
   ]
 }

@@ -1,23 +1,53 @@
 import { Socket } from 'net';
 import { Session } from '../../session/session';
-import { v4 as uuidv4 } from 'uuid';
+
+/*---------------------------------------------
+    [SessionManager]
+    - 목적: 세션 관리 및 핸들러 함수에서 클라에게 응답할 때 사용
+---------------------------------------------*/
 class SessionManager {
-  private sessions: Map<string, Session>;
+  /*---------------------------------------------
+    [멤버 변수]
+      -sessions: 
+        클라는 반드시 자신의 uuid를 담아서 패킷을 전송하므로
+        빠르게 session을 가져오기 위해 Map선택
+---------------------------------------------*/
+  private sessions: Set<Session>;
 
+  /*---------------------------------------------
+    [생성자]
+---------------------------------------------*/
   constructor() {
-    this.sessions = new Map<string, Session>();
+    this.sessions = new Set<Session>();
   }
 
-  addSession(socket: Socket, uuid: string): void {
-    this.sessions.set(uuid, new Session(socket, uuid));
+  /*---------------------------------------------
+    [세션 추가]
+---------------------------------------------*/
+  addSession(socket: Socket): void {
+    this.sessions.add(new Session(socket));
   }
 
+  /*---------------------------------------------
+      [getter]
+  ---------------------------------------------*/
   getSessionOrNull(uuid: string): Session | null {
-    const ret: Session | undefined = this.sessions.get(uuid);
-    if (ret != undefined) return ret;
-    else return null;
+    for (const session of this.sessions) {
+      if (session.getId() === uuid) {
+        return session;
+      }
+    }
+    return null;
+  }
+
+  getNextSequenceOrNull(uuid: string): number | null {
+    const session: Session | null = this.getSessionOrNull(uuid);
+    if (!session) {
+      return null;
+    }
+
+    return session.getNextSequence();
   }
 }
 
 export const sessionManager: SessionManager = new SessionManager();
-export const gameSessionManager: SessionManager = new SessionManager();
