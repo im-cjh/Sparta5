@@ -29,6 +29,15 @@ class SessionManager {
   }
 
   /*---------------------------------------------
+    [세션 제거]
+---------------------------------------------*/
+  removeSession(session: Session): boolean {
+    //console.log(this.sessions.size);
+    const ret = this.sessions.delete(session);
+    //console.log(this.sessions.size);
+    return ret;
+  }
+  /*---------------------------------------------
       [getter]
   ---------------------------------------------*/
   getSessionOrNull(uuid: string): Session | null {

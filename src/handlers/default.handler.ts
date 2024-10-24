@@ -1,4 +1,6 @@
 import { Session } from '../session/session';
+import CustomError from '../utils/error/customeError';
+import { ErrorCodes } from '../utils/error/errorCodes';
 
 /*---------------------------------------------
     [기본 핸들러]
@@ -7,7 +9,7 @@ import { Session } from '../session/session';
     - ePacketId만 정의해놓고 매핑안하면 컴파일로 미리 에러 잡기 위해
 ---------------------------------------------*/
 const defaultHandler = async (buffer: Buffer, session: Session) => {
-  return;
+  throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `핸들러를 찾을 수 없습니다.`);
 };
 
 export default defaultHandler;

@@ -11,6 +11,7 @@ import initialHandler from '../handlers/user/initial.handler';
 import CustomError from '../utils/error/customeError';
 import { ErrorCodes } from '../utils/error/errorCodes';
 import { handleError } from '../utils/error/errorHandler';
+import { sessionManager } from '../classes/managers/SessionManager';
 
 export class Session {
   /*---------------------------------------------
@@ -82,6 +83,8 @@ export class Session {
 ---------------------------------------------*/
   private onEnd(): void {
     console.log('클라이언트 연결이 종료되었습니다.');
+
+    sessionManager.removeSession(this);
   }
 
   /*---------------------------------------------
@@ -93,6 +96,10 @@ export class Session {
 ---------------------------------------------*/
   private onError(error: any): void {
     console.error('소켓 오류:', error);
+
+    handleError(this, new CustomError(500, `소켓 오류: ${error.message}`));
+    // 세션에서 유저 삭제
+    console.log('유저 제거: ', sessionManager.removeSession(this));
   }
 
   /*---------------------------------------------
@@ -109,7 +116,7 @@ export class Session {
     try {
       //1. sequence 검증
       if (this.sequence != header.sequence) {
-        throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '잘못된 시퀀스 값입니다.');
+        throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '시퀀스가 잘못되었습니다.');
       }
 
       //2. 패킷 ID에 해당하는 핸들러 확인
@@ -117,7 +124,7 @@ export class Session {
 
       //2-1. 핸들러가 존재하지 않을 경우 오류 출력
       if (!handler) {
-        throw new CustomError(ErrorCodes.INVALID_PACKET_ID, `핸들러를 찾을 수 없습니다: ${header.id}`);
+        throw new CustomError(ErrorCodes.INVALID_PACKET_ID, `패킷id가 잘못되었습니다: ${header.id}`);
       }
       //3. 핸들러 호출
       await handler(packet, this);

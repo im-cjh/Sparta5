@@ -25,12 +25,12 @@ client.connect(PORT, HOST, async () => {
   const packet: C2S_InitialPacket = create(C2S_InitialPacketSchema, {
     meta: create(C2S_MetaDataSchema, {
       userId: 'im-cjh',
-      clientVersion: '12.0.0',
+      clientVersion: '1.0.0',
     }),
     deviceId: 'xxxxx',
   });
 
-  const sendBuffer: Buffer = ParserUtils.SerializePacket<C2S_InitialPacket>(packet, C2S_InitialPacketSchema, ePacketId.C2S_Init, 100);
+  const sendBuffer: Buffer = ParserUtils.SerializePacket<C2S_InitialPacket>(packet, C2S_InitialPacketSchema, ePacketId.C2S_Init, 0);
 
   sendPacket(client, sendBuffer);
 });

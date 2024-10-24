@@ -11,13 +11,14 @@ import { ParserUtils } from '../parser/ParserUtils';
 export const handleError = (session: Session, error: any) => {
   let responseCode: number;
   let message: string = error.message;
-  console.log(error);
   if (error.code) {
     responseCode = error.code;
     console.error(`에러 코드: ${error.code}, 메시지: ${error.message}`);
+    console.log(error.stack.split('\n')[1]);
   } else {
     responseCode = ErrorCodes.SOCKET_ERROR;
     console.error(`일반 에러: ${error.message}`);
+    console.log(error.stack.split('\n')[1]);
   }
 
   const packet: S2C_Error = ResponseUtils.createErrorResponse(responseCode, message);
