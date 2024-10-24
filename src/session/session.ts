@@ -3,10 +3,15 @@ import { config } from '../config/config';
 
 import { Utils } from '../utils/utils';
 //import handlerMappings from '../Handlers/handlerMapping';
-import { ePacketId } from '../constants/packetHeader';
-import { handlerMappings } from '../handlers/handlerMapping';
-import { PacketHeader } from '../types';
+import { ePacketId } from '../constants/packetId';
+import handlerMappings from '../handlers/user';
+import { PacketHeader } from '../classes/models/PacketHeader';
 import { ParserUtils } from '../utils/parser/ParserUtils';
+import initialHandler from '../handlers/user/initial.handler';
+import CustomError from '../utils/error/customeError';
+import { ErrorCodes } from '../utils/error/errorCodes';
+import { handleError } from '../utils/error/errorHandler';
+import { sessionManager } from '../classes/managers/SessionManager';
 
 export class Session {
   /*---------------------------------------------
@@ -14,6 +19,8 @@ export class Session {
 ---------------------------------------------*/
   private socket: Socket;
   private buffer: Buffer;
+  private id: string = '';
+  private sequence: number = 0;
 
   /*---------------------------------------------
     [생성자]
@@ -21,7 +28,6 @@ export class Session {
   constructor(socket: Socket) {
     this.socket = socket;
     this.buffer = Buffer.alloc(0);
-
     this.init();
   }
 
@@ -31,7 +37,7 @@ export class Session {
     2. end: 자원을 정리하거나 로그를 남기기
     3. error: 예외 상황을 적절히 처리하고 로그를 남기거나 대응을 하기
 ---------------------------------------------*/
-  init() {
+  private init() {
     this.socket.on('data', (data: Buffer) => this.onData(data));
     this.socket.on('end', () => this.onEnd());
     this.socket.on('error', (error: any) => this.onError(error));
@@ -49,22 +55,24 @@ export class Session {
 ---------------------------------------------*/
   private onData(buffer: Buffer): void {
     this.buffer = Buffer.concat([this.buffer, buffer]);
-    console.log('onData', this.buffer);
     while (true) {
       //최소한 헤더는 파싱할 수 있어야 한다
-      if (this.buffer.length < config.packet.sizeOfHeader) break;
+      if (this.buffer.length < config.packet.sizeOfHeader) {
+        break;
+      }
 
       let header: PacketHeader = ParserUtils.readPacketHeader(this.buffer);
       // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
-      if (this.buffer.length < header.size) break;
+      if (this.buffer.length < header.size) {
+        break;
+      }
 
-      console.log('this.buffer.length', this.buffer.length);
       const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
       this.buffer = buffer.subarray(header.size);
       //패킷 조립 성공
-      console.log('패킷 조립 성공');
-      console.log(header);
-      this.handlePacket(packet, header.id);
+      console.log('패킷 조립 성공', header);
+
+      this.handlePacket(packet, header);
     }
   }
 
@@ -75,6 +83,8 @@ export class Session {
 ---------------------------------------------*/
   private onEnd(): void {
     console.log('클라이언트 연결이 종료되었습니다.');
+
+    sessionManager.removeSession(this);
   }
 
   /*---------------------------------------------
@@ -86,29 +96,72 @@ export class Session {
 ---------------------------------------------*/
   private onError(error: any): void {
     console.error('소켓 오류:', error);
+
+    handleError(this, new CustomError(500, `소켓 오류: ${error.message}`));
+    // 세션에서 유저 삭제
+    console.log('유저 제거: ', sessionManager.removeSession(this));
   }
 
   /*---------------------------------------------
     [handlePacket]
     - 목적: 수신한 패킷의 Id에 맞는 함수 호출
+
+    1. sequence 검증
+    2. 패킷 ID에 해당하는 핸들러 확인
+      2-1. 핸들러가 존재하지 않을 경우 오류 출력
+    3. 핸들러 호출
+
 ---------------------------------------------*/
-  private async handlePacket(packet: Buffer, packetId: ePacketId) {
-    // [TODO]
-    // 1. 클라이언트 버전이 지원되는지 확인
-    // [TODO];
-    //2. 패킷 ID에 해당하는 핸들러 확인
-    const handler = handlerMappings[packetId];
-    // [TODO];
-    //2-1. 핸들러가 존재하지 않을 경우 오류 처리
-    if (!handler) {
-      console.log('핸들러 없음');
-      console.log(packet, packetId);
-      console.log('------------------------------');
-      return;
+  private async handlePacket(packet: Buffer, header: PacketHeader) {
+    try {
+      //1. sequence 검증
+      if (this.sequence != header.sequence) {
+        throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '시퀀스가 잘못되었습니다.');
+      }
+
+      //2. 패킷 ID에 해당하는 핸들러 확인
+      const handler = handlerMappings[header.id];
+
+      //2-1. 핸들러가 존재하지 않을 경우 오류 출력
+      if (!handler) {
+        throw new CustomError(ErrorCodes.INVALID_PACKET_ID, `패킷id가 잘못되었습니다: ${header.id}`);
+      }
+      //3. 핸들러 호출
+      await handler(packet, this);
+    } catch (error) {
+      handleError(this, error);
     }
-    //3. 핸들러를 호출하여 응답 생성
-    const response = await handler(packet);
-    // [TODO];
-    //4. 클라이언트에 결과 전송
+  }
+
+  /*---------------------------------------------
+    [getter]
+---------------------------------------------*/
+  getSequence() {
+    return this.sequence;
+  }
+
+  getNextSequence() {
+    return ++this.sequence;
+  }
+
+  getId(): string {
+    return this.id;
+  }
+  /*---------------------------------------------
+    [setter]
+---------------------------------------------*/
+  setSequence(sequence: number) {
+    this.sequence = sequence;
+  }
+
+  setId(id: string) {
+    this.id = id;
+  }
+
+  /*---------------------------------------------
+    [비동기 패킷 전송]
+---------------------------------------------*/
+  public send(sendBuffer: Buffer) {
+    this.socket.write(sendBuffer);
   }
 }

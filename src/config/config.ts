@@ -1,5 +1,5 @@
 import { CLIENT_VERSION, HOST, PORT } from '../constants/env';
-import { SIZEOF_ID, SIZEOF_SIZE } from '../constants/packetHeader';
+import { SIZEOF_ID, SIZEOF_SEQUENCE, SIZEOF_SIZE } from '../constants/packetId';
 
 export const config = {
   server: {
@@ -12,6 +12,7 @@ export const config = {
   packet: {
     sizeOfSize: SIZEOF_SIZE,
     sizeOfId: SIZEOF_ID,
-    sizeOfHeader: SIZEOF_SIZE + SIZEOF_ID,
+    sizeOfSequence: SIZEOF_SEQUENCE,
+    sizeOfHeader: SIZEOF_SIZE + SIZEOF_ID + SIZEOF_SEQUENCE,
   },
 };
