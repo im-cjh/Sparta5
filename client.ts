@@ -2,10 +2,10 @@ import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
 import net, { Socket } from 'net';
 
 import { ParserUtils } from './src/utils/parser/ParserUtils';
-import { PacketHeader } from './src/classes/models/PacketHeader';
+import { PacketHeader } from './src/classes/interfaces/PacketHeader';
 import { config } from './src/config/config';
 import { ePacketId } from './src/constants/packetId';
-import { C2S_MetaDataSchema, C2S_Pos, C2S_PosSchema } from './src/common/protobuf/request/common_pb';
+import { C2S_MetaDataSchema } from './src/common/protobuf/request/common_pb';
 import { C2S_InitialPacket, C2S_InitialPacketSchema } from './src/common/protobuf/request/initial_pb';
 import { S2C_InitSchema } from './src/common/protobuf/response/response_pb';
 

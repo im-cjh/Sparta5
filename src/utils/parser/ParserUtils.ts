@@ -4,7 +4,7 @@ import path, { resolve } from 'path';
 import { config } from '../../config/config';
 
 import { fromBinary, Message, toBinary } from '@bufbuild/protobuf';
-import { PacketHeader } from '../../classes/models/PacketHeader';
+import { PacketHeader } from '../../classes/interfaces/PacketHeader';
 import { ePacketId } from '../../constants/packetId';
 
 import { GenMessage } from '@bufbuild/protobuf/codegenv1';

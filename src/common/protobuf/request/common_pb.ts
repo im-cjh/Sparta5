@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file common/protobuf/request/common.proto.
  */
 export const file_common_protobuf_request_common: GenFile = /*@__PURE__*/
-  fileDesc("CiRjb21tb24vcHJvdG9idWYvcmVxdWVzdC9jb21tb24ucHJvdG8SBmNvbW1vbiI1CgxDMlNfTWV0YURhdGESDgoGdXNlcklkGAEgASgJEhUKDWNsaWVudFZlcnNpb24YAiABKAkiQwoHQzJTX1BvcxIiCgRtZXRhGAEgASgLMhQuY29tbW9uLkMyU19NZXRhRGF0YRIJCgF5GAIgASgFEgkKAXgYAyABKAViBnByb3RvMw");
+  fileDesc("CiRjb21tb24vcHJvdG9idWYvcmVxdWVzdC9jb21tb24ucHJvdG8SBmNvbW1vbiI1CgxDMlNfTWV0YURhdGESDgoGdXNlcklkGAEgASgJEhUKDWNsaWVudFZlcnNpb24YAiABKAliBnByb3RvMw");
 
 /**
  * 공통 요청 메시지 구조
@@ -39,37 +39,4 @@ export type C2S_MetaData = Message<"common.C2S_MetaData"> & {
  */
 export const C2S_MetaDataSchema: GenMessage<C2S_MetaData> = /*@__PURE__*/
   messageDesc(file_common_protobuf_request_common, 0);
-
-/**
- * @generated from message common.C2S_Pos
- */
-export type C2S_Pos = Message<"common.C2S_Pos"> & {
-  /**
-   * 공통 메타 데이터(유저 ID, 버전, 호출 수)
-   *
-   * @generated from field: common.C2S_MetaData meta = 1;
-   */
-  meta?: C2S_MetaData;
-
-  /**
-   * y축 좌표
-   *
-   * @generated from field: int32 y = 2;
-   */
-  y: number;
-
-  /**
-   * x축 좌표
-   *
-   * @generated from field: int32 x = 3;
-   */
-  x: number;
-};
-
-/**
- * Describes the message common.C2S_Pos.
- * Use `create(C2S_PosSchema)` to create a new message.
- */
-export const C2S_PosSchema: GenMessage<C2S_Pos> = /*@__PURE__*/
-  messageDesc(file_common_protobuf_request_common, 1);
 

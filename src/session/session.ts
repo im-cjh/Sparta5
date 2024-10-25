@@ -4,7 +4,7 @@ import { config } from '../config/config';
 //import handlerMappings from '../Handlers/handlerMapping';
 import { ePacketId } from '../constants/packetId';
 import handlerMappings from '../handlers/user';
-import { PacketHeader } from '../classes/models/PacketHeader';
+import { PacketHeader } from '../classes/interfaces/PacketHeader';
 import { ParserUtils } from '../utils/parser/ParserUtils';
 import CustomError from '../utils/error/CustomeError';
 import { handleError } from '../utils/error/errorHandler';

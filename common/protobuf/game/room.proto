@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package room;
+
+// 방 입장 요청 패킷
+message C2S_EnterRoom {
+    C2S_Metadata meta = 1;
+  uint64 roomId = 2;       // 입장하려는 Room ID
+  string playerId = 3;     // 플레이어 ID
+}
+
+// 방 입장 응답 패킷
+message S2C_EnterRoom {
+  S2C_RoomMeta meta = 1;    // 공통 응답 메타 데이터
+  bool isEntered = 2;       // 방 입장 성공 여부
+  uint64 roomId = 3;        // 방 ID
+  repeated PlayerInfo players = 4;  // 방에 있는 기존 플레이어 정보
+}
+
+// 방에 있는 플레이어 정보
+message PlayerInfo {
+  string playerId = 1;              // 플레이어 ID
+  float x = 2;                      // 플레이어 위치 X 좌표
+  float y = 3;                      // 플레이어 위치 Y 좌표
+  float z = 4;                      // 플레이어 위치 Z 좌표
+  uint32 direction = 5;             // 플레이어의 초기 방향
+}

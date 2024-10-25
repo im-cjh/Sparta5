@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package response;
+package server;
 
 // 공통 응답 메시지 구조
 message S2C_MetaData {

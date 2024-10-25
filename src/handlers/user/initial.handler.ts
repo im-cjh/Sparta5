@@ -56,7 +56,7 @@ const initialHandler = async (buffer: Buffer, session: Session) => {
   }
 
   //3. session의 유저 id 갱신
-  session.setId(packet.deviceId);
+  session.setId(user.id);
   //3. 유저 정보 응답 생성
   const initPacket: S2C_Init = create(S2C_InitSchema, {
     meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
