@@ -1,9 +1,14 @@
 import fs from 'fs';
 import path, { resolve } from 'path';
-
+import camelCase from 'lodash/camelCase.js';
 import { config } from '../config/config';
 
-//최상위 경로 + assets 폴더
+/*---------------------------------------------
+    [Utils]
+    1. Promise<any> readFileAsync(string): 비동기 파일 읽기
+    2. any toCamelCase(any): snake_case -> camelCase 변환
+   
+---------------------------------------------*/
 export class Utils {
   static basePath: string = path.join(__dirname, '../../Assets');
   static protoPath: string = path.join(__dirname, '../protobuf');
@@ -24,18 +29,20 @@ export class Utils {
   }
 
   /*---------------------------------------------
-    [동기 protobuf 파일 읽기]
+    [snake_case -> camelCase 변환]
 ---------------------------------------------*/
-  static getAllProtoFiles(dir: string = Utils.protoPath, fileList: string[] = []): string[] {
-    const files = fs.readdirSync(dir);
-    files.forEach((file) => {
-      const filePath = path.join(dir, file);
-      if (fs.statSync(filePath).isDirectory()) {
-        this.getAllProtoFiles(filePath, fileList);
-      } else if (path.extname(file) === '.proto') {
-        fileList.push(filePath);
-      }
-    });
-    return fileList;
-  }
+  static toCamelCase = (obj: any): any => {
+    if (Array.isArray(obj)) {
+      // 배열인 경우, 배열의 각 요소에 대해 재귀적으로 toCamelCase 함수를 호출
+      return obj.map((v) => Utils.toCamelCase(v));
+    } else if (obj !== null && typeof obj === 'object' && obj.constructor === Object) {
+      // 객체인 경우, 객체의 키를 카멜케이스로 변환하고, 값에 대해서도 재귀적으로 toCamelCase 함수를 호출
+      return Object.keys(obj).reduce((result: Record<string, any>, key: string) => {
+        result[camelCase(key)] = Utils.toCamelCase(obj[key]);
+        return result;
+      }, {});
+    }
+    // 객체도 배열도 아닌 경우, 원본 값을 반환
+    return obj;
+  };
 }

@@ -1,6 +1,6 @@
 import { Socket } from 'net';
-import { ErrorCodes } from './errorCodes';
-import CustomError from './customeError';
+import { ErrorCodes } from './ErrorCodes';
+import CustomError from './CustomeError';
 import { Session } from '../../session/session';
 import { ePacketId } from '../../constants/packetId';
 import { S2C_Error, S2C_ErrorSchema, S2C_MetaDataSchema } from '../../common/protobuf/response/response_pb';

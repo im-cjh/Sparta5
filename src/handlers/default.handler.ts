@@ -1,6 +1,6 @@
 import { Session } from '../session/session';
-import CustomError from '../utils/error/customeError';
-import { ErrorCodes } from '../utils/error/errorCodes';
+import CustomError from '../utils/error/CustomeError';
+import { ErrorCodes } from '../utils/error/ErrorCodes';
 
 /*---------------------------------------------
     [기본 핸들러]

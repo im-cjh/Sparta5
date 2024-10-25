@@ -1,7 +1,7 @@
 import { config } from '../../config/config';
 import { Session } from '../../session/session';
-import CustomError from './customeError';
-import { ErrorCodes } from './errorCodes';
+import CustomError from './CustomeError';
+import { ErrorCodes } from './ErrorCodes';
 
 export class ErrorUtils {
   static clientVersionValidate(clientVersion: string) {

@@ -1,17 +1,15 @@
 import { Socket } from 'net';
 import { config } from '../config/config';
 
-import { Utils } from '../utils/utils';
 //import handlerMappings from '../Handlers/handlerMapping';
 import { ePacketId } from '../constants/packetId';
 import handlerMappings from '../handlers/user';
 import { PacketHeader } from '../classes/models/PacketHeader';
 import { ParserUtils } from '../utils/parser/ParserUtils';
-import initialHandler from '../handlers/user/initial.handler';
-import CustomError from '../utils/error/customeError';
-import { ErrorCodes } from '../utils/error/errorCodes';
+import CustomError from '../utils/error/CustomeError';
 import { handleError } from '../utils/error/errorHandler';
 import { sessionManager } from '../classes/managers/SessionManager';
+import { ErrorCodes } from '../utils/error/ErrorCodes';
 
 export class Session {
   /*---------------------------------------------

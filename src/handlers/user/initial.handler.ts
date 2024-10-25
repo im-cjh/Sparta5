@@ -8,19 +8,29 @@ import { S2C_Init, S2C_InitSchema, S2C_MetaDataSchema } from '../../common/proto
 import { C2S_InitialPacket, C2S_InitialPacketSchema } from '../../common/protobuf/request/initial_pb';
 import { Session } from '../../session/session';
 import { ResponseUtils } from '../../utils/response/responseUtils';
-import CustomError from '../../utils/error/customeError';
+import CustomError from '../../utils/error/CustomeError';
 import { handleError } from '../../utils/error/errorHandler';
-import { ErrorCodes } from '../../utils/error/errorCodes';
+import { ErrorCodes } from '../../utils/error/ErrorCodes';
 import { config } from '../../config/config';
+import { UserDb } from '../../db/user/user.db';
 
 /*---------------------------------------------
     [초기화 핸들러]
 
     1. 클라 버전 검증
-    2. 유저 id 갱신
-    3. 유저 정보 응답 생성
-    4. 유저 정보 직렬화
-    5. 버퍼 전송
+    2. 유저 정보 갱신
+        2-1. 최초 접속 시 DB에 저장
+        2-2. 최초가 아니면 로그인 기록 갱신
+    3. session의 유저 id 갱신
+    4. 유저 정보 응답 생성
+    5. 유저 정보 직렬화
+    6. 버퍼 전송
+
+    - 클라로부터 deviceId를 받기
+    - DB 조회
+        -데이터X: 새로운 id발급
+        -데이터O: 기존 id반환
+
 ---------------------------------------------*/
 const initialHandler = async (buffer: Buffer, session: Session) => {
   let packet: C2S_InitialPacket;
@@ -34,7 +44,18 @@ const initialHandler = async (buffer: Buffer, session: Session) => {
   if (packet.meta?.clientVersion !== config.client.version) {
     throw new CustomError(ErrorCodes.CLIENT_VERSION_MISMATCH, '클라이언트 버전이 일치하지 않습니다.');
   }
-  //2. 유저 id 갱신
+
+  //2. 유저 정보 갱신
+  const user = await UserDb.findUserByDeviceID(packet.deviceId);
+  if (!user) {
+    //2-1. 최초 접속 시 DB에 저장
+    await UserDb.createUser(packet.deviceId);
+  } else {
+    //2-2. 최초가 아니면 로그인 기록 갱신
+    UserDb.updateUserLogin(user.id);
+  }
+
+  //3. session의 유저 id 갱신
   session.setId(packet.deviceId);
   //3. 유저 정보 응답 생성
   const initPacket: S2C_Init = create(S2C_InitSchema, {
