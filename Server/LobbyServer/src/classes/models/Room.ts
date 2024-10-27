@@ -2,13 +2,13 @@ import { create, toBinary } from "@bufbuild/protobuf";
 import { RESPONSE_SUCCESS_CODE } from "ServerCore/constants";
 import { ePacketId } from "ServerCore/network/PacketId";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
-import { UserInfoSchema } from "src/common/protobuf/common/struct_pb";
+import { eRoomStateId } from "src/constants/roomState";
+import { LobbySession } from "src/network/LobbySession";
 import {
   L2C_EnterRoomNewUser,
   L2C_EnterRoomNewUserSchema,
-} from "src/common/protobuf/game/room_pb";
-import { eRoomStateId } from "src/constants/roomState";
-import { LobbySession } from "src/network/LobbySession";
+} from "src/protocol/room_pb";
+import { UserInfoSchema } from "src/protocol/struct_pb";
 import { ResponseUtils } from "src/utils/response/ResponseUtils";
 
 export class Room {

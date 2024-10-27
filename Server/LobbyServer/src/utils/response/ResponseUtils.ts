@@ -4,7 +4,7 @@ import {
   S2C_ErrorSchema,
   S2C_Metadata,
   S2C_MetadataSchema,
-} from "src/common/protobuf/server/server_pb";
+} from "src/protocol/server_pb";
 
 export class ResponseUtils {
   static createMetaResponse(responseCode: number): S2C_Metadata {

@@ -1,14 +1,12 @@
 import { Socket } from "net";
 import { create } from "@bufbuild/protobuf";
 import { LobbySession } from "src/network/LobbySession";
-import {
-  S2C_Error,
-  S2C_ErrorSchema,
-} from "src/common/protobuf/server/server_pb";
+
 import { ResponseUtils } from "../response/ResponseUtils";
 import { ErrorCodes } from "ServerCore/utils/error/ErrorCodes";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
 import { ePacketId } from "ServerCore/network/PacketId";
+import { S2C_Error, S2C_ErrorSchema } from "src/protocol/server_pb";
 
 export const handleError = (session: LobbySession, error: any) => {
   let responseCode: number;

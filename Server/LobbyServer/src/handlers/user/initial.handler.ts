@@ -1,20 +1,19 @@
 import { Socket } from "net";
-
 import { create, fromBinary } from "@bufbuild/protobuf";
 import { LobbySession } from "src/network/LobbySession";
-import {
-  C2L_InitialPacket,
-  C2L_InitialPacketSchema,
-} from "src/common/protobuf/client/client_pb";
 import { CustomError } from "ServerCore/utils/error/CustomError";
 import { ErrorCodes } from "ServerCore/utils/error/ErrorCodes";
 import { lobbyConfig } from "src/config/config";
 import { UserDb } from "src/db/user/user.db";
-import { L2C_Init, L2C_InitSchema } from "src/common/protobuf/server/server_pb";
 import { ResponseUtils } from "src/utils/response/ResponseUtils";
 import { RESPONSE_SUCCESS_CODE } from "ServerCore/constants";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
 import { ePacketId } from "ServerCore/network/PacketId";
+import {
+  C2L_InitialPacket,
+  C2L_InitialPacketSchema,
+} from "src/protocol/client_pb";
+import { L2C_Init, L2C_InitSchema } from "src/protocol/server_pb";
 
 /*---------------------------------------------
     [초기화 핸들러]

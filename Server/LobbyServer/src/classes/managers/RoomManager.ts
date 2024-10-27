@@ -1,14 +1,11 @@
 import { create, fromBinary, toBinary } from "@bufbuild/protobuf";
 import { RESPONSE_SUCCESS_CODE } from "ServerCore/constants";
-import {
-  C2L_EnterRoom,
-  C2L_EnterRoomSchema,
-  L2C_EnterRoomNewUserSchema,
-} from "src/common/protobuf/game/room_pb";
+
 import { LobbySession } from "src/network/LobbySession";
 import { ResponseUtils } from "src/utils/response/ResponseUtils";
 import { Room } from "../models/Room";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
+import { C2L_EnterRoom, C2L_EnterRoomSchema } from "src/protocol/room_pb";
 
 class RoomManager {
   /*---------------------------------------------
