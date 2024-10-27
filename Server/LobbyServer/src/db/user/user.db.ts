@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import pools from "../database";
 import { SQL_QUERIES } from "./user.queries";
-import { Utils } from "@rootproject/servercore/utils/Utils";
+import { Utils } from "ServerCore/utils/Utils";
 
 export class UserDb {
   static async findUserByDeviceID(deviceId: string) {

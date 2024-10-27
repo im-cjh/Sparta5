@@ -7,10 +7,10 @@ export abstract class Session {
   /*---------------------------------------------
     [멤버 변수]
 ---------------------------------------------*/
-  private socket: Socket;
-  private buffer: Buffer;
-  private id: string = "";
-  private sequence: number = 0;
+  protected socket: Socket;
+  protected buffer: Buffer;
+  protected id: string = "";
+  protected sequence: number = 0;
 
   /*---------------------------------------------
     [생성자]

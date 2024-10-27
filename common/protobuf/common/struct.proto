@@ -20,5 +20,5 @@ message ObjectInfo
 message UserInfo
 {
 	string userId = 1;             // 유저 ID (UUID, 16바이트)
-	string userName = 2;	  //유저 닉네임
+	string nickname  = 2;	  //유저 닉네임
 }

@@ -11,7 +11,13 @@ import { ePacketId } from "./network/PacketId";
 import { PacketHeader } from "./network/PacketHeader";
 import { config } from "./config/config";
 import { L2C_InitSchema } from "./common/protobuf/server/server_pb";
+import {
+  C2L_EnterRoomSchema,
+  L2C_EnterRoomNewUserSchema,
+} from "./common/protobuf/game/room_pb";
 
+var flag = true;
+var userId = "";
 //임시 테스트
 const sendPacket = (socket: Socket, sendBuffer: Buffer) => {
   socket.write(sendBuffer);
@@ -33,13 +39,31 @@ client.connect(PORT, HOST, async () => {
     deviceId: "xxxxx",
   });
 
-  const sendBuffer: Buffer = ParserUtils.SerializePacket<C2L_InitialPacket>(
-    packet,
-    C2L_InitialPacketSchema,
-    ePacketId.C2L_Init,
+  // const sendBuffer: Buffer = ParserUtils.SerializePacket<C2L_InitialPacket>(
+  //   packet,
+  //   C2L_InitialPacketSchema,
+  //   ePacketId.C2L_Init,
+  //   0
+  // );
+
+  //sendPacket(client, sendBuffer);
+
+  const roomPacket = create(C2L_EnterRoomSchema, {
+    meta: create(C2S_MetadataSchema, {
+      userId: "im-cjh",
+      clientVersion: "1.0.0",
+    }),
+    roomId: BigInt(0),
+  });
+
+  const sendBuffer = ParserUtils.SerializePacket(
+    roomPacket,
+    C2L_EnterRoomSchema,
+    ePacketId.C2L_EnterRoom,
     0
   );
 
+  console.log("roomPacket 전송");
   sendPacket(client, sendBuffer);
 });
 
@@ -50,10 +74,40 @@ client.on("data", (data) => {
   console.log("packetHeader: ", packetHeader);
 
   // 메시지 추출
-  const slicedBuffer = buffer.slice(config.packet.sizeOfHeader); // 앞의 헤더 부분을 잘라낸다.
+  const payloadLength = packetHeader.size - config.packet.sizeOfHeader;
+  const slicedBuffer = buffer.slice(config.packet.sizeOfHeader);
 
-  const packet = fromBinary(L2C_InitSchema, slicedBuffer);
-  console.log("server 에게 받은 메세지: ", packet);
+  // 디코딩 예외 처리
+  try {
+    const packet = fromBinary(L2C_EnterRoomNewUserSchema, slicedBuffer);
+    console.log("server에게 받은 메시지: ", packet);
+  } catch (error) {
+    console.error("디코딩 오류:", error);
+    return;
+  }
+
+  // 방 접속 패킷 테스트
+  if (!flag) {
+    flag = false;
+
+    const roomPacket = create(C2L_EnterRoomSchema, {
+      meta: create(C2S_MetadataSchema, {
+        userId: "im-cjh",
+        clientVersion: "1.0.0",
+      }),
+      roomId: BigInt(0),
+    });
+
+    const sendBuffer = ParserUtils.SerializePacket(
+      roomPacket,
+      C2L_EnterRoomSchema,
+      ePacketId.C2L_EnterRoom,
+      1
+    );
+
+    console.log("roomPacket 전송");
+    sendPacket(client, sendBuffer);
+  }
 });
 
 client.on("close", () => {

@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file common/protobuf/game/room.proto.
  */
 export const file_common_protobuf_game_room: GenFile = /*@__PURE__*/
-  fileDesc("Ch9jb21tb24vcHJvdG9idWYvZ2FtZS9yb29tLnByb3RvEgRyb29tIlMKDUMyTF9FbnRlclJvb20SIgoEbWV0YRgBIAEoCzIULmNsaWVudC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgEEg4KBnVzZXJJZBgDIAEoCSJ3Cg1MMkNfRW50ZXJSb29tEiIKBG1ldGEYASABKAsyFC5zZXJ2ZXIuUzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIOCgZyb29tSWQYAyABKAQSHwoFdXNlcnMYBCADKAsyEC5jb21tb24uVXNlckluZm9iBnByb3RvMw", [file_common_protobuf_client_client, file_common_protobuf_server_server, file_common_protobuf_common_struct]);
+  fileDesc("Ch9jb21tb24vcHJvdG9idWYvZ2FtZS9yb29tLnByb3RvEgRyb29tIkMKDUMyTF9FbnRlclJvb20SIgoEbWV0YRgBIAEoCzIULmNsaWVudC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgEIm4KFEwyQ19FbnRlclJvb21OZXdVc2VyEiIKBG1ldGEYASABKAsyFC5zZXJ2ZXIuUzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIfCgV1c2VycxgDIAMoCzIQLmNvbW1vbi5Vc2VySW5mbyJfChZMMkNfRW50ZXJSb29tRXhpc3RVc2VyEiIKBG1ldGEYASABKAsyFC5zZXJ2ZXIuUzJDX01ldGFkYXRhEiEKB25ld1VzZXIYAiABKAsyEC5jb21tb24uVXNlckluZm9iBnByb3RvMw", [file_common_protobuf_client_client, file_common_protobuf_server_server, file_common_protobuf_common_struct]);
 
 /**
  * 방 입장 요청 패킷
@@ -35,13 +35,6 @@ export type C2L_EnterRoom = Message<"room.C2L_EnterRoom"> & {
    * @generated from field: uint64 roomId = 2;
    */
   roomId: bigint;
-
-  /**
-   * 유저 ID
-   *
-   * @generated from field: string userId = 3;
-   */
-  userId: string;
 };
 
 /**
@@ -52,11 +45,11 @@ export const C2L_EnterRoomSchema: GenMessage<C2L_EnterRoom> = /*@__PURE__*/
   messageDesc(file_common_protobuf_game_room, 0);
 
 /**
- * 방 입장 응답 패킷
+ * 방 입장 응답 패킷(신규 유저)
  *
- * @generated from message room.L2C_EnterRoom
+ * @generated from message room.L2C_EnterRoomNewUser
  */
-export type L2C_EnterRoom = Message<"room.L2C_EnterRoom"> & {
+export type L2C_EnterRoomNewUser = Message<"room.L2C_EnterRoomNewUser"> & {
   /**
    * 공통 응답 메타 데이터
    *
@@ -72,24 +65,45 @@ export type L2C_EnterRoom = Message<"room.L2C_EnterRoom"> & {
   isEntered: boolean;
 
   /**
-   * 방 ID
-   *
-   * @generated from field: uint64 roomId = 3;
-   */
-  roomId: bigint;
-
-  /**
    * 방에 있는 기존 유저 정보
    *
-   * @generated from field: repeated common.UserInfo users = 4;
+   * @generated from field: repeated common.UserInfo users = 3;
    */
   users: UserInfo[];
 };
 
 /**
- * Describes the message room.L2C_EnterRoom.
- * Use `create(L2C_EnterRoomSchema)` to create a new message.
+ * Describes the message room.L2C_EnterRoomNewUser.
+ * Use `create(L2C_EnterRoomNewUserSchema)` to create a new message.
  */
-export const L2C_EnterRoomSchema: GenMessage<L2C_EnterRoom> = /*@__PURE__*/
+export const L2C_EnterRoomNewUserSchema: GenMessage<L2C_EnterRoomNewUser> = /*@__PURE__*/
   messageDesc(file_common_protobuf_game_room, 1);
+
+/**
+ * 방 입장 응답 패킷(기존 유저)
+ *
+ * @generated from message room.L2C_EnterRoomExistUser
+ */
+export type L2C_EnterRoomExistUser = Message<"room.L2C_EnterRoomExistUser"> & {
+  /**
+   * 공통 응답 메타 데이터
+   *
+   * @generated from field: server.S2C_Metadata meta = 1;
+   */
+  meta?: S2C_Metadata;
+
+  /**
+   * 신규 유저 정보
+   *
+   * @generated from field: common.UserInfo newUser = 2;
+   */
+  newUser?: UserInfo;
+};
+
+/**
+ * Describes the message room.L2C_EnterRoomExistUser.
+ * Use `create(L2C_EnterRoomExistUserSchema)` to create a new message.
+ */
+export const L2C_EnterRoomExistUserSchema: GenMessage<L2C_EnterRoomExistUser> = /*@__PURE__*/
+  messageDesc(file_common_protobuf_game_room, 2);
 

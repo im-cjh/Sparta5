@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file common/protobuf/common/struct.proto.
  */
 export const file_common_protobuf_common_struct: GenFile = /*@__PURE__*/
-  fileDesc("CiNjb21tb24vcHJvdG9idWYvY29tbW9uL3N0cnVjdC5wcm90bxIGY29tbW9uIjIKB1Bvc0luZm8SEQoJb2JqZWN0X2lkGAEgASgJEgkKAXgYAiABKAISCQoBeRgDIAEoAiJYCgpPYmplY3RJbmZvEiEKCHBvc19pbmZvGAEgASgLMg8uY29tbW9uLlBvc0luZm8SJwoLb2JqZWN0X3R5cGUYAiABKA4yEi5jb21tb24uT2JqZWN0VHlwZSIsCghVc2VySW5mbxIOCgZ1c2VySWQYASABKAkSEAoIdXNlck5hbWUYAiABKAliBnByb3RvMw", [file_common_protobuf_common_enum]);
+  fileDesc("CiNjb21tb24vcHJvdG9idWYvY29tbW9uL3N0cnVjdC5wcm90bxIGY29tbW9uIjIKB1Bvc0luZm8SEQoJb2JqZWN0X2lkGAEgASgJEgkKAXgYAiABKAISCQoBeRgDIAEoAiJYCgpPYmplY3RJbmZvEiEKCHBvc19pbmZvGAEgASgLMg8uY29tbW9uLlBvc0luZm8SJwoLb2JqZWN0X3R5cGUYAiABKA4yEi5jb21tb24uT2JqZWN0VHlwZSIsCghVc2VySW5mbxIOCgZ1c2VySWQYASABKAkSEAoIbmlja25hbWUYAiABKAliBnByb3RvMw", [file_common_protobuf_common_enum]);
 
 /**
  * @generated from message common.PosInfo
@@ -79,9 +79,9 @@ export type UserInfo = Message<"common.UserInfo"> & {
   /**
    * 유저 닉네임
    *
-   * @generated from field: string userName = 2;
+   * @generated from field: string nickname = 2;
    */
-  userName: string;
+  nickname: string;
 };
 
 /**

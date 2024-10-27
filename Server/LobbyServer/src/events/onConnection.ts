@@ -1,5 +1,5 @@
 import { Socket } from "net";
-import { sessionManager } from "src/lobbyServer";
+import { sessionManager } from "src/server";
 
 export const onConnection = (socket: Socket): void => {
   console.log(

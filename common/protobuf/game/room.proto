@@ -10,13 +10,17 @@ import "common/protobuf/common/struct.proto";
 message C2L_EnterRoom {
   client.C2S_Metadata meta = 1;
   uint64 roomId = 2;       // 입장하려는 Room ID
-  string userId = 3;     // 유저 ID
 }
 
-// 방 입장 응답 패킷
-message L2C_EnterRoom {
+// 방 입장 응답 패킷(신규 유저)
+message L2C_EnterRoomNewUser {
   server.S2C_Metadata meta = 1;    // 공통 응답 메타 데이터
   bool isEntered = 2;       // 방 입장 성공 여부
-  uint64 roomId = 3;        // 방 ID
-  repeated common.UserInfo users = 4;  // 방에 있는 기존 유저 정보
+  repeated common.UserInfo users = 3;  // 방에 있는 기존 유저 정보
+}
+
+//방 입장 응답 패킷(기존 유저)
+message L2C_EnterRoomExistUser {
+  server.S2C_Metadata meta = 1;    // 공통 응답 메타 데이터
+  common.UserInfo newUser = 2;       // 신규 유저 정보
 }

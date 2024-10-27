@@ -1,18 +1,20 @@
-import { Socket } from 'net';
-import { sessionManager } from '../../classes/managers/SessionManager';
+import { Socket } from "net";
 
-import { create, fromBinary } from '@bufbuild/protobuf';
-import { ePacketId, RESPONSE_SUCCESS_CODE } from '../../constants/packetId';
-import { ParserUtils } from '../../utils/parser/ParserUtils';
-import { S2C_Init, S2C_InitSchema, S2C_MetaDataSchema } from '../../common/protobuf/response/response_pb';
-import { C2S_InitialPacket, C2S_InitialPacketSchema } from '../../common/protobuf/request/initial_pb';
-import { Session } from '../../session/session';
-import { ResponseUtils } from '../../utils/response/responseUtils';
-import CustomError from '../../utils/error/CustomeError';
-import { handleError } from '../../utils/error/errorHandler';
-import { ErrorCodes } from '../../utils/error/ErrorCodes';
-import { config } from '../../config/config';
-import { UserDb } from '../../db/user/user.db';
+import { create, fromBinary } from "@bufbuild/protobuf";
+import { LobbySession } from "src/network/LobbySession";
+import {
+  C2L_InitialPacket,
+  C2L_InitialPacketSchema,
+} from "src/common/protobuf/client/client_pb";
+import { CustomError } from "ServerCore/utils/error/CustomError";
+import { ErrorCodes } from "ServerCore/utils/error/ErrorCodes";
+import { lobbyConfig } from "src/config/config";
+import { UserDb } from "src/db/user/user.db";
+import { L2C_Init, L2C_InitSchema } from "src/common/protobuf/server/server_pb";
+import { ResponseUtils } from "src/utils/response/ResponseUtils";
+import { RESPONSE_SUCCESS_CODE } from "ServerCore/constants";
+import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
+import { ePacketId } from "ServerCore/network/PacketId";
 
 /*---------------------------------------------
     [초기화 핸들러]
@@ -32,17 +34,23 @@ import { UserDb } from '../../db/user/user.db';
         -데이터O: 기존 id반환
 
 ---------------------------------------------*/
-const initialHandler = async (buffer: Buffer, session: Session) => {
-  let packet: C2S_InitialPacket;
+const initialHandler = async (buffer: Buffer, session: LobbySession) => {
+  let packet: C2L_InitialPacket;
   try {
-    packet = fromBinary(C2S_InitialPacketSchema, buffer);
+    packet = fromBinary(C2L_InitialPacketSchema, buffer);
   } catch (error) {
-    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다');
+    throw new CustomError(
+      ErrorCodes.PACKET_DECODE_ERROR,
+      "패킷 디코딩 중 오류가 발생했습니다"
+    );
   }
 
   //1. 클라 버전 검증
-  if (packet.meta?.clientVersion !== config.client.version) {
-    throw new CustomError(ErrorCodes.CLIENT_VERSION_MISMATCH, '클라이언트 버전이 일치하지 않습니다.');
+  if (packet.meta?.clientVersion !== lobbyConfig.client.version) {
+    throw new CustomError(
+      ErrorCodes.CLIENT_VERSION_MISMATCH,
+      "클라이언트 버전이 일치하지 않습니다."
+    );
   }
 
   //2. 유저 정보 갱신
@@ -58,19 +66,20 @@ const initialHandler = async (buffer: Buffer, session: Session) => {
   //3. session의 유저 id 갱신
   session.setId(user.id);
   //3. 유저 정보 응답 생성
-  const initPacket: S2C_Init = create(S2C_InitSchema, {
+  const initPacket: L2C_Init = create(L2C_InitSchema, {
     meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
     userId: packet.deviceId,
   });
 
   //4. 유저 정보 직렬화
-  const sendBuffer: Buffer = ParserUtils.SerializePacket<S2C_Init>(
+  const sendBuffer: Buffer = ParserUtils.SerializePacket<L2C_Init>(
     initPacket,
-    S2C_InitSchema,
-    ePacketId.S2C_Init,
-    session.getNextSequence(),
+    L2C_InitSchema,
+    ePacketId.L2C_Init,
+    session.getNextSequence()
   );
   //5. 버퍼 전송
+  console.log("Serialized sendBuffer length:", sendBuffer.length);
   session.send(sendBuffer);
 };
 
