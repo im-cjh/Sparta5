@@ -1,5 +1,6 @@
 syntax = "proto3";
-package Protocol;
+
+package common;
 
 import "common/protobuf/common/enum.proto";
 
@@ -14,4 +15,10 @@ message ObjectInfo
 {
 	PosInfo pos_info = 1;
 	ObjectType object_type = 2; //OBJECT_TYPE_CREATURE, OBJECT_TYPE_PROJECTILE, OBJECT_TYPE_ENV;
+}
+
+message UserInfo
+{
+	string userId = 1;             // 유저 ID (UUID, 16바이트)
+	string userName = 2;	  //유저 닉네임
 }

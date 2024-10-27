@@ -1,5 +1,13 @@
 version: v1
 plugins:
-  - plugin: es
-    out: src
+  - name: es
+    out: Server/LobbyServer/src
+    opt: target=ts
+
+  - name: es
+    out: Server/BattleServer/src
+    opt: target=ts
+
+  - name: es
+    out: Client/src
     opt: target=ts
