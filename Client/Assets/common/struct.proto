@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package common;
+
+import "common/protobuf/common/enum.proto";
+
+message PosInfo
+{
+	string object_id = 1;
+	float x = 2;
+	float y = 3;
+}
+
+message ObjectInfo
+{
+	PosInfo pos_info = 1;
+	ObjectType object_type = 2; //OBJECT_TYPE_CREATURE, OBJECT_TYPE_PROJECTILE, OBJECT_TYPE_ENV;
+}
+
+message UserInfo
+{
+	string userId = 1;             // 유저 ID (UUID, 16바이트)
+	string nickname  = 2;	  //유저 닉네임
+}
