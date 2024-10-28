@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +15,7 @@ public class GameManager : MonoBehaviour
     public int targetFrameRate;
     public string version = "1.0.0";
     public int latency = 2;
+    public UInt32 sequence = 0;
 
     [Header("# Player Info")]
     public uint playerId;
@@ -29,8 +33,10 @@ public class GameManager : MonoBehaviour
         playerId = (uint)Random.Range(0, 4);
     }
 
+    //public void GameStart(InitialData data) {
     public void GameStart() {
         player.deviceId = deviceId;
+        //ayer.UpdatePosition(data.x, data.y);
         player.gameObject.SetActive(true);
         hud.SetActive(true);
         GameStartUI.SetActive(false);
@@ -66,5 +72,10 @@ public class GameManager : MonoBehaviour
             return;
         }
         gameTime += Time.deltaTime;
+    }
+
+    public UInt32 GetNextSequence()
+    {
+        return sequence++;
     }
 }

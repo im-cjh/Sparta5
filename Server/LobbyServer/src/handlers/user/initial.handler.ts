@@ -34,6 +34,7 @@ import { L2C_Init, L2C_InitSchema } from "src/protocol/server_pb";
 
 ---------------------------------------------*/
 const initialHandler = async (buffer: Buffer, session: LobbySession) => {
+  console.log("initialHandler: called");
   let packet: C2L_InitialPacket;
   try {
     packet = fromBinary(C2L_InitialPacketSchema, buffer);
@@ -53,10 +54,10 @@ const initialHandler = async (buffer: Buffer, session: LobbySession) => {
   }
 
   //2. 유저 정보 갱신
-  const user = await UserDb.findUserByDeviceID(packet.deviceId);
+  let user = await UserDb.findUserByDeviceID(packet.meta.userId);
   if (!user) {
     //2-1. 최초 접속 시 DB에 저장
-    await UserDb.createUser(packet.deviceId);
+    user = await UserDb.createUser(packet.meta.userId);
   } else {
     //2-2. 최초가 아니면 로그인 기록 갱신
     UserDb.updateUserLogin(user.id);
@@ -67,7 +68,7 @@ const initialHandler = async (buffer: Buffer, session: LobbySession) => {
   //3. 유저 정보 응답 생성
   const initPacket: L2C_Init = create(L2C_InitSchema, {
     meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
-    userId: packet.deviceId,
+    userId: packet.meta.userId,
   });
 
   //4. 유저 정보 직렬화

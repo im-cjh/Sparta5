@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file client.proto.
  */
 export const file_client: GenFile = /*@__PURE__*/
-  fileDesc("CgxjbGllbnQucHJvdG8SCFByb3RvY29sIjUKDEMyU19NZXRhZGF0YRIOCgZ1c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCSJLChFDMkxfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEhAKCGRldmljZUlkGAIgASgJYgZwcm90bzM");
+  fileDesc("CgxjbGllbnQucHJvdG8SCFByb3RvY29sIjUKDEMyU19NZXRhZGF0YRIOCgZ1c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCSJcChFDMkxfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEhAKCHBsYXllcklkGAIgASgNEg8KB2xhdGVuY3kYAyABKAJiBnByb3RvMw");
 
 /**
  * 공통 요청 메시지 구조
@@ -52,9 +52,14 @@ export type C2L_InitialPacket = Message<"Protocol.C2L_InitialPacket"> & {
   meta?: C2S_Metadata;
 
   /**
-   * @generated from field: string deviceId = 2;
+   * @generated from field: uint32 playerId = 2;
    */
-  deviceId: string;
+  playerId: number;
+
+  /**
+   * @generated from field: float latency = 3;
+   */
+  latency: number;
 };
 
 /**
