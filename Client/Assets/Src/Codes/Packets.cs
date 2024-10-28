@@ -28,6 +28,24 @@ public class Packets : MonoBehaviour
             throw;
         }
     }
+    public static string ExtractValue(string json, string key)
+    {
+        string pattern = $"\"{key}\":";
+        int startIndex = json.IndexOf(pattern) + pattern.Length;
+        int endIndex;
+
+        if (json[startIndex] == '\"')
+        {
+            startIndex++;
+            endIndex = json.IndexOf('\"', startIndex);
+        }
+        else
+        {
+            endIndex = json.IndexOfAny(new char[] { ',', '}' }, startIndex);
+        }
+
+        return json.Substring(startIndex, endIndex - startIndex).Trim('\"', ' ', '\t', '\n', '\r');
+    }
 }
 
 [ProtoContract]
@@ -103,4 +121,11 @@ public class Response {
 
     [ProtoMember(4)]
     public byte[] data { get; set; }
+}
+
+public class InitialData
+{
+    public string userId { get; set; }
+    public float x { get; set; }
+    public float y { get; set; }
 }

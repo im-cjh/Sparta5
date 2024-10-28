@@ -5,9 +5,14 @@ import { handleError } from "src/utils/error/errorHandler";
 import { CustomError } from "ServerCore/utils/error/CustomError";
 import handlerMappings from "src/handlers/user";
 import { ErrorCodes } from "ServerCore/utils/error/ErrorCodes";
+import { Socket } from "net";
 
 export class LobbySession extends Session {
   private nickname: string = "tmpName";
+
+  constructor(socket: Socket) {
+    super(socket);
+  }
   /*---------------------------------------------
     [onEnd]
     - 발생 조건: 상대방이 FIN패킷을 보냈을 때 
@@ -47,6 +52,7 @@ export class LobbySession extends Session {
     packet: Buffer,
     header: PacketHeader
   ): Promise<void> {
+    console.log("핸들러 호출");
     try {
       //1. sequence 검증
       if (this.sequence != header.sequence) {

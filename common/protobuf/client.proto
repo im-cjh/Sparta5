@@ -11,5 +11,6 @@ message C2S_Metadata {
 // 최초 패킷 구조
 message C2L_InitialPacket {
     C2S_Metadata meta = 1;
-    string deviceId = 2;
+    uint32 playerId = 2;
+    float latency = 3;
 }

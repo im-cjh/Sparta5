@@ -25,14 +25,15 @@ namespace Protocol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgxjbGllbnQucHJvdG8SCFByb3RvY29sIjUKDEMyU19NZXRhZGF0YRIOCgZ1",
-            "c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCSJLChFDMkxfSW5p",
+            "c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCSJcChFDMkxfSW5p",
             "dGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFk",
-            "YXRhEhAKCGRldmljZUlkGAIgASgJYgZwcm90bzM="));
+            "YXRhEhAKCHBsYXllcklkGAIgASgNEg8KB2xhdGVuY3kYAyABKAJiBnByb3Rv",
+            "Mw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2S_Metadata), global::Protocol.C2S_Metadata.Parser, new[]{ "UserId", "ClientVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2L_InitialPacket), global::Protocol.C2L_InitialPacket.Parser, new[]{ "Meta", "DeviceId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2L_InitialPacket), global::Protocol.C2L_InitialPacket.Parser, new[]{ "Meta", "PlayerId", "Latency" }, null, null, null, null)
           }));
     }
     #endregion
@@ -312,7 +313,8 @@ namespace Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public C2L_InitialPacket(C2L_InitialPacket other) : this() {
       meta_ = other.meta_ != null ? other.meta_.Clone() : null;
-      deviceId_ = other.deviceId_;
+      playerId_ = other.playerId_;
+      latency_ = other.latency_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -334,15 +336,27 @@ namespace Protocol {
       }
     }
 
-    /// <summary>Field number for the "deviceId" field.</summary>
-    public const int DeviceIdFieldNumber = 2;
-    private string deviceId_ = "";
+    /// <summary>Field number for the "playerId" field.</summary>
+    public const int PlayerIdFieldNumber = 2;
+    private uint playerId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string DeviceId {
-      get { return deviceId_; }
+    public uint PlayerId {
+      get { return playerId_; }
       set {
-        deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        playerId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "latency" field.</summary>
+    public const int LatencyFieldNumber = 3;
+    private float latency_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float Latency {
+      get { return latency_; }
+      set {
+        latency_ = value;
       }
     }
 
@@ -362,7 +376,8 @@ namespace Protocol {
         return true;
       }
       if (!object.Equals(Meta, other.Meta)) return false;
-      if (DeviceId != other.DeviceId) return false;
+      if (PlayerId != other.PlayerId) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Latency, other.Latency)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -371,7 +386,8 @@ namespace Protocol {
     public override int GetHashCode() {
       int hash = 1;
       if (meta_ != null) hash ^= Meta.GetHashCode();
-      if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
+      if (PlayerId != 0) hash ^= PlayerId.GetHashCode();
+      if (Latency != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Latency);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -394,9 +410,13 @@ namespace Protocol {
         output.WriteRawTag(10);
         output.WriteMessage(Meta);
       }
-      if (DeviceId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(DeviceId);
+      if (PlayerId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(PlayerId);
+      }
+      if (Latency != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Latency);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -412,9 +432,13 @@ namespace Protocol {
         output.WriteRawTag(10);
         output.WriteMessage(Meta);
       }
-      if (DeviceId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(DeviceId);
+      if (PlayerId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(PlayerId);
+      }
+      if (Latency != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Latency);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -429,8 +453,11 @@ namespace Protocol {
       if (meta_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Meta);
       }
-      if (DeviceId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
+      if (PlayerId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(PlayerId);
+      }
+      if (Latency != 0F) {
+        size += 1 + 4;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -450,8 +477,11 @@ namespace Protocol {
         }
         Meta.MergeFrom(other.Meta);
       }
-      if (other.DeviceId.Length != 0) {
-        DeviceId = other.DeviceId;
+      if (other.PlayerId != 0) {
+        PlayerId = other.PlayerId;
+      }
+      if (other.Latency != 0F) {
+        Latency = other.Latency;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -475,8 +505,12 @@ namespace Protocol {
             input.ReadMessage(Meta);
             break;
           }
-          case 18: {
-            DeviceId = input.ReadString();
+          case 16: {
+            PlayerId = input.ReadUInt32();
+            break;
+          }
+          case 29: {
+            Latency = input.ReadFloat();
             break;
           }
         }
@@ -501,8 +535,12 @@ namespace Protocol {
             input.ReadMessage(Meta);
             break;
           }
-          case 18: {
-            DeviceId = input.ReadString();
+          case 16: {
+            PlayerId = input.ReadUInt32();
+            break;
+          }
+          case 29: {
+            Latency = input.ReadFloat();
             break;
           }
         }

@@ -3,8 +3,10 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,8 +31,10 @@ public class NetworkManager : MonoBehaviour
         wait = new WaitForSecondsRealtime(5);
     }
     public void OnStartButtonClicked() {
-        string ip = ipInputField.text;
-        string port = portInputField.text;
+        //string ip = ipInputField.text;
+        string ip = "127.0.0.1";
+        string port = "3000";
+        //string port = portInputField.text;
 
         if (IsValidPort(port)) {
             int portNumber = int.Parse(port);
@@ -108,84 +112,42 @@ public class NetworkManager : MonoBehaviour
         uiNotice.transform.GetChild(index).gameObject.SetActive(false);
     }
 
-    public static byte[] ToBigEndian(byte[] bytes) {
-        if (BitConverter.IsLittleEndian)
-        {
-            Array.Reverse(bytes);
-        }
-        return bytes;
-    }
-
-    byte[] CreatePacketHeader(int dataLength, Packets.PacketType packetType) {
-        int packetLength = 4 + 1 + dataLength; // 전체 패킷 길이 (헤더 포함)
-        byte[] header = new byte[5]; // 4바이트 길이 + 1바이트 타입
-
-        // 첫 4바이트: 패킷 전체 길이
-        byte[] lengthBytes = BitConverter.GetBytes(packetLength);
-        lengthBytes = ToBigEndian(lengthBytes);
-        Array.Copy(lengthBytes, 0, header, 0, 4);
-
-        // 다음 1바이트: 패킷 타입
-        header[4] = (byte)packetType;
-
-        return header;
-    }
-
-    // 공통 패킷 생성 함수
-    async void SendPacket<T>(T payload, uint handlerId)
+    //패킷 전송
+    async void SendPacket(byte[] sendBuffer)
     {
-        // ArrayBufferWriter<byte>를 사용하여 직렬화
-        var payloadWriter = new ArrayBufferWriter<byte>();
-        Packets.Serialize(payloadWriter, payload);
-        byte[] payloadData = payloadWriter.WrittenSpan.ToArray();
-
-        CommonPacket commonPacket = new CommonPacket
-        {
-            handlerId = handlerId,
-            userId = GameManager.instance.deviceId,
-            version = GameManager.instance.version,
-            payload = payloadData,
-        };
-
-        // ArrayBufferWriter<byte>를 사용하여 직렬화
-        var commonPacketWriter = new ArrayBufferWriter<byte>();
-        Packets.Serialize(commonPacketWriter, commonPacket);
-        byte[] data = commonPacketWriter.WrittenSpan.ToArray();
-
-        // 헤더 생성
-        byte[] header = CreatePacketHeader(data.Length, Packets.PacketType.Normal);
-
-        // 패킷 생성
-        byte[] packet = new byte[header.Length + data.Length];
-        Array.Copy(header, 0, packet, 0, header.Length);
-        Array.Copy(data, 0, packet, header.Length, data.Length);
 
         await Task.Delay(GameManager.instance.latency);
         
         // 패킷 전송
-        stream.Write(packet, 0, packet.Length);
+        stream.Write(sendBuffer, 0, sendBuffer.Length);
     }
 
     void SendInitialPacket() {
-        InitialPayload initialPayload = new InitialPayload
+        Protocol.C2L_InitialPacket pkt = new Protocol.C2L_InitialPacket();
+        pkt.Meta = new Protocol.C2S_Metadata 
         {
-            deviceId = GameManager.instance.deviceId,
-            playerId = GameManager.instance.playerId,
-            latency = GameManager.instance.latency,
+            ClientVersion = GameManager.instance.version,
+            UserId = GameManager.instance.deviceId,
         };
+        pkt.Latency = GameManager.instance.latency;
+        pkt.PlayerId = GameManager.instance.playerId;
 
+        byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_Init, GameManager.instance.GetNextSequence());
+        Debug.Log(sendBuffer.Length);
         // handlerId는 0으로 가정
-        SendPacket(initialPayload, (uint)Packets.HandlerIds.Init);
+        SendPacket(sendBuffer);
     }
 
-    public void SendLocationUpdatePacket(float x, float y) {
-        LocationUpdatePayload locationUpdatePayload = new LocationUpdatePayload
-        {
-            x = x,
-            y = y,
-        };
+    public void SendLocationUpdatePacket(float x, float y) 
+    {
+        //LocationUpdatePayload locationUpdatePayload = new LocationUpdatePayload
+        //{
+        //    x = x,
+        //    y = y,
+        //};
 
-        SendPacket(locationUpdatePayload, (uint)Packets.HandlerIds.LocationUpdate);
+        
+//        SendPacket(sendBuffer);
     }
 
 
@@ -210,34 +172,61 @@ public class NetworkManager : MonoBehaviour
     void ProcessReceivedData(byte[] data, int length) {
          incompleteData.AddRange(data.AsSpan(0, length).ToArray());
 
-        while (incompleteData.Count >= 5)
+        Debug.Log("ProcessReceivedData"+ incompleteData.Count);
+        //헤더는 읽을 수 있음
+        while (incompleteData.Count >= Marshal.SizeOf(typeof(PacketHeader)))
         {
             // 패킷 길이와 타입 읽기
-            byte[] lengthBytes = incompleteData.GetRange(0, 4).ToArray();
-            int packetLength = BitConverter.ToInt32(ToBigEndian(lengthBytes), 0);
-            Packets.PacketType packetType = (Packets.PacketType)incompleteData[4];
+            //서버에서 subaray한거랑 비슷한듯 ㅎㅎ
+            byte[] lengthBytes = incompleteData.GetRange(0, Marshal.SizeOf(typeof(PacketHeader))).ToArray();
+            PacketHeader header = MemoryMarshal.Read<PacketHeader>(lengthBytes);
 
-            if (incompleteData.Count < packetLength)
+            // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
+            if (incompleteData.Count < header.size)
             {
-                // 데이터가 충분하지 않으면 반환
+                Debug.Log("데이터가 충분하지 않으면 반환" + incompleteData.Count+ " : " + header.size);
                 return;
             }
 
             // 패킷 데이터 추출
-            byte[] packetData = incompleteData.GetRange(5, packetLength - 5).ToArray();
-            incompleteData.RemoveRange(0, packetLength);
+            byte[] packetData = incompleteData.GetRange(Marshal.SizeOf(typeof(PacketHeader)), header.size - Marshal.SizeOf(typeof(PacketHeader))).ToArray();
+            incompleteData.RemoveRange(0, header.size);
 
             // Debug.Log($"Received packet: Length = {packetLength}, Type = {packetType}");
+            HandlePacket(packetData, header.size, header.id);
+        }
+    }
 
-            switch (packetType)
-            {
-                case Packets.PacketType.Normal:
-                    HandleNormalPacket(packetData);
-                    break;
-                case Packets.PacketType.Location:
-                    HandleLocationPacket(packetData);
-                    break;
-            }
+    /*---------------------------------------------
+  [handlePacket]
+  - 목적: 수신한 패킷의 Id에 맞는 함수 호출
+
+  1. 패킷 ID에 해당하는 핸들러 확인
+    1-1. 핸들러가 존재하지 않을 경우 오류 출력
+  2. 핸들러 호출
+---------------------------------------------*/
+    private void HandlePacket(byte[] pBuffer, ushort pLen, ePacketID pId)
+    {
+        //핸들러가 존재하지 않을 경우 오류 출력
+        Action<byte[], ushort> handler;
+        try
+        {
+            handler = PacketHandler.handlerMapping[pId];
+        }
+        catch (Exception e)
+        {
+            Debug.Log("패킷id가 잘못되었습니다: "+pId);
+            return; //throw e;
+        }
+        //핸들러 호출
+        try
+        {
+            handler(pBuffer, pLen);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+            return; //throw e;
         }
     }
 
@@ -253,21 +242,30 @@ public class NetworkManager : MonoBehaviour
         }
 
         if (response.data != null && response.data.Length > 0) {
-            if (response.handlerId == 0) {
-                GameManager.instance.GameStart();
-            }
-            ProcessResponseData(response.data);
+            ProcessResponseData(response);
         }
     }
 
-    void ProcessResponseData(byte[] data) {
-        try {
-            // var specificData = Packets.Deserialize<SpecificDataType>(data);
-            string jsonString = Encoding.UTF8.GetString(data);
-            Debug.Log($"Processed SpecificDataType: {jsonString}");
-        } catch (Exception e) {
-            Debug.LogError($"Error processing response data: {e.Message}");
-        }
+    void ProcessResponseData(Response response) {
+        //try {
+        //    string jsonString = Encoding.UTF8.GetString(response.data);
+
+        //    switch (response.handlerId) {
+        //        case (uint) Packets.HandlerIds.Init: {
+        //            InitialData data = new InitialData();
+        //            data.userId = Packets.ExtractValue(jsonString, "userId");
+        //            data.x = float.Parse(Packets.ExtractValue(jsonString, "x"));
+        //            data.y = float.Parse(Packets.ExtractValue(jsonString, "y"));
+        //            Debug.Log($"userId: {data.userId}, x: {data.x}, y: {data.y}");
+
+        //            GameManager.instance.GameStart(data);
+        //            break;
+        //        }
+        //    }
+
+        //} catch (Exception e) {
+        //    Debug.LogError($"Error processing response data: {e.Message}");
+        //}
     }
 
     void HandleLocationPacket(byte[] data) {

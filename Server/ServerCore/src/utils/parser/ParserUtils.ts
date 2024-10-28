@@ -13,9 +13,9 @@ export class ParserUtils {
     [헤더 파싱]
 ---------------------------------------------*/
   static readPacketHeader(buffer: Buffer): PacketHeader {
-    const size = buffer.readUInt16BE(0); //2바이트
-    const id = buffer.readUInt16BE(config.packet.sizeOfSize); // 2바이트
-    const sequence: number = buffer.readUint32BE(config.packet.sizeOfSequence);
+    const size = buffer.readUInt16LE(0); //2바이트
+    const id = buffer.readUInt16LE(config.packet.sizeOfSize); // 2바이트
+    const sequence: number = buffer.readUint32LE(config.packet.sizeOfSequence);
     return { size, id, sequence };
   }
 
@@ -37,11 +37,11 @@ export class ParserUtils {
     const header = sendBuffer.subarray(0, config.packet.sizeOfHeader);
 
     //size 삽입
-    header.writeUInt16BE(sendBufferSize);
+    header.writeUInt16LE(sendBufferSize);
     //id 삽입
-    header.writeUInt16BE(id, config.packet.sizeOfSize);
+    header.writeUInt16LE(id, config.packet.sizeOfSize);
     //sequence 삽입
-    header.writeUInt32BE(
+    header.writeUInt32LE(
       sequence,
       config.packet.sizeOfSize + config.packet.sizeOfId
     );

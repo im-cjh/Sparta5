@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     SpriteRenderer spriter;
     Animator anim;
     TextMeshPro myText;
-
+    
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -51,20 +51,16 @@ public class Player : MonoBehaviour
         NetworkManager.instance.SendLocationUpdatePacket(rigid.position.x, rigid.position.y);
     }
 
-
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         if (!GameManager.instance.isLive) {
             return;
         }
-        // 힘을 준다.
-        // rigid.AddForce(inputVec);
 
-        // 속도 제어
-        // rigid.velocity = inputVec;
-
-        // 위치 이동
+        // 클라이언트 입력을 사용한 이동
         Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
-        rigid.MovePosition(rigid.position + nextVec);
+        Vector2 nextPosition = rigid.position + nextVec;
+        rigid.MovePosition(nextPosition);
     }
 
     // Update가 끝난이후 적용
@@ -78,6 +74,18 @@ public class Player : MonoBehaviour
         if (inputVec.x != 0) {
             spriter.flipX = inputVec.x < 0;
         }
+    }
+
+    // 서버로부터 위치 업데이트를 수신할 때 호출될 메서드
+    public void UpdatePosition(float x, float y)
+    {
+        if (!GameManager.instance.isLive) {
+            return;
+        }
+        Debug.Log("----------------------------");
+        Debug.Log($"server x: {x}, y: {y}");
+        Debug.Log($"client x: {rigid.position.x}, y: {rigid.position.y}");
+        rigid.MovePosition(new Vector2(x, y));
     }
 
     void OnCollisionStay2D(Collision2D collision) {
