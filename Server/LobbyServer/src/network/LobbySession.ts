@@ -79,7 +79,17 @@ export class LobbySession extends Session {
     }
   }
 
+  /*---------------------------------------------
+    [getter]
+---------------------------------------------*/
   public getNickname() {
     return this.nickname;
+  }
+
+  /*---------------------------------------------
+    [setter]
+---------------------------------------------*/
+  public setNickname(nickname: string) {
+    this.nickname = nickname;
   }
 }

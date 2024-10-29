@@ -65,6 +65,7 @@ const initialHandler = async (buffer: Buffer, session: LobbySession) => {
 
   //3. session의 유저 id 갱신
   session.setId(user.id);
+  session.setNickname(packet.nickname);
   //3. 유저 정보 응답 생성
   const initPacket: L2C_Init = create(L2C_InitSchema, {
     meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),

@@ -13,4 +13,5 @@ message C2L_InitialPacket {
     C2S_Metadata meta = 1;
     uint32 playerId = 2;
     float latency = 3;
+    string nickname = 4;
 }

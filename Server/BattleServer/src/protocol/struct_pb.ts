@@ -12,14 +12,14 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file struct.proto.
  */
 export const file_struct: GenFile = /*@__PURE__*/
-  fileDesc("CgxzdHJ1Y3QucHJvdG8SCFByb3RvY29sIjIKB1Bvc0luZm8SEQoJb2JqZWN0X2lkGAEgASgJEgkKAXgYAiABKAISCQoBeRgDIAEoAiJcCgpPYmplY3RJbmZvEiMKCHBvc19pbmZvGAEgASgLMhEuUHJvdG9jb2wuUG9zSW5mbxIpCgtvYmplY3RfdHlwZRgCIAEoDjIULlByb3RvY29sLk9iamVjdFR5cGUiLAoIVXNlckluZm8SDgoGdXNlcklkGAEgASgJEhAKCG5pY2tuYW1lGAIgASgJYgZwcm90bzM", [file_enum]);
+  fileDesc("CgxzdHJ1Y3QucHJvdG8SCFByb3RvY29sIjEKB1Bvc0luZm8SEAoIb2JqZWN0SWQYASABKAkSCQoBeBgCIAEoAhIJCgF5GAMgASgCIloKCk9iamVjdEluZm8SIgoHcG9zSW5mbxgBIAEoCzIRLlByb3RvY29sLlBvc0luZm8SKAoKb2JqZWN0VHlwZRgCIAEoDjIULlByb3RvY29sLk9iamVjdFR5cGUiLAoIVXNlckluZm8SDgoGdXNlcklkGAEgASgJEhAKCG5pY2tuYW1lGAIgASgJIlQKCFJvb21JbmZvEg4KBnJvb21JZBgBIAEoDRIQCghyb29tTmFtZRgCIAEoCRIUCgxjdXJyZW50Q291bnQYAyABKAUSEAoIbWF4Q291bnQYBCABKAViBnByb3RvMw", [file_enum]);
 
 /**
  * @generated from message Protocol.PosInfo
  */
 export type PosInfo = Message<"Protocol.PosInfo"> & {
   /**
-   * @generated from field: string object_id = 1;
+   * @generated from field: string objectId = 1;
    */
   objectId: string;
 
@@ -46,14 +46,14 @@ export const PosInfoSchema: GenMessage<PosInfo> = /*@__PURE__*/
  */
 export type ObjectInfo = Message<"Protocol.ObjectInfo"> & {
   /**
-   * @generated from field: Protocol.PosInfo pos_info = 1;
+   * @generated from field: Protocol.PosInfo posInfo = 1;
    */
   posInfo?: PosInfo;
 
   /**
    * OBJECT_TYPE_CREATURE, OBJECT_TYPE_PROJECTILE, OBJECT_TYPE_ENV;
    *
-   * @generated from field: Protocol.ObjectType object_type = 2;
+   * @generated from field: Protocol.ObjectType objectType = 2;
    */
   objectType: ObjectType;
 };
@@ -90,4 +90,44 @@ export type UserInfo = Message<"Protocol.UserInfo"> & {
  */
 export const UserInfoSchema: GenMessage<UserInfo> = /*@__PURE__*/
   messageDesc(file_struct, 2);
+
+/**
+ * @generated from message Protocol.RoomInfo
+ */
+export type RoomInfo = Message<"Protocol.RoomInfo"> & {
+  /**
+   * 방 ID
+   *
+   * @generated from field: uint32 roomId = 1;
+   */
+  roomId: number;
+
+  /**
+   * 방 이름
+   *
+   * @generated from field: string roomName = 2;
+   */
+  roomName: string;
+
+  /**
+   * 현재 인원 수
+   *
+   * @generated from field: int32 currentCount = 3;
+   */
+  currentCount: number;
+
+  /**
+   * 최대 인원 수
+   *
+   * @generated from field: int32 maxCount = 4;
+   */
+  maxCount: number;
+};
+
+/**
+ * Describes the message Protocol.RoomInfo.
+ * Use `create(RoomInfoSchema)` to create a new message.
+ */
+export const RoomInfoSchema: GenMessage<RoomInfo> = /*@__PURE__*/
+  messageDesc(file_struct, 3);
 

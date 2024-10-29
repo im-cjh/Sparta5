@@ -1,49 +1,54 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.EditorTools;
+using System;
 
 public class LobbyManager : MonoBehaviour
 {
-    public Button createRoomButton; // 방 생성 버튼
-    public Transform roomListContent; // Scroll View의 Content에 할당
-    public GameObject roomItemPrefab; // RoomItem 프리팹
+    public static LobbyManager instance;
 
-    // 방 생성 UI 관련 변수
-    public GameObject roomCreationPanel;
-    public InputField roomNameInput;
-    public Button createRoomConfirmButton;
-    public Button cancelRoomButton;
+    [Header("UI References")]
+    public Button createRoomButton;            // 방 생성 버튼
+    public Transform roomListContent;          // 방 목록 Scroll View의 Content
+    public GameObject roomItemPrefab;          // RoomItem 프리팹
+    public GameObject roomCreationPanel;       // 방 생성 패널
+    public InputField roomNameInput;           // 방 이름 입력 필드
+    public Button createRoomConfirmButton;     // 방 생성 확인 버튼
+    public Button cancelRoomButton;            // 방 생성 취소 버튼
 
-    private List<string> rooms = new List<string>(); // 예제 방 데이터
+    private List<RoomData> mRooms = new List<RoomData>(); // 방 목록 데이터 (예: 방 이름 및 인원 수)
 
     void Start()
     {
-        // 방 생성 버튼 이벤트 연결
-        createRoomButton.onClick.AddListener(ShowRoomCreationPanel);
+        instance = this;
+        DontDestroyOnLoad(this);
 
-        // 방 생성 확인 및 취소 버튼 이벤트 연결
+        // 초기 UI 설정 및 이벤트 연결
+        createRoomButton.onClick.AddListener(ShowRoomCreationPanel);
         createRoomConfirmButton.onClick.AddListener(CreateRoom);
         cancelRoomButton.onClick.AddListener(HideRoomCreationPanel);
 
-        // 방 목록 초기화
-        RefreshRoomList();
+        // 서버로부터 방 목록 요청
+        RequestRoomList();
     }
 
     // 방 생성 패널을 표시하는 함수
-    void ShowRoomCreationPanel()
+    private void ShowRoomCreationPanel()
     {
         roomNameInput.text = ""; // 입력 필드 초기화
         roomCreationPanel.SetActive(true); // 패널 활성화
     }
 
     // 방 생성 패널을 숨기는 함수
-    void HideRoomCreationPanel()
+    private void HideRoomCreationPanel()
     {
         roomCreationPanel.SetActive(false); // 패널 비활성화
     }
 
     // 방 생성 함수
-    void CreateRoom()
+    private void CreateRoom()
     {
         string roomName = roomNameInput.text.Trim();
 
@@ -54,28 +59,79 @@ public class LobbyManager : MonoBehaviour
             return;
         }
 
-        // 방 이름 추가 및 방 목록 갱신
-        rooms.Add(roomName);
-        RefreshRoomList();
+        // 새 방 추가
+        mRooms.Add(new RoomData(1, roomName, 1, 4)); // 기본적으로 최대 인원 4명으로 설정
 
-        // 방 생성 패널 숨기기
-        HideRoomCreationPanel();
+        RefreshRoomList(); // 방 목록 갱신
+        HideRoomCreationPanel(); // 방 생성 패널 닫기
     }
 
     // 방 목록 UI 갱신 함수
-    void RefreshRoomList()
+    public void RefreshRoomList()
     {
-        // 기존 방 목록 제거
+        // 기존 방 목록 UI 제거
         foreach (Transform child in roomListContent)
         {
             Destroy(child.gameObject);
         }
 
         // 새로운 방 목록 UI 추가
-        foreach (var roomName in rooms)
+        foreach (var room in mRooms)
         {
             GameObject roomItem = Instantiate(roomItemPrefab, roomListContent);
-            roomItem.GetComponentInChildren<Text>().text = roomName;
+
+            // 방 이름 설정
+            roomItem.transform.Find("RoomNameText").GetComponent<TextMeshProUGUI>().text = room.roomName;
+
+            // 인원 수 설정 (예: "1/4")
+            roomItem.transform.Find("RoomCountText").GetComponent<TextMeshProUGUI>().text = $"{room.currentCount}/{room.maxCount}";
+
+
+            // 입장 버튼에 이벤트 추가
+            Button enterButton = roomItem.transform.Find("EnterRoomButton").GetComponent<Button>();
+            enterButton.onClick.AddListener(() => EnterRoom(room.roomId));
         }
+    }
+
+    // 방 입장 함수
+    private void EnterRoom(UInt32 pRoomId)
+    {
+        Debug.Log("EnterRoom called");
+
+        Protocol.C2L_EnterRoom pkt = new Protocol.C2L_EnterRoom();
+        pkt.Meta = new Protocol.C2S_Metadata
+        {
+            ClientVersion = NewGameManager.instance.version,
+            UserId = NewGameManager.instance.deviceId,
+        };
+        pkt.RoomId = pRoomId;
+
+        byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_EnterRoom, NewGameManager.instance.GetNextSequence());
+        NetworkManager.instance.SendPacket(sendBuffer);
+    }
+
+    public void OnRecvRooms(List<RoomData> roomData)
+    {
+        mRooms = roomData;
+
+        RefreshRoomList();
+    }
+
+    public void OnRecvEnterRoomMe(List<UserData> userDatas)
+    {
+        Debug.Log("OnRecvEnterRoomMe");
+        RoomManager.instance.OnRecvUserData(userDatas);
+    }
+    public void RequestRoomList()
+    {
+        Protocol.C2L_RoomList pkt = new Protocol.C2L_RoomList();
+        pkt.Meta = new Protocol.C2S_Metadata
+        {
+            ClientVersion = NewGameManager.instance.version,
+            UserId = NewGameManager.instance.deviceId,
+        };
+
+        byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_GetRooms, NewGameManager.instance.GetNextSequence());
+        NetworkManager.instance.SendPacket(sendBuffer);
     }
 }

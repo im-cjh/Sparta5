@@ -8,7 +8,7 @@ import type { C2S_Metadata } from "./client_pb";
 import { file_client } from "./client_pb";
 import type { S2C_Metadata } from "./server_pb";
 import { file_server } from "./server_pb";
-import type { UserInfo } from "./struct_pb";
+import type { RoomInfo, UserInfo } from "./struct_pb";
 import { file_struct } from "./struct_pb";
 import type { Message } from "@bufbuild/protobuf";
 
@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file room.proto.
  */
 export const file_room: GenFile = /*@__PURE__*/
-  fileDesc("Cgpyb29tLnByb3RvEghQcm90b2NvbCJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgEInIKFEwyQ19FbnRlclJvb21OZXdVc2VyEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESEQoJaXNFbnRlcmVkGAIgASgIEiEKBXVzZXJzGAMgAygLMhIuUHJvdG9jb2wuVXNlckluZm8iYwoWTDJDX0VudGVyUm9vbUV4aXN0VXNlchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEiMKB25ld1VzZXIYAiABKAsyEi5Qcm90b2NvbC5Vc2VySW5mb2IGcHJvdG8z", [file_client, file_server, file_struct]);
+  fileDesc("Cgpyb29tLnByb3RvEghQcm90b2NvbCJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgNIm0KD0wyQ19FbnRlclJvb21NZRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIhCgV1c2VycxgDIAMoCzISLlByb3RvY29sLlVzZXJJbmZvIl8KEkwyQ19FbnRlclJvb21PdGhlchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEiMKB25ld1VzZXIYAiABKAsyEi5Qcm90b2NvbC5Vc2VySW5mbyI0CgxDMkxfUm9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLkMyU19NZXRhZGF0YSJXCgxMMkNfUm9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIhCgVyb29tcxgCIAMoCzISLlByb3RvY29sLlJvb21JbmZvYgZwcm90bzM", [file_client, file_server, file_struct]);
 
 /**
  * 방 입장 요청 패킷
@@ -32,9 +32,9 @@ export type C2L_EnterRoom = Message<"Protocol.C2L_EnterRoom"> & {
   /**
    * 입장하려는 Room ID
    *
-   * @generated from field: uint64 roomId = 2;
+   * @generated from field: uint32 roomId = 2;
    */
-  roomId: bigint;
+  roomId: number;
 };
 
 /**
@@ -45,11 +45,11 @@ export const C2L_EnterRoomSchema: GenMessage<C2L_EnterRoom> = /*@__PURE__*/
   messageDesc(file_room, 0);
 
 /**
- * 방 입장 응답 패킷(신규 유저)
+ * 방 입장 응답 패킷(내가 입장)
  *
- * @generated from message Protocol.L2C_EnterRoomNewUser
+ * @generated from message Protocol.L2C_EnterRoomMe
  */
-export type L2C_EnterRoomNewUser = Message<"Protocol.L2C_EnterRoomNewUser"> & {
+export type L2C_EnterRoomMe = Message<"Protocol.L2C_EnterRoomMe"> & {
   /**
    * 공통 응답 메타 데이터
    *
@@ -73,18 +73,18 @@ export type L2C_EnterRoomNewUser = Message<"Protocol.L2C_EnterRoomNewUser"> & {
 };
 
 /**
- * Describes the message Protocol.L2C_EnterRoomNewUser.
- * Use `create(L2C_EnterRoomNewUserSchema)` to create a new message.
+ * Describes the message Protocol.L2C_EnterRoomMe.
+ * Use `create(L2C_EnterRoomMeSchema)` to create a new message.
  */
-export const L2C_EnterRoomNewUserSchema: GenMessage<L2C_EnterRoomNewUser> = /*@__PURE__*/
+export const L2C_EnterRoomMeSchema: GenMessage<L2C_EnterRoomMe> = /*@__PURE__*/
   messageDesc(file_room, 1);
 
 /**
- * 방 입장 응답 패킷(기존 유저)
+ * 방 입장 응답 패킷(남이 입장)
  *
- * @generated from message Protocol.L2C_EnterRoomExistUser
+ * @generated from message Protocol.L2C_EnterRoomOther
  */
-export type L2C_EnterRoomExistUser = Message<"Protocol.L2C_EnterRoomExistUser"> & {
+export type L2C_EnterRoomOther = Message<"Protocol.L2C_EnterRoomOther"> & {
   /**
    * 공통 응답 메타 데이터
    *
@@ -101,9 +101,52 @@ export type L2C_EnterRoomExistUser = Message<"Protocol.L2C_EnterRoomExistUser"> 
 };
 
 /**
- * Describes the message Protocol.L2C_EnterRoomExistUser.
- * Use `create(L2C_EnterRoomExistUserSchema)` to create a new message.
+ * Describes the message Protocol.L2C_EnterRoomOther.
+ * Use `create(L2C_EnterRoomOtherSchema)` to create a new message.
  */
-export const L2C_EnterRoomExistUserSchema: GenMessage<L2C_EnterRoomExistUser> = /*@__PURE__*/
+export const L2C_EnterRoomOtherSchema: GenMessage<L2C_EnterRoomOther> = /*@__PURE__*/
   messageDesc(file_room, 2);
+
+/**
+ * @generated from message Protocol.C2L_RoomList
+ */
+export type C2L_RoomList = Message<"Protocol.C2L_RoomList"> & {
+  /**
+   * @generated from field: Protocol.C2S_Metadata meta = 1;
+   */
+  meta?: C2S_Metadata;
+};
+
+/**
+ * Describes the message Protocol.C2L_RoomList.
+ * Use `create(C2L_RoomListSchema)` to create a new message.
+ */
+export const C2L_RoomListSchema: GenMessage<C2L_RoomList> = /*@__PURE__*/
+  messageDesc(file_room, 3);
+
+/**
+ * @generated from message Protocol.L2C_RoomList
+ */
+export type L2C_RoomList = Message<"Protocol.L2C_RoomList"> & {
+  /**
+   * 공통 응답 메타 데이터
+   *
+   * @generated from field: Protocol.S2C_Metadata meta = 1;
+   */
+  meta?: S2C_Metadata;
+
+  /**
+   * 방 목록
+   *
+   * @generated from field: repeated Protocol.RoomInfo rooms = 2;
+   */
+  rooms: RoomInfo[];
+};
+
+/**
+ * Describes the message Protocol.L2C_RoomList.
+ * Use `create(L2C_RoomListSchema)` to create a new message.
+ */
+export const L2C_RoomListSchema: GenMessage<L2C_RoomList> = /*@__PURE__*/
+  messageDesc(file_room, 4);
 

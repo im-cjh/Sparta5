@@ -2,30 +2,50 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class RoomManager : MonoBehaviour
 {
-    public Transform playerListContent; // Scroll View의 Content에 할당
-    public GameObject playerItemPrefab; // PlayerItem 프리팹
+    public static RoomManager instance;
 
-    public Button gameStartButton; // 게임 시작 버튼
+    public GameObject playerListPanel;        // 방에 접속한 유저 패널
+    public GameObject roomListPanel;        // 방 목록 패널
+    public Transform playerListContent;       // Scroll View의 Content에 할당
+    public GameObject playerItemPrefab;       // PlayerItem 프리팹
+    public Button gameStartButton;            // 게임 시작 버튼
 
-    private List<string> players = new List<string>(); // 방에 있는 플레이어 목록
-    private bool isHost = false; // 호스트 여부 확인
+    private List<UserData> users = new List<UserData>(); // 방의 플레이어 목록
+    private bool isHost = false;                        // 호스트 여부 확인
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
-        // 방장이면 게임 시작 버튼을 활성화
-        gameStartButton.interactable = isHost;
+        //gameStartButton.interactable = isHost;
         gameStartButton.onClick.AddListener(StartGame);
 
-        // 방에 들어오면서 플레이어 목록을 갱신
-        RefreshPlayerList();
+        // 기본적으로 PlayerListPanel을 비활성화
+        playerListPanel.SetActive(false);
     }
 
-    // 방에 있는 플레이어 목록 UI 갱신 함수
+    // 방 입장 함수
+    public void EnterRoom(string roomName)
+    {
+        Debug.Log($"{roomName} 방에 입장합니다.");
+        //방 목록 판넬 disable
+        roomListPanel.SetActive(false);
+
+        // PlayerListPanel 활성화
+        playerListPanel.SetActive(true);
+    }
+
+    // 방의 플레이어 목록 UI 갱신 함수
     public void RefreshPlayerList()
     {
+        Debug.Log(users);
         // 기존 플레이어 목록 UI 제거
         foreach (Transform child in playerListContent)
         {
@@ -33,38 +53,40 @@ public class RoomManager : MonoBehaviour
         }
 
         // 새로운 플레이어 목록 UI 추가
-        foreach (var playerName in players)
+        foreach (var user in users)
         {
             GameObject playerItem = Instantiate(playerItemPrefab, playerListContent);
-            playerItem.GetComponentInChildren<Text>().text = playerName;
+
+            playerItem.transform.Find("PlayerIdText").GetComponent<TextMeshProUGUI>().text = user.userId;
+            playerItem.transform.Find("PlayerNameText").GetComponent<TextMeshProUGUI>().text = user.userName;
+            
+            //playerItem.GetComponentInChildren<TextMeshProUGUI>().text = user.userName;
         }
+    }
+
+    public void OnRecvUserData(List<UserData> pUsers)
+    {
+        Debug.Log("OnRecvUserData called");
+
+        roomListPanel.SetActive(false );
+        playerListPanel.SetActive(true);
+
+        users = pUsers;
+        Debug.Log(users);
+        RefreshPlayerList();
     }
 
     // 게임 시작 함수 (호스트만 시작 가능)
     void StartGame()
     {
-        if (!isHost)
+        //if (!isHost)
+        if (false)
         {
             Debug.Log("호스트만 게임을 시작할 수 있습니다.");
             return;
         }
 
-        // 게임 씬으로 이동 (예: GameScene)
-        SceneManager.LoadScene("GameScene");
-    }
-
-    // 플레이어 추가 함수
-    public void AddPlayer(string playerName)
-    {
-        players.Add(playerName);
-        RefreshPlayerList();
-    }
-
-    // 플레이어 제거 함수
-    public void RemovePlayer(string playerName)
-    {
-        players.Remove(playerName);
-        RefreshPlayerList();
+        
     }
 
     // 호스트 설정 함수 (방장만 게임 시작 버튼 활성화)

@@ -4,10 +4,7 @@ import { ePacketId } from "ServerCore/network/PacketId";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
 import { eRoomStateId } from "src/constants/roomState";
 import { LobbySession } from "src/network/LobbySession";
-import {
-  L2C_EnterRoomNewUser,
-  L2C_EnterRoomNewUserSchema,
-} from "src/protocol/room_pb";
+import { L2C_EnterRoomMe, L2C_EnterRoomMeSchema } from "src/protocol/room_pb";
 import { UserInfoSchema } from "src/protocol/struct_pb";
 import { ResponseUtils } from "src/utils/response/ResponseUtils";
 
@@ -16,6 +13,7 @@ export class Room {
     [멤버 변수]
 ---------------------------------------------*/
   private id: number;
+  private roomName: string;
   private users: Array<LobbySession>;
   //private users: Set<LobbySession>;
   private state: eRoomStateId;
@@ -24,8 +22,9 @@ export class Room {
   /*---------------------------------------------
     [생성자]
 ---------------------------------------------*/
-  constructor(id: number, maxPlayerCount: number = 2) {
+  constructor(id: number, roomName: string, maxPlayerCount: number = 2) {
     this.id = id;
+    this.roomName = roomName;
     this.users = new Array();
     //this.users = new Set();
     this.state = eRoomStateId.WAITING; // 'waiting', 'inProgress'
@@ -62,7 +61,7 @@ export class Room {
         );
         //}
       }
-      let packet: L2C_EnterRoomNewUser = create(L2C_EnterRoomNewUserSchema, {
+      let packet: L2C_EnterRoomMe = create(L2C_EnterRoomMeSchema, {
         meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
         isEntered: true,
         users: existUsers,
@@ -70,8 +69,8 @@ export class Room {
 
       const sendBuffer = ParserUtils.SerializePacket(
         packet,
-        L2C_EnterRoomNewUserSchema,
-        ePacketId.L2C_EnterRoom,
+        L2C_EnterRoomMeSchema,
+        ePacketId.L2C_EnterRoomMe,
         newUser.getNextSequence()
       );
       console.log("Serialized packet size:", sendBuffer.length);
@@ -118,5 +117,20 @@ export class Room {
     //생성한 Game에 players정보 넣기
 
     //gameStart패킷 전송
+  }
+
+  /*---------------------------------------------
+    [getter]
+---------------------------------------------*/
+  getRoomName() {
+    return this.roomName;
+  }
+
+  getUsesCount() {
+    return this.users.length;
+  }
+
+  getMaxUserCount() {
+    return this.maxPlayerCount;
   }
 }

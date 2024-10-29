@@ -48,14 +48,13 @@ export abstract class Session {
     while (true) {
       //최소한 헤더는 파싱할 수 있어야 한다
       if (this.buffer.length < config.packet.sizeOfHeader) {
-        console.log("헤더도 파싱X");
         break;
       }
 
       let header: PacketHeader = ParserUtils.readPacketHeader(this.buffer);
       // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
       if (this.buffer.length < header.size) {
-        console.log("헤더도 파싱X2", header.size);
+        console.log("파싱X", this.buffer.length, header.size);
         break;
       }
 

@@ -26,18 +26,23 @@ namespace Protocol {
           string.Concat(
             "Cgpyb29tLnByb3RvEghQcm90b2NvbBoMY2xpZW50LnByb3RvGgxzZXJ2ZXIu",
             "cHJvdG8aDHN0cnVjdC5wcm90byJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEY",
-            "ASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgE",
-            "InIKFEwyQ19FbnRlclJvb21OZXdVc2VyEiQKBG1ldGEYASABKAsyFi5Qcm90",
-            "b2NvbC5TMkNfTWV0YWRhdGESEQoJaXNFbnRlcmVkGAIgASgIEiEKBXVzZXJz",
-            "GAMgAygLMhIuUHJvdG9jb2wuVXNlckluZm8iYwoWTDJDX0VudGVyUm9vbUV4",
-            "aXN0VXNlchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRh",
-            "EiMKB25ld1VzZXIYAiABKAsyEi5Qcm90b2NvbC5Vc2VySW5mb2IGcHJvdG8z"));
+            "ASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgN",
+            "Im0KD0wyQ19FbnRlclJvb21NZRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wu",
+            "UzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIhCgV1c2VycxgDIAMo",
+            "CzISLlByb3RvY29sLlVzZXJJbmZvIl8KEkwyQ19FbnRlclJvb21PdGhlchIk",
+            "CgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEiMKB25ld1Vz",
+            "ZXIYAiABKAsyEi5Qcm90b2NvbC5Vc2VySW5mbyI0CgxDMkxfUm9vbUxpc3QS",
+            "JAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLkMyU19NZXRhZGF0YSJXCgxMMkNf",
+            "Um9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0",
+            "YRIhCgVyb29tcxgCIAMoCzISLlByb3RvY29sLlJvb21JbmZvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protocol.ClientReflection.Descriptor, global::Protocol.ServerReflection.Descriptor, global::Protocol.StructReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2L_EnterRoom), global::Protocol.C2L_EnterRoom.Parser, new[]{ "Meta", "RoomId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.L2C_EnterRoomNewUser), global::Protocol.L2C_EnterRoomNewUser.Parser, new[]{ "Meta", "IsEntered", "Users" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.L2C_EnterRoomExistUser), global::Protocol.L2C_EnterRoomExistUser.Parser, new[]{ "Meta", "NewUser" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.L2C_EnterRoomMe), global::Protocol.L2C_EnterRoomMe.Parser, new[]{ "Meta", "IsEntered", "Users" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.L2C_EnterRoomOther), global::Protocol.L2C_EnterRoomOther.Parser, new[]{ "Meta", "NewUser" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2L_RoomList), global::Protocol.C2L_RoomList.Parser, new[]{ "Meta" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.L2C_RoomList), global::Protocol.L2C_RoomList.Parser, new[]{ "Meta", "Rooms" }, null, null, null, null)
           }));
     }
     #endregion
@@ -106,13 +111,13 @@ namespace Protocol {
 
     /// <summary>Field number for the "roomId" field.</summary>
     public const int RoomIdFieldNumber = 2;
-    private ulong roomId_;
+    private uint roomId_;
     /// <summary>
     /// 입장하려는 Room ID
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ulong RoomId {
+    public uint RoomId {
       get { return roomId_; }
       set {
         roomId_ = value;
@@ -144,7 +149,7 @@ namespace Protocol {
     public override int GetHashCode() {
       int hash = 1;
       if (meta_ != null) hash ^= Meta.GetHashCode();
-      if (RoomId != 0UL) hash ^= RoomId.GetHashCode();
+      if (RoomId != 0) hash ^= RoomId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -167,9 +172,9 @@ namespace Protocol {
         output.WriteRawTag(10);
         output.WriteMessage(Meta);
       }
-      if (RoomId != 0UL) {
+      if (RoomId != 0) {
         output.WriteRawTag(16);
-        output.WriteUInt64(RoomId);
+        output.WriteUInt32(RoomId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -185,9 +190,9 @@ namespace Protocol {
         output.WriteRawTag(10);
         output.WriteMessage(Meta);
       }
-      if (RoomId != 0UL) {
+      if (RoomId != 0) {
         output.WriteRawTag(16);
-        output.WriteUInt64(RoomId);
+        output.WriteUInt32(RoomId);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -202,8 +207,8 @@ namespace Protocol {
       if (meta_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Meta);
       }
-      if (RoomId != 0UL) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(RoomId);
+      if (RoomId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RoomId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -223,7 +228,7 @@ namespace Protocol {
         }
         Meta.MergeFrom(other.Meta);
       }
-      if (other.RoomId != 0UL) {
+      if (other.RoomId != 0) {
         RoomId = other.RoomId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -249,7 +254,7 @@ namespace Protocol {
             break;
           }
           case 16: {
-            RoomId = input.ReadUInt64();
+            RoomId = input.ReadUInt32();
             break;
           }
         }
@@ -275,7 +280,7 @@ namespace Protocol {
             break;
           }
           case 16: {
-            RoomId = input.ReadUInt64();
+            RoomId = input.ReadUInt32();
             break;
           }
         }
@@ -286,18 +291,18 @@ namespace Protocol {
   }
 
   /// <summary>
-  /// 방 입장 응답 패킷(신규 유저)
+  /// 방 입장 응답 패킷(내가 입장)
   /// </summary>
-  public sealed partial class L2C_EnterRoomNewUser : pb::IMessage<L2C_EnterRoomNewUser>
+  public sealed partial class L2C_EnterRoomMe : pb::IMessage<L2C_EnterRoomMe>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<L2C_EnterRoomNewUser> _parser = new pb::MessageParser<L2C_EnterRoomNewUser>(() => new L2C_EnterRoomNewUser());
+    private static readonly pb::MessageParser<L2C_EnterRoomMe> _parser = new pb::MessageParser<L2C_EnterRoomMe>(() => new L2C_EnterRoomMe());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<L2C_EnterRoomNewUser> Parser { get { return _parser; } }
+    public static pb::MessageParser<L2C_EnterRoomMe> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -313,7 +318,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public L2C_EnterRoomNewUser() {
+    public L2C_EnterRoomMe() {
       OnConstruction();
     }
 
@@ -321,7 +326,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public L2C_EnterRoomNewUser(L2C_EnterRoomNewUser other) : this() {
+    public L2C_EnterRoomMe(L2C_EnterRoomMe other) : this() {
       meta_ = other.meta_ != null ? other.meta_.Clone() : null;
       isEntered_ = other.isEntered_;
       users_ = other.users_.Clone();
@@ -330,8 +335,8 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public L2C_EnterRoomNewUser Clone() {
-      return new L2C_EnterRoomNewUser(this);
+    public L2C_EnterRoomMe Clone() {
+      return new L2C_EnterRoomMe(this);
     }
 
     /// <summary>Field number for the "meta" field.</summary>
@@ -381,12 +386,12 @@ namespace Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as L2C_EnterRoomNewUser);
+      return Equals(other as L2C_EnterRoomMe);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(L2C_EnterRoomNewUser other) {
+    public bool Equals(L2C_EnterRoomMe other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -477,7 +482,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(L2C_EnterRoomNewUser other) {
+    public void MergeFrom(L2C_EnterRoomMe other) {
       if (other == null) {
         return;
       }
@@ -559,18 +564,18 @@ namespace Protocol {
   }
 
   /// <summary>
-  ///방 입장 응답 패킷(기존 유저)
+  ///방 입장 응답 패킷(남이 입장)
   /// </summary>
-  public sealed partial class L2C_EnterRoomExistUser : pb::IMessage<L2C_EnterRoomExistUser>
+  public sealed partial class L2C_EnterRoomOther : pb::IMessage<L2C_EnterRoomOther>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<L2C_EnterRoomExistUser> _parser = new pb::MessageParser<L2C_EnterRoomExistUser>(() => new L2C_EnterRoomExistUser());
+    private static readonly pb::MessageParser<L2C_EnterRoomOther> _parser = new pb::MessageParser<L2C_EnterRoomOther>(() => new L2C_EnterRoomOther());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<L2C_EnterRoomExistUser> Parser { get { return _parser; } }
+    public static pb::MessageParser<L2C_EnterRoomOther> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -586,7 +591,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public L2C_EnterRoomExistUser() {
+    public L2C_EnterRoomOther() {
       OnConstruction();
     }
 
@@ -594,7 +599,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public L2C_EnterRoomExistUser(L2C_EnterRoomExistUser other) : this() {
+    public L2C_EnterRoomOther(L2C_EnterRoomOther other) : this() {
       meta_ = other.meta_ != null ? other.meta_.Clone() : null;
       newUser_ = other.newUser_ != null ? other.newUser_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -602,8 +607,8 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public L2C_EnterRoomExistUser Clone() {
-      return new L2C_EnterRoomExistUser(this);
+    public L2C_EnterRoomOther Clone() {
+      return new L2C_EnterRoomOther(this);
     }
 
     /// <summary>Field number for the "meta" field.</summary>
@@ -639,12 +644,12 @@ namespace Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as L2C_EnterRoomExistUser);
+      return Equals(other as L2C_EnterRoomOther);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(L2C_EnterRoomExistUser other) {
+    public bool Equals(L2C_EnterRoomOther other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -730,7 +735,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(L2C_EnterRoomExistUser other) {
+    public void MergeFrom(L2C_EnterRoomOther other) {
       if (other == null) {
         return;
       }
@@ -802,6 +807,434 @@ namespace Protocol {
               NewUser = new global::Protocol.UserInfo();
             }
             input.ReadMessage(NewUser);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class C2L_RoomList : pb::IMessage<C2L_RoomList>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<C2L_RoomList> _parser = new pb::MessageParser<C2L_RoomList>(() => new C2L_RoomList());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<C2L_RoomList> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protocol.RoomReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2L_RoomList() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2L_RoomList(C2L_RoomList other) : this() {
+      meta_ = other.meta_ != null ? other.meta_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2L_RoomList Clone() {
+      return new C2L_RoomList(this);
+    }
+
+    /// <summary>Field number for the "meta" field.</summary>
+    public const int MetaFieldNumber = 1;
+    private global::Protocol.C2S_Metadata meta_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Protocol.C2S_Metadata Meta {
+      get { return meta_; }
+      set {
+        meta_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as C2L_RoomList);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(C2L_RoomList other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Meta, other.Meta)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (meta_ != null) hash ^= Meta.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (meta_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Meta);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (meta_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Meta);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (meta_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Meta);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(C2L_RoomList other) {
+      if (other == null) {
+        return;
+      }
+      if (other.meta_ != null) {
+        if (meta_ == null) {
+          Meta = new global::Protocol.C2S_Metadata();
+        }
+        Meta.MergeFrom(other.Meta);
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (meta_ == null) {
+              Meta = new global::Protocol.C2S_Metadata();
+            }
+            input.ReadMessage(Meta);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (meta_ == null) {
+              Meta = new global::Protocol.C2S_Metadata();
+            }
+            input.ReadMessage(Meta);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class L2C_RoomList : pb::IMessage<L2C_RoomList>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<L2C_RoomList> _parser = new pb::MessageParser<L2C_RoomList>(() => new L2C_RoomList());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<L2C_RoomList> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Protocol.RoomReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public L2C_RoomList() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public L2C_RoomList(L2C_RoomList other) : this() {
+      meta_ = other.meta_ != null ? other.meta_.Clone() : null;
+      rooms_ = other.rooms_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public L2C_RoomList Clone() {
+      return new L2C_RoomList(this);
+    }
+
+    /// <summary>Field number for the "meta" field.</summary>
+    public const int MetaFieldNumber = 1;
+    private global::Protocol.S2C_Metadata meta_;
+    /// <summary>
+    ///공통 응답 메타 데이터
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Protocol.S2C_Metadata Meta {
+      get { return meta_; }
+      set {
+        meta_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "rooms" field.</summary>
+    public const int RoomsFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Protocol.RoomInfo> _repeated_rooms_codec
+        = pb::FieldCodec.ForMessage(18, global::Protocol.RoomInfo.Parser);
+    private readonly pbc::RepeatedField<global::Protocol.RoomInfo> rooms_ = new pbc::RepeatedField<global::Protocol.RoomInfo>();
+    /// <summary>
+    ///방 목록
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Protocol.RoomInfo> Rooms {
+      get { return rooms_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as L2C_RoomList);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(L2C_RoomList other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Meta, other.Meta)) return false;
+      if(!rooms_.Equals(other.rooms_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (meta_ != null) hash ^= Meta.GetHashCode();
+      hash ^= rooms_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (meta_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Meta);
+      }
+      rooms_.WriteTo(output, _repeated_rooms_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (meta_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Meta);
+      }
+      rooms_.WriteTo(ref output, _repeated_rooms_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (meta_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Meta);
+      }
+      size += rooms_.CalculateSize(_repeated_rooms_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(L2C_RoomList other) {
+      if (other == null) {
+        return;
+      }
+      if (other.meta_ != null) {
+        if (meta_ == null) {
+          Meta = new global::Protocol.S2C_Metadata();
+        }
+        Meta.MergeFrom(other.Meta);
+      }
+      rooms_.Add(other.rooms_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (meta_ == null) {
+              Meta = new global::Protocol.S2C_Metadata();
+            }
+            input.ReadMessage(Meta);
+            break;
+          }
+          case 18: {
+            rooms_.AddEntriesFrom(input, _repeated_rooms_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (meta_ == null) {
+              Meta = new global::Protocol.S2C_Metadata();
+            }
+            input.ReadMessage(Meta);
+            break;
+          }
+          case 18: {
+            rooms_.AddEntriesFrom(ref input, _repeated_rooms_codec);
             break;
           }
         }

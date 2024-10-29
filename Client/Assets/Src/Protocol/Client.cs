@@ -25,15 +25,15 @@ namespace Protocol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgxjbGllbnQucHJvdG8SCFByb3RvY29sIjUKDEMyU19NZXRhZGF0YRIOCgZ1",
-            "c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCSJcChFDMkxfSW5p",
+            "c2VySWQYASABKAkSFQoNY2xpZW50VmVyc2lvbhgCIAEoCSJuChFDMkxfSW5p",
             "dGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFk",
-            "YXRhEhAKCHBsYXllcklkGAIgASgNEg8KB2xhdGVuY3kYAyABKAJiBnByb3Rv",
-            "Mw=="));
+            "YXRhEhAKCHBsYXllcklkGAIgASgNEg8KB2xhdGVuY3kYAyABKAISEAoIbmlj",
+            "a25hbWUYBCABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2S_Metadata), global::Protocol.C2S_Metadata.Parser, new[]{ "UserId", "ClientVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2L_InitialPacket), global::Protocol.C2L_InitialPacket.Parser, new[]{ "Meta", "PlayerId", "Latency" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2L_InitialPacket), global::Protocol.C2L_InitialPacket.Parser, new[]{ "Meta", "PlayerId", "Latency", "Nickname" }, null, null, null, null)
           }));
     }
     #endregion
@@ -315,6 +315,7 @@ namespace Protocol {
       meta_ = other.meta_ != null ? other.meta_.Clone() : null;
       playerId_ = other.playerId_;
       latency_ = other.latency_;
+      nickname_ = other.nickname_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -360,6 +361,18 @@ namespace Protocol {
       }
     }
 
+    /// <summary>Field number for the "nickname" field.</summary>
+    public const int NicknameFieldNumber = 4;
+    private string nickname_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Nickname {
+      get { return nickname_; }
+      set {
+        nickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -378,6 +391,7 @@ namespace Protocol {
       if (!object.Equals(Meta, other.Meta)) return false;
       if (PlayerId != other.PlayerId) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Latency, other.Latency)) return false;
+      if (Nickname != other.Nickname) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -388,6 +402,7 @@ namespace Protocol {
       if (meta_ != null) hash ^= Meta.GetHashCode();
       if (PlayerId != 0) hash ^= PlayerId.GetHashCode();
       if (Latency != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Latency);
+      if (Nickname.Length != 0) hash ^= Nickname.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -418,6 +433,10 @@ namespace Protocol {
         output.WriteRawTag(29);
         output.WriteFloat(Latency);
       }
+      if (Nickname.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Nickname);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -440,6 +459,10 @@ namespace Protocol {
         output.WriteRawTag(29);
         output.WriteFloat(Latency);
       }
+      if (Nickname.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Nickname);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -458,6 +481,9 @@ namespace Protocol {
       }
       if (Latency != 0F) {
         size += 1 + 4;
+      }
+      if (Nickname.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Nickname);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -482,6 +508,9 @@ namespace Protocol {
       }
       if (other.Latency != 0F) {
         Latency = other.Latency;
+      }
+      if (other.Nickname.Length != 0) {
+        Nickname = other.Nickname;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -513,6 +542,10 @@ namespace Protocol {
             Latency = input.ReadFloat();
             break;
           }
+          case 34: {
+            Nickname = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -541,6 +574,10 @@ namespace Protocol {
           }
           case 29: {
             Latency = input.ReadFloat();
+            break;
+          }
+          case 34: {
+            Nickname = input.ReadString();
             break;
           }
         }

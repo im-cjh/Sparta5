@@ -5,7 +5,15 @@ import { LobbySession } from "src/network/LobbySession";
 import { ResponseUtils } from "src/utils/response/ResponseUtils";
 import { Room } from "../models/Room";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
-import { C2L_EnterRoom, C2L_EnterRoomSchema } from "src/protocol/room_pb";
+import {
+  C2L_EnterRoom,
+  C2L_EnterRoomSchema,
+  C2L_RoomList,
+  C2L_RoomListSchema,
+  L2C_RoomListSchema,
+} from "src/protocol/room_pb";
+import { RoomInfoSchema } from "src/protocol/struct_pb";
+import { ePacketId } from "ServerCore/network/PacketId";
 
 class RoomManager {
   /*---------------------------------------------
@@ -13,10 +21,10 @@ class RoomManager {
   -users: 
     일단 LobbySession으로 사용하기...
 ---------------------------------------------*/
-  private rooms = new Map<BigInt, Room>();
+  private rooms = new Map<number, Room>();
 
   constructor() {
-    this.rooms.set(BigInt(0), new Room(0, 2));
+    this.rooms.set(0, new Room(0, "정현의 방", 2));
   }
 
   /*---------------------------------------------
@@ -36,7 +44,40 @@ class RoomManager {
   /*---------------------------------------------
     [방 퇴장]
 ---------------------------------------------*/
-  leaveRoom() {}
+  leaveRoomHandler(buffer: Buffer, session: LobbySession) {}
+
+  /*---------------------------------------------
+    [방 목록 조회]
+---------------------------------------------*/
+  getRoomsHandler(buffer: Buffer, session: LobbySession) {
+    console.log("getRoomsHandler called");
+    // 방 목록을 담을 배열 초기화
+    const roomInfos = [];
+
+    // 방 목록을 순회하면서 RoomInfo 메시지 생성
+    for (const [roomId, room] of this.rooms) {
+      const roomInfo = create(RoomInfoSchema, {
+        roomId,
+        roomName: room.getRoomName(),
+        currentCount: room.getUsesCount(),
+        maxCount: room.getMaxUserCount(),
+      });
+      roomInfos.push(roomInfo);
+    }
+
+    const packet = create(L2C_RoomListSchema, {
+      meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
+      rooms: roomInfos,
+    });
+
+    const sendBuffer = ParserUtils.SerializePacket(
+      packet,
+      L2C_RoomListSchema,
+      ePacketId.L2C_GetRoom,
+      session.getNextSequence()
+    );
+    session.send(sendBuffer);
+  }
 }
 
 export const roomManager = new RoomManager();
