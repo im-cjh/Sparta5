@@ -42,6 +42,7 @@ public class PacketHandler
         handlerMapping[ePacketID.L2C_Init] = HandleInitPacket;
         handlerMapping[ePacketID.L2C_GetRoom] = HandleRoomsPacket;
         handlerMapping[ePacketID.L2C_EnterRoomMe] = HandleEnterRoomMe;
+        handlerMapping[ePacketID.L2C_EnterRoomOther] = HandleEnterRoomOther;
     }
 
 
@@ -110,5 +111,8 @@ public class PacketHandler
     [방 입장 응답]
     - 다른 플레이어가 방에 입장했을 때
 ---------------------------------------------*/
-
+    static void HandleEnterRoomOther(byte[] pBuffer)
+    {
+        Debug.Log("HandleEnterRoomOther Called");
+    }
 }

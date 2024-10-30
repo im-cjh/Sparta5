@@ -5,6 +5,7 @@ import { lobbyConfig } from "./config/config";
 
 import { LobbySession } from "./network/LobbySession";
 import { onConnection } from "./events/onConnection";
+import { BattleSession } from "./network/BattleSession";
 
 const server: Server = net.createServer(onConnection);
 /*---------------------------------------------
@@ -14,6 +15,9 @@ const server: Server = net.createServer(onConnection);
 export const sessionManager: SessionManager<LobbySession> = new SessionManager(
   LobbySession
 );
+
+export const battleSessionManager: SessionManager<BattleSession> =
+  new SessionManager(BattleSession);
 
 initServer()
   .then(() => {

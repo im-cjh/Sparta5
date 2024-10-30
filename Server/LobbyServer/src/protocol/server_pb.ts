@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file server.proto.
  */
 export const file_server: GenFile = /*@__PURE__*/
-  fileDesc("CgxzZXJ2ZXIucHJvdG8SCFByb3RvY29sIjcKDFMyQ19NZXRhZGF0YRIUCgxyZXNwb25zZUNvZGUYASABKA0SEQoJdGltZXN0YW1wGAIgASgDIkAKCEwyQ19Jbml0EiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESDgoGdXNlcklkGAIgASgJIkIKCVMyQ19FcnJvchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEg8KB21lc3NhZ2UYAiABKAliBnByb3RvMw");
+  fileDesc("CgxzZXJ2ZXIucHJvdG8SCFByb3RvY29sIjcKDFMyQ19NZXRhZGF0YRIUCgxyZXNwb25zZUNvZGUYASABKA0SEQoJdGltZXN0YW1wGAIgASgDIkAKCEwyQ19Jbml0EiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESDgoGdXNlcklkGAIgASgJIkIKCVMyQ19FcnJvchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEg8KB21lc3NhZ2UYAiABKAkiJQoRQjJMX0luaXRpYWxQYWNrZXQSEAoIc2VydmVySWQYASABKAliBnByb3RvMw");
 
 /**
  * 공통 응답 메시지 구조
@@ -95,4 +95,25 @@ export type S2C_Error = Message<"Protocol.S2C_Error"> & {
  */
 export const S2C_ErrorSchema: GenMessage<S2C_Error> = /*@__PURE__*/
   messageDesc(file_server, 2);
+
+/**
+ * 초기화 메시지
+ *
+ * @generated from message Protocol.B2L_InitialPacket
+ */
+export type B2L_InitialPacket = Message<"Protocol.B2L_InitialPacket"> & {
+  /**
+   * UUID
+   *
+   * @generated from field: string serverId = 1;
+   */
+  serverId: string;
+};
+
+/**
+ * Describes the message Protocol.B2L_InitialPacket.
+ * Use `create(B2L_InitialPacketSchema)` to create a new message.
+ */
+export const B2L_InitialPacketSchema: GenMessage<B2L_InitialPacket> = /*@__PURE__*/
+  messageDesc(file_server, 3);
 

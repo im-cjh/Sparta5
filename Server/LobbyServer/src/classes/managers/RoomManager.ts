@@ -99,6 +99,7 @@ class RoomManager {
     [게임 시작]
     
     - 배틀서버에게 게임 방 생성 요청
+    - 클라에게 배틀 서버의 주소와 포트번호, 게임 방ID 전송 
   ---------------------------------------------*/
   public gameStartHandler(buffer: Buffer, sesison: LobbySession) {
     console.log("gameStartHandler");

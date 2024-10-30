@@ -2,7 +2,7 @@ import { Socket } from "net";
 import { PacketHeader } from "ServerCore/network/PacketHeader";
 import { Session } from "ServerCore/network/Session";
 
-class BattleServerSession extends Session {
+export class BattleSession extends Session {
   constructor(socket: Socket) {
     super(socket);
   }

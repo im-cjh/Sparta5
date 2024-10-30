@@ -83,6 +83,8 @@ export abstract class Session {
 ---------------------------------------------*/
   protected abstract onError(error: any): void;
 
+  public onInit(): void {}
+
   /*---------------------------------------------
     [handlePacket]
     - 목적: 수신한 패킷의 Id에 맞는 함수 호출

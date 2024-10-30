@@ -16,6 +16,7 @@ export enum ePacketId {
   C2L_LeaveRoom = 3,
   C2L_GetRooms = 4,
   C2L_GameStart = 5,
+  C2B_Init = 21,
   L2C_Init = 51,
   L2C_EnterRoomMe = 52,
   L2C_EnterRoomOther = 53,
@@ -23,4 +24,7 @@ export enum ePacketId {
   L2C_LeaveRoomOther = 55,
   L2C_GetRoom = 56,
   L2C_GameStart = 57,
+  L2B_Init = 61,
+  B2C_Init = 101,
+  B2L_Init = 121,
 }

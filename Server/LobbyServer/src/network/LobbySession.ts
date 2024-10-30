@@ -21,7 +21,7 @@ export class LobbySession extends Session {
   protected onEnd(): void {
     console.log("클라이언트 연결이 종료되었습니다.");
 
-    sessionManager.removeSession(this);
+    sessionManager.removeSession(this.getId());
   }
 
   /*---------------------------------------------
@@ -36,7 +36,7 @@ export class LobbySession extends Session {
 
     handleError(this, new CustomError(500, `소켓 오류: ${error.message}`));
     // 세션에서 유저 삭제
-    console.log("유저 제거: ", sessionManager.removeSession(this));
+    console.log("유저 제거: ", sessionManager.removeSession(this.getId()));
   }
 
   /*---------------------------------------------

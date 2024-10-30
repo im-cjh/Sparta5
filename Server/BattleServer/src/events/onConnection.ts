@@ -1,6 +1,4 @@
 import { Socket } from "net";
-import { battleSessionManager, sessionManager } from "src/server";
-import { LobbySession } from "src/network/LobbySession";
 import { config } from "ServerCore/config/config";
 import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
 import { PacketHeader } from "ServerCore/network/PacketHeader";
@@ -35,12 +33,9 @@ export const onConnection = (socket: Socket): void => {
 
     const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
 
-    if (header.id == ePacketId.C2L_Init) {
+    if (header.id == ePacketId.C2B_Init) {
       console.log("클라 접속");
-      initialHandler(packet, socket, ePacketId.C2L_Init);
-    } else if (header.id == ePacketId.B2L_Init) {
-      console.log("배틀 서버 접속");
-      initialHandler(packet, socket, ePacketId.B2L_Init);
+      initialHandler(packet, socket);
     } else {
       console.log("먼지 모르겥는거 두두등장");
       socket.destroy();
