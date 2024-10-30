@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file room.proto.
  */
 export const file_room: GenFile = /*@__PURE__*/
-  fileDesc("Cgpyb29tLnByb3RvEghQcm90b2NvbCJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgNIm0KD0wyQ19FbnRlclJvb21NZRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIhCgV1c2VycxgDIAMoCzISLlByb3RvY29sLlVzZXJJbmZvIl8KEkwyQ19FbnRlclJvb21PdGhlchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEiMKB25ld1VzZXIYAiABKAsyEi5Qcm90b2NvbC5Vc2VySW5mbyI0CgxDMkxfUm9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLkMyU19NZXRhZGF0YSJXCgxMMkNfUm9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIhCgVyb29tcxgCIAMoCzISLlByb3RvY29sLlJvb21JbmZvYgZwcm90bzM", [file_client, file_server, file_struct]);
+  fileDesc("Cgpyb29tLnByb3RvEghQcm90b2NvbCJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgNIn0KD0wyQ19FbnRlclJvb21NZRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIhCgV1c2VycxgDIAMoCzISLlByb3RvY29sLlVzZXJJbmZvEg4KBnJvb21JZBgEIAEoDSJfChJMMkNfRW50ZXJSb29tT3RoZXISJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIjCgduZXdVc2VyGAIgASgLMhIuUHJvdG9jb2wuVXNlckluZm8iVQoNQzJMX0xlYXZlUm9vbRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIOCgZ1c2VySWQYAyABKAkiNwoPTDJDX0xlYXZlUm9vbU1lEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGEiSgoSTDJDX0xlYXZlUm9vbU90aGVyEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESDgoGdXNlcklkGAIgASgJIjQKDEMyTF9Sb29tTGlzdBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhIlcKDEwyQ19Sb29tTGlzdBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEiEKBXJvb21zGAIgAygLMhIuUHJvdG9jb2wuUm9vbUluZm8iRQoNQzJMX0dhbWVTdGFydBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDSJRCg1MMkNfR2FtZVN0YXJ0EiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESDAoEaG9zdBgCIAEoCRIMCgRwb3J0GAMgASgNYgZwcm90bzM", [file_client, file_server, file_struct]);
 
 /**
  * 방 입장 요청 패킷
@@ -70,6 +70,11 @@ export type L2C_EnterRoomMe = Message<"Protocol.L2C_EnterRoomMe"> & {
    * @generated from field: repeated Protocol.UserInfo users = 3;
    */
   users: UserInfo[];
+
+  /**
+   * @generated from field: uint32 roomId = 4;
+   */
+  roomId: number;
 };
 
 /**
@@ -108,6 +113,76 @@ export const L2C_EnterRoomOtherSchema: GenMessage<L2C_EnterRoomOther> = /*@__PUR
   messageDesc(file_room, 2);
 
 /**
+ * @generated from message Protocol.C2L_LeaveRoom
+ */
+export type C2L_LeaveRoom = Message<"Protocol.C2L_LeaveRoom"> & {
+  /**
+   * @generated from field: Protocol.C2S_Metadata meta = 1;
+   */
+  meta?: C2S_Metadata;
+
+  /**
+   * @generated from field: uint32 roomId = 2;
+   */
+  roomId: number;
+
+  /**
+   * @generated from field: string userId = 3;
+   */
+  userId: string;
+};
+
+/**
+ * Describes the message Protocol.C2L_LeaveRoom.
+ * Use `create(C2L_LeaveRoomSchema)` to create a new message.
+ */
+export const C2L_LeaveRoomSchema: GenMessage<C2L_LeaveRoom> = /*@__PURE__*/
+  messageDesc(file_room, 3);
+
+/**
+ * @generated from message Protocol.L2C_LeaveRoomMe
+ */
+export type L2C_LeaveRoomMe = Message<"Protocol.L2C_LeaveRoomMe"> & {
+  /**
+   * 공통 응답 메타 데이터
+   *
+   * @generated from field: Protocol.S2C_Metadata meta = 1;
+   */
+  meta?: S2C_Metadata;
+};
+
+/**
+ * Describes the message Protocol.L2C_LeaveRoomMe.
+ * Use `create(L2C_LeaveRoomMeSchema)` to create a new message.
+ */
+export const L2C_LeaveRoomMeSchema: GenMessage<L2C_LeaveRoomMe> = /*@__PURE__*/
+  messageDesc(file_room, 4);
+
+/**
+ * @generated from message Protocol.L2C_LeaveRoomOther
+ */
+export type L2C_LeaveRoomOther = Message<"Protocol.L2C_LeaveRoomOther"> & {
+  /**
+   * 공통 응답 메타 데이터
+   *
+   * @generated from field: Protocol.S2C_Metadata meta = 1;
+   */
+  meta?: S2C_Metadata;
+
+  /**
+   * @generated from field: string userId = 2;
+   */
+  userId: string;
+};
+
+/**
+ * Describes the message Protocol.L2C_LeaveRoomOther.
+ * Use `create(L2C_LeaveRoomOtherSchema)` to create a new message.
+ */
+export const L2C_LeaveRoomOtherSchema: GenMessage<L2C_LeaveRoomOther> = /*@__PURE__*/
+  messageDesc(file_room, 5);
+
+/**
  * @generated from message Protocol.C2L_RoomList
  */
 export type C2L_RoomList = Message<"Protocol.C2L_RoomList"> & {
@@ -122,7 +197,7 @@ export type C2L_RoomList = Message<"Protocol.C2L_RoomList"> & {
  * Use `create(C2L_RoomListSchema)` to create a new message.
  */
 export const C2L_RoomListSchema: GenMessage<C2L_RoomList> = /*@__PURE__*/
-  messageDesc(file_room, 3);
+  messageDesc(file_room, 6);
 
 /**
  * @generated from message Protocol.L2C_RoomList
@@ -148,5 +223,62 @@ export type L2C_RoomList = Message<"Protocol.L2C_RoomList"> & {
  * Use `create(L2C_RoomListSchema)` to create a new message.
  */
 export const L2C_RoomListSchema: GenMessage<L2C_RoomList> = /*@__PURE__*/
-  messageDesc(file_room, 4);
+  messageDesc(file_room, 7);
+
+/**
+ * @generated from message Protocol.C2L_GameStart
+ */
+export type C2L_GameStart = Message<"Protocol.C2L_GameStart"> & {
+  /**
+   * @generated from field: Protocol.C2S_Metadata meta = 1;
+   */
+  meta?: C2S_Metadata;
+
+  /**
+   * 입장하려는 Room ID
+   *
+   * @generated from field: uint32 roomId = 2;
+   */
+  roomId: number;
+};
+
+/**
+ * Describes the message Protocol.C2L_GameStart.
+ * Use `create(C2L_GameStartSchema)` to create a new message.
+ */
+export const C2L_GameStartSchema: GenMessage<C2L_GameStart> = /*@__PURE__*/
+  messageDesc(file_room, 8);
+
+/**
+ * @generated from message Protocol.L2C_GameStart
+ */
+export type L2C_GameStart = Message<"Protocol.L2C_GameStart"> & {
+  /**
+   * 공통 응답 메타 데이터
+   *
+   * @generated from field: Protocol.S2C_Metadata meta = 1;
+   */
+  meta?: S2C_Metadata;
+
+  /**
+   * ex: localhost
+   *
+   * @generated from field: string host = 2;
+   */
+  host: string;
+
+  /**
+   * 포트번호
+   *
+   * @generated from field: uint32 port = 3;
+   */
+  port: number;
+};
+
+/**
+ * Describes the message Protocol.L2C_GameStart.
+ * Use `create(L2C_GameStartSchema)` to create a new message.
+ */
+export const L2C_GameStartSchema: GenMessage<L2C_GameStart> = /*@__PURE__*/
+  messageDesc(file_room, 9);
 

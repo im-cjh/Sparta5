@@ -8,12 +8,18 @@ import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
 import {
   C2L_EnterRoom,
   C2L_EnterRoomSchema,
+  C2L_LeaveRoom,
+  C2L_LeaveRoomSchema,
   C2L_RoomList,
   C2L_RoomListSchema,
   L2C_RoomListSchema,
 } from "src/protocol/room_pb";
 import { RoomInfoSchema } from "src/protocol/struct_pb";
 import { ePacketId } from "ServerCore/network/PacketId";
+import { CustomError } from "ServerCore/utils/error/CustomError";
+import { ErrorCodes } from "ServerCore/utils/error/ErrorCodes";
+
+const MAX_ROOMS_SIZE: number = 10000;
 
 class RoomManager {
   /*---------------------------------------------
@@ -22,9 +28,14 @@ class RoomManager {
     일단 LobbySession으로 사용하기...
 ---------------------------------------------*/
   private rooms = new Map<number, Room>();
+  private availableRoomIds = Array.from(
+    { length: MAX_ROOMS_SIZE },
+    (_, i) => i + 1
+  );
 
   constructor() {
-    this.rooms.set(0, new Room(0, "정현의 방", 2));
+    const tmpRoomId: number = this.availableRoomIds.shift() || 0;
+    this.rooms.set(tmpRoomId, new Room(tmpRoomId, "정현의 방", 2));
   }
 
   /*---------------------------------------------
@@ -44,7 +55,12 @@ class RoomManager {
   /*---------------------------------------------
     [방 퇴장]
 ---------------------------------------------*/
-  leaveRoomHandler(buffer: Buffer, session: LobbySession) {}
+  leaveRoomHandler(buffer: Buffer, session: LobbySession) {
+    console.log("leaveRoomHandler");
+    // 패킷 분해
+    const packet: C2L_LeaveRoom = fromBinary(C2L_LeaveRoomSchema, buffer);
+    this.rooms.get(packet.roomId)?.leaveRoom(session);
+  }
 
   /*---------------------------------------------
     [방 목록 조회]
@@ -78,6 +94,28 @@ class RoomManager {
     );
     session.send(sendBuffer);
   }
-}
 
+  /*---------------------------------------------
+    [게임 시작]
+    
+    - 배틀서버에게 게임 방 생성 요청
+  ---------------------------------------------*/
+  public gameStartHandler(buffer: Buffer, sesison: LobbySession) {
+    console.log("gameStartHandler");
+  }
+  /*---------------------------------------------
+    [방 ID 해제]
+    사용하지 않는 방 ID를 큐에 반환하여 재사용 가능하게 만듦
+  ---------------------------------------------*/
+  public freeRoomId(roomId: number) {
+    if (!this.rooms.has(roomId)) {
+      console.log("유효하지 않은 roomID");
+      return;
+      //throw new CustomError(ErrorCodes.)
+    }
+
+    this.rooms.delete(roomId);
+    this.availableRoomIds.push(roomId);
+  }
+}
 export const roomManager = new RoomManager();

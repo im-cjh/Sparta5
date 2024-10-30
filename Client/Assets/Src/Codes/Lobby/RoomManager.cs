@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class RoomManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class RoomManager : MonoBehaviour
 
     private List<UserData> users = new List<UserData>(); // 방의 플레이어 목록
     private bool isHost = false;                        // 호스트 여부 확인
+    private UInt32 roomId;
 
     void Awake()
     {
@@ -86,7 +88,6 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
-        
     }
 
     // 호스트 설정 함수 (방장만 게임 시작 버튼 활성화)
@@ -94,5 +95,19 @@ public class RoomManager : MonoBehaviour
     {
         isHost = hostStatus;
         gameStartButton.interactable = isHost;
+    }
+
+    private void RequestGameStart()
+    {
+        Protocol.C2L_GameStart pkt = new Protocol.C2L_GameStart();
+        pkt.Meta = new Protocol.C2S_Metadata
+        {
+            ClientVersion = NewGameManager.instance.version,
+            UserId = NewGameManager.instance.deviceId,
+        };
+        pkt.RoomId = roomId;
+
+        byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_GameStart, NewGameManager.instance.GetNextSequence());
+        NetworkManager.instance.SendPacket(sendBuffer);
     }
 }

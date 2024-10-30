@@ -96,7 +96,7 @@ public class PacketHandler
         {
             throw new Exception("방 입장 실패");
         }
-
+        
         List<UserData> users = new List<UserData>();
         foreach(var user in pkt.Users)
         {

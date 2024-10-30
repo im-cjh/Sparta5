@@ -31,6 +31,11 @@ const handlerMappings: Record<ePacketId, PacketHandler> = {
     defaultHandler(buffer, session),
   [ePacketId.L2C_LeaveRoomOther]: (buffer: Buffer, session: LobbySession) =>
     defaultHandler(buffer, session),
+  [ePacketId.C2L_GameStart]: (buffer: Buffer, session: LobbySession) => 
+    roomManager.gameStartHandler(buffer, sesison);
+    
+  [ePacketId.L2C_GameStart]: (buffer: Buffer, session: LobbySession) =>
+    defaultHandler(buffer, session),
 };
 
 export default handlerMappings;

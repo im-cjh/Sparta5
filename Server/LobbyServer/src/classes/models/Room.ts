@@ -15,7 +15,6 @@ export class Room {
   private id: number;
   private roomName: string;
   private users: Array<LobbySession>;
-  //private users: Set<LobbySession>;
   private state: eRoomStateId;
   private maxPlayerCount: number;
 
@@ -33,22 +32,20 @@ export class Room {
 
   /*---------------------------------------------
     [방 입장]
+    // 1. 방이 가득 찼는지 확인
+    // 2. 기존 플레이어 목록을 유저에게 보내기
+    // 3.  유저 추가
+    // 4. 새 유저 입장 정보를 다른 유저들에게 알리기
 ---------------------------------------------*/
   public enterRoom(newUser: LobbySession): boolean {
     console.log("Room::enterRoom");
     //1. 방이 가득 찼는지 확인
     if (this.users.length >= this.maxPlayerCount) {
-      //if (this.users.size >= this.maxPlayerCount) {
       console.log("풀방");
       return false;
     }
 
-    //2.  유저 추가
-    this.users.push(newUser);
-    //this.users.add(newUser);
-    console.log("2.  유저 추가");
-
-    //3. 기존 플레이어 목록을 유저에게 보내기
+    //2. 기존 플레이어 목록을 유저에게 보내기
     {
       const existUsers = [];
       for (const user of this.users) {
@@ -76,17 +73,33 @@ export class Room {
       console.log("Serialized packet size:", sendBuffer.length);
       newUser.send(sendBuffer);
     }
-    console.log("3.  기존 플레이어 목록을 유저에게 보내기");
-    //4. 유저 입장을 다른 플레이어들에게 알리기
-    console.log("4. 유저 입장을 다른 플레이어들에게 알리기");
-    //6. 입장한 유저 정보를 기존 플레이어들에게 보내기
 
-    //7. 가득 찼다면 3초 뒤 게임 시작
-    // if (this.players.length === this.maxPlayerCount) {
-    //   setTimeout(() => {
-    //     this.startGame();
-    //   }, 3000);
-    // }
+    //3.  유저 추가
+    this.users.push(newUser);
+
+    // 4. 새 유저 입장 정보를 다른 유저들에게 알리기
+    {
+      const newUserInfo = create(UserInfoSchema, {
+        userId: newUser.getId(),
+        nickname: newUser.getNickname(),
+      });
+
+      const packet: L2C_EnterRoomMe = create(L2C_EnterRoomMeSchema, {
+        meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
+        isEntered: true,
+        users: [newUserInfo],
+      });
+
+      const sendBuffer: Buffer = ParserUtils.SerializePacket(
+        packet,
+        L2C_EnterRoomMeSchema,
+        ePacketId.L2C_EnterRoomOther,
+        0
+      );
+
+      this.broadcast(sendBuffer);
+    }
+
     return true;
   }
 
@@ -119,6 +132,14 @@ export class Room {
     //gameStart패킷 전송
   }
 
+  /*---------------------------------------------
+    [broadcast]
+---------------------------------------------*/
+  private broadcast(buffer: Buffer) {
+    for (const user of this.users) {
+      user.send(buffer);
+    }
+  }
   /*---------------------------------------------
     [getter]
 ---------------------------------------------*/
