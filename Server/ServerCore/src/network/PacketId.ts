@@ -25,6 +25,8 @@ export enum ePacketId {
   L2C_GetRoom = 56,
   L2C_GameStart = 57,
   L2B_Init = 61,
+  L2B_CreateRoom = 62,
   B2C_Init = 101,
   B2L_Init = 121,
+  B2L_CreateRoom = 122,
 }

@@ -147,11 +147,11 @@ export class Room {
     return this.roomName;
   }
 
-  getUsesCount() {
+  getCurrentUsersCount() {
     return this.users.length;
   }
 
-  getMaxUserCount() {
+  getMaxUsersCount() {
     return this.maxPlayerCount;
   }
 }

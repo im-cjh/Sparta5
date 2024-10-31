@@ -62,6 +62,7 @@ message C2L_GameStart
 {
     C2S_Metadata meta = 1;
     uint32 roomId = 2;       // 입장하려는 Room ID
+    uint32 maxPlayers = 3;
 }
 
 message L2C_GameStart
@@ -69,5 +70,15 @@ message L2C_GameStart
     S2C_Metadata meta = 1; //공통 응답 메타 데이터
     string host = 2; //ex: localhost
     uint32 port = 3; //포트번호
-    
+}
+
+message L2B_CreateRoom
+{
+  uint32 roomId = 1;
+  uint32 maxPlayers = 2;
+}
+
+message B2L_CreateRoom
+{
+  bool isCreated = 1;
 }

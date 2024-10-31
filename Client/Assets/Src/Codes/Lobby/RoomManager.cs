@@ -97,7 +97,7 @@ public class RoomManager : MonoBehaviour
         gameStartButton.interactable = isHost;
     }
 
-    private void RequestGameStart()
+    public void RequestGameStart()
     {
         Protocol.C2L_GameStart pkt = new Protocol.C2L_GameStart();
         pkt.Meta = new Protocol.C2S_Metadata

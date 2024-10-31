@@ -16,5 +16,4 @@ message C2B_InitialPacket
 message B2C_EnterRoom
 {
     S2C_Metadata meta = 1;
-    string s = 2;
 }
