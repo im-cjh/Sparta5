@@ -1,4 +1,6 @@
 import {
+  BATTLE_HOST,
+  BATTLE_PORT,
   CLIENT_VERSION,
   DB1_HOST,
   DB1_NAME,
@@ -12,12 +14,16 @@ import {
   DB2_USER,
   HOST,
   PORT,
-} from "../constants/env";
+} from '../constants/env';
 
 export const lobbyConfig = {
   server: {
     port: PORT,
     host: HOST,
+  },
+  battleServer: {
+    port: BATTLE_PORT,
+    host: BATTLE_HOST,
   },
   client: {
     version: CLIENT_VERSION,

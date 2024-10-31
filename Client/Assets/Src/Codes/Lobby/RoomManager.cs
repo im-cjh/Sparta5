@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System;
+using UnityEngine.Rendering.Universal;
 
 public class RoomManager : MonoBehaviour
 {
@@ -15,9 +16,9 @@ public class RoomManager : MonoBehaviour
     public GameObject playerItemPrefab;       // PlayerItem 프리팹
     public Button gameStartButton;            // 게임 시작 버튼
 
-    private List<UserData> users = new List<UserData>(); // 방의 플레이어 목록
+    private List<UserData> mUsers = new List<UserData>(); // 방의 플레이어 목록
     private bool isHost = false;                        // 호스트 여부 확인
-    private UInt32 roomId;
+    private RoomData mRoom;
 
     void Awake()
     {
@@ -27,7 +28,7 @@ public class RoomManager : MonoBehaviour
     void Start()
     {
         //gameStartButton.interactable = isHost;
-        gameStartButton.onClick.AddListener(StartGame);
+        gameStartButton.onClick.AddListener(RequestGameStart);
 
         // 기본적으로 PlayerListPanel을 비활성화
         playerListPanel.SetActive(false);
@@ -47,7 +48,7 @@ public class RoomManager : MonoBehaviour
     // 방의 플레이어 목록 UI 갱신 함수
     public void RefreshPlayerList()
     {
-        Debug.Log(users);
+        Debug.Log(mUsers);
         // 기존 플레이어 목록 UI 제거
         foreach (Transform child in playerListContent)
         {
@@ -55,7 +56,7 @@ public class RoomManager : MonoBehaviour
         }
 
         // 새로운 플레이어 목록 UI 추가
-        foreach (var user in users)
+        foreach (var user in mUsers)
         {
             GameObject playerItem = Instantiate(playerItemPrefab, playerListContent);
 
@@ -66,27 +67,33 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    public void OnRecvUserData(List<UserData> pUsers)
+    public void OnRecvEnterRoomMe(List<UserData> pUsers, RoomData pRoomInfo)
     {
-        Debug.Log("OnRecvUserData called");
+        Debug.Log("OnRecvEnterRoomMe called");
 
         roomListPanel.SetActive(false );
         playerListPanel.SetActive(true);
 
-        users = pUsers;
-        Debug.Log(users);
+        mUsers = pUsers;
+        mRoom = pRoomInfo;
+
+        Debug.Log(mUsers);
         RefreshPlayerList();
     }
 
-    // 게임 시작 함수 (호스트만 시작 가능)
-    void StartGame()
+    public void OnRecvEnterRoomOther(UserData pUser)
     {
-        //if (!isHost)
-        if (false)
-        {
-            Debug.Log("호스트만 게임을 시작할 수 있습니다.");
-            return;
-        }
+        Debug.Log("OnRecvEnterRoomOther called");
+        mUsers.Add(pUser);
+
+        Debug.Log(mUsers);
+        RefreshPlayerList();
+    }
+
+
+
+    void OnStartGame()
+    {
 
     }
 
@@ -105,9 +112,9 @@ public class RoomManager : MonoBehaviour
             ClientVersion = NewGameManager.instance.version,
             UserId = NewGameManager.instance.deviceId,
         };
-        pkt.RoomId = roomId;
-
+        pkt.RoomId = mRoom.roomId;
+        
         byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_GameStart, NewGameManager.instance.GetNextSequence());
-        NetworkManager.instance.SendPacket(sendBuffer);
+        NetworkManager.instance.SendLobbyPacket(sendBuffer);
     }
 }

@@ -12,15 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("# Game Control")]
     public bool isLive;
     public float gameTime;
-    public int targetFrameRate;
-    public string version = "1.0.0";
-    public int latency = 2;
-    public UInt32 sequence = 0;
-
-    [Header("# Player Info")]
-    public uint playerId;
-    public string deviceId;
-
+    
     [Header("# Game Object")]
     public PoolManager pool;
     public Player player;
@@ -29,14 +21,16 @@ public class GameManager : MonoBehaviour
 
     void Awake() {
         instance = this;
-        Application.targetFrameRate = targetFrameRate;
-        playerId = (uint)Random.Range(0, 4);
+    }
+
+    void Start()
+    {
+        GameStart();
     }
 
     //public void GameStart(InitialData data) {
     public void GameStart() {
-        player.deviceId = deviceId;
-        //ayer.UpdatePosition(data.x, data.y);
+        //player.UpdatePosition(data.x, data.y);
         player.gameObject.SetActive(true);
         hud.SetActive(true);
         GameStartUI.SetActive(false);
@@ -74,8 +68,16 @@ public class GameManager : MonoBehaviour
         gameTime += Time.deltaTime;
     }
 
-    public UInt32 GetNextSequence()
+    void SendLocationUpdatePacket(float x, float y)
     {
-        return sequence++;
+        LocationUpdatePayload locationUpdatePayload = new LocationUpdatePayload
+        {
+            x = x,
+            y = y,
+        };
+
+        byte[] sendBuffer = PacketUtils.SerializePacket() 
+        NetworkManager.instance.SendBattlePacket()
+        //NetworkManager.instance.Send(locationUpdatePayload, (uint)Packets.HandlerIds.LocationUpdate);
     }
 }

@@ -29,16 +29,16 @@ namespace Protocol {
             "Ck9iamVjdEluZm8SIgoHcG9zSW5mbxgBIAEoCzIRLlByb3RvY29sLlBvc0lu",
             "Zm8SKAoKb2JqZWN0VHlwZRgCIAEoDjIULlByb3RvY29sLk9iamVjdFR5cGUi",
             "LAoIVXNlckluZm8SDgoGdXNlcklkGAEgASgJEhAKCG5pY2tuYW1lGAIgASgJ",
-            "IlQKCFJvb21JbmZvEg4KBnJvb21JZBgBIAEoDRIQCghyb29tTmFtZRgCIAEo",
-            "CRIUCgxjdXJyZW50Q291bnQYAyABKAUSEAoIbWF4Q291bnQYBCABKAViBnBy",
-            "b3RvMw=="));
+            "IlgKCFJvb21JbmZvEg4KBnJvb21JZBgBIAEoDRIQCghyb29tTmFtZRgCIAEo",
+            "CRIWCg5jdXJyZW50UGxheWVycxgDIAEoDRISCgptYXhQbGF5ZXJzGAQgASgN",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Protocol.EnumReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.PosInfo), global::Protocol.PosInfo.Parser, new[]{ "ObjectId", "X", "Y" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.ObjectInfo), global::Protocol.ObjectInfo.Parser, new[]{ "PosInfo", "ObjectType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.UserInfo), global::Protocol.UserInfo.Parser, new[]{ "UserId", "Nickname" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.RoomInfo), global::Protocol.RoomInfo.Parser, new[]{ "RoomId", "RoomName", "CurrentCount", "MaxCount" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.RoomInfo), global::Protocol.RoomInfo.Parser, new[]{ "RoomId", "RoomName", "CurrentPlayers", "MaxPlayers" }, null, null, null, null)
           }));
     }
     #endregion
@@ -814,8 +814,8 @@ namespace Protocol {
     public RoomInfo(RoomInfo other) : this() {
       roomId_ = other.roomId_;
       roomName_ = other.roomName_;
-      currentCount_ = other.currentCount_;
-      maxCount_ = other.maxCount_;
+      currentPlayers_ = other.currentPlayers_;
+      maxPlayers_ = other.maxPlayers_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -855,33 +855,33 @@ namespace Protocol {
       }
     }
 
-    /// <summary>Field number for the "currentCount" field.</summary>
-    public const int CurrentCountFieldNumber = 3;
-    private int currentCount_;
+    /// <summary>Field number for the "currentPlayers" field.</summary>
+    public const int CurrentPlayersFieldNumber = 3;
+    private uint currentPlayers_;
     /// <summary>
     ///현재 인원 수
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CurrentCount {
-      get { return currentCount_; }
+    public uint CurrentPlayers {
+      get { return currentPlayers_; }
       set {
-        currentCount_ = value;
+        currentPlayers_ = value;
       }
     }
 
-    /// <summary>Field number for the "maxCount" field.</summary>
-    public const int MaxCountFieldNumber = 4;
-    private int maxCount_;
+    /// <summary>Field number for the "maxPlayers" field.</summary>
+    public const int MaxPlayersFieldNumber = 4;
+    private uint maxPlayers_;
     /// <summary>
     ///최대 인원 수
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int MaxCount {
-      get { return maxCount_; }
+    public uint MaxPlayers {
+      get { return maxPlayers_; }
       set {
-        maxCount_ = value;
+        maxPlayers_ = value;
       }
     }
 
@@ -902,8 +902,8 @@ namespace Protocol {
       }
       if (RoomId != other.RoomId) return false;
       if (RoomName != other.RoomName) return false;
-      if (CurrentCount != other.CurrentCount) return false;
-      if (MaxCount != other.MaxCount) return false;
+      if (CurrentPlayers != other.CurrentPlayers) return false;
+      if (MaxPlayers != other.MaxPlayers) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -913,8 +913,8 @@ namespace Protocol {
       int hash = 1;
       if (RoomId != 0) hash ^= RoomId.GetHashCode();
       if (RoomName.Length != 0) hash ^= RoomName.GetHashCode();
-      if (CurrentCount != 0) hash ^= CurrentCount.GetHashCode();
-      if (MaxCount != 0) hash ^= MaxCount.GetHashCode();
+      if (CurrentPlayers != 0) hash ^= CurrentPlayers.GetHashCode();
+      if (MaxPlayers != 0) hash ^= MaxPlayers.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -941,13 +941,13 @@ namespace Protocol {
         output.WriteRawTag(18);
         output.WriteString(RoomName);
       }
-      if (CurrentCount != 0) {
+      if (CurrentPlayers != 0) {
         output.WriteRawTag(24);
-        output.WriteInt32(CurrentCount);
+        output.WriteUInt32(CurrentPlayers);
       }
-      if (MaxCount != 0) {
+      if (MaxPlayers != 0) {
         output.WriteRawTag(32);
-        output.WriteInt32(MaxCount);
+        output.WriteUInt32(MaxPlayers);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -967,13 +967,13 @@ namespace Protocol {
         output.WriteRawTag(18);
         output.WriteString(RoomName);
       }
-      if (CurrentCount != 0) {
+      if (CurrentPlayers != 0) {
         output.WriteRawTag(24);
-        output.WriteInt32(CurrentCount);
+        output.WriteUInt32(CurrentPlayers);
       }
-      if (MaxCount != 0) {
+      if (MaxPlayers != 0) {
         output.WriteRawTag(32);
-        output.WriteInt32(MaxCount);
+        output.WriteUInt32(MaxPlayers);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -991,11 +991,11 @@ namespace Protocol {
       if (RoomName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(RoomName);
       }
-      if (CurrentCount != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(CurrentCount);
+      if (CurrentPlayers != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(CurrentPlayers);
       }
-      if (MaxCount != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxCount);
+      if (MaxPlayers != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MaxPlayers);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1015,11 +1015,11 @@ namespace Protocol {
       if (other.RoomName.Length != 0) {
         RoomName = other.RoomName;
       }
-      if (other.CurrentCount != 0) {
-        CurrentCount = other.CurrentCount;
+      if (other.CurrentPlayers != 0) {
+        CurrentPlayers = other.CurrentPlayers;
       }
-      if (other.MaxCount != 0) {
-        MaxCount = other.MaxCount;
+      if (other.MaxPlayers != 0) {
+        MaxPlayers = other.MaxPlayers;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1045,11 +1045,11 @@ namespace Protocol {
             break;
           }
           case 24: {
-            CurrentCount = input.ReadInt32();
+            CurrentPlayers = input.ReadUInt32();
             break;
           }
           case 32: {
-            MaxCount = input.ReadInt32();
+            MaxPlayers = input.ReadUInt32();
             break;
           }
         }
@@ -1076,11 +1076,11 @@ namespace Protocol {
             break;
           }
           case 24: {
-            CurrentCount = input.ReadInt32();
+            CurrentPlayers = input.ReadUInt32();
             break;
           }
           case 32: {
-            MaxCount = input.ReadInt32();
+            MaxPlayers = input.ReadUInt32();
             break;
           }
         }

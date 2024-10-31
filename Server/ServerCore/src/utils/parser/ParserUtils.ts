@@ -8,7 +8,7 @@ import { GenMessage } from "@bufbuild/protobuf/dist/cjs/codegenv1/types";
 
 //import { PacketSchema } from '../../../Protocol/request/common_pb';
 //최상위 경로 + assets 폴더
-export class ParserUtils {
+export class PacketUtils {
   /*---------------------------------------------
     [헤더 파싱]
 ---------------------------------------------*/

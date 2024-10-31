@@ -4,8 +4,9 @@ import { RESPONSE_SUCCESS_CODE } from 'ServerCore/constants';
 import { LobbySession } from 'src/network/LobbySession';
 import { ResponseUtils } from 'src/utils/response/ResponseUtils';
 import { Room } from '../models/Room';
-import { ParserUtils } from 'ServerCore/utils/parser/ParserUtils';
+import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import {
+  B2L_CreateRoomSchema,
   C2L_EnterRoom,
   C2L_EnterRoomSchema,
   C2L_GameStartSchema,
@@ -14,6 +15,7 @@ import {
   C2L_RoomList,
   C2L_RoomListSchema,
   L2B_CreateRoomSchema,
+  L2C_GameStartSchema,
   L2C_RoomListSchema,
 } from 'src/protocol/room_pb';
 import { RoomInfoSchema } from 'src/protocol/struct_pb';
@@ -23,6 +25,7 @@ import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
 import { battleSessionManager } from 'src/server';
 import { BattleSession } from 'src/network/BattleSession';
 import { send } from 'process';
+import { lobbyConfig } from 'src/config/config';
 
 const MAX_ROOMS_SIZE: number = 10000;
 
@@ -36,14 +39,15 @@ class RoomManager {
   private availableRoomIds = Array.from({ length: MAX_ROOMS_SIZE }, (_, i) => i + 1);
 
   constructor() {
-    const tmpRoomId: number = this.availableRoomIds.shift() || 0;
+    let tmpRoomId: number | undefined = this.availableRoomIds.shift();
+    if (!tmpRoomId) tmpRoomId = 0;
     this.rooms.set(tmpRoomId, new Room(tmpRoomId, '정현의 방', 2));
   }
 
   /*---------------------------------------------
     [방 입장]
 ---------------------------------------------*/
-  enterRoomHandler(buffer: Buffer, session: LobbySession | BattleSession) {
+  enterRoomHandler(buffer: Buffer, session: LobbySession) {
     console.log('enterRoomHandler');
     //패킷 분해
     const packet: C2L_EnterRoom = fromBinary(C2L_EnterRoomSchema, buffer);
@@ -88,7 +92,7 @@ class RoomManager {
       rooms: roomInfos,
     });
 
-    const sendBuffer = ParserUtils.SerializePacket(
+    const sendBuffer = PacketUtils.SerializePacket(
       packet,
       L2C_RoomListSchema,
       ePacketId.L2C_GetRoom,
@@ -101,7 +105,6 @@ class RoomManager {
     [게임 시작]
     
     - 배틀서버에게 게임 방 생성 요청
-    - 클라에게 배틀 서버의 주소와 포트번호, 게임 방ID 전송 
   ---------------------------------------------*/
   public gameStartHandler(buffer: Buffer, sesison: LobbySession | BattleSession) {
     console.log('gameStartHandler');
@@ -114,22 +117,65 @@ class RoomManager {
     }
 
     const packet = fromBinary(C2L_GameStartSchema, buffer);
+    const room = this.rooms.get(packet.roomId);
+    if (room == undefined) {
+      console.log('방을 찾을 수 없습니다.');
+      throw new CustomError(ErrorCodes.SOCKET_ERROR, 'invalid roomId.');
+    }
 
     const L2BPacket = create(L2B_CreateRoomSchema, {
       roomId: packet.roomId,
-      maxPlayers: packet.maxPlayers,
+      maxPlayers: room.getCurrentUsersCount(),
     });
 
-    const sendBuffer: Buffer = ParserUtils.SerializePacket(
+    const sendBuffer: Buffer = PacketUtils.SerializePacket(
       L2BPacket,
       L2B_CreateRoomSchema,
       ePacketId.L2B_CreateRoom,
       sesison.getNextSequence(),
     );
 
-    console.log('보내기 직전');
+    console.log('내가 받은 roomId', packet.roomId);
     battleSession.send(sendBuffer);
     console.log('보내기 직후');
+  }
+
+  /*---------------------------------------------
+    [게임 시작2]
+    
+    - 클라에게 배틀 서버의 주소와 포트번호, 게임 방ID 전송 
+  ---------------------------------------------*/
+  public onGameStartHandler(buffer: Buffer, sesison: LobbySession | BattleSession) {
+    console.log('onGameStartHandler');
+
+    const packet = fromBinary(B2L_CreateRoomSchema, buffer);
+
+    if (packet.isCreated == false) {
+      console.log('onGameStartHandler: 실패');
+      throw new CustomError(ErrorCodes.SOCKET_ERROR, '방 생성 실패');
+    }
+
+    const room = this.rooms.get(packet.roomId);
+    if (!room) {
+      console.log(this.rooms);
+      console.log('onGameStartHandler: 실패');
+      throw new CustomError(ErrorCodes.SOCKET_ERROR, `유효하지 않은 roomID: ${packet.roomId}`);
+    }
+
+    const L2C_GameStartPacket = create(L2C_GameStartSchema, {
+      meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
+      host: lobbyConfig.battleServer.host,
+      port: lobbyConfig.battleServer.port,
+      roomId: packet.roomId,
+    });
+
+    const sendBuffer = PacketUtils.SerializePacket(
+      L2C_GameStartPacket,
+      L2C_GameStartSchema,
+      ePacketId.L2C_GameStart,
+      0,
+    );
+    room.broadcast(sendBuffer);
   }
   /*---------------------------------------------
     [방 ID 해제]
@@ -138,8 +184,7 @@ class RoomManager {
   public freeRoomId(roomId: number) {
     if (!this.rooms.has(roomId)) {
       console.log('유효하지 않은 roomID');
-      return;
-      //throw new CustomError(ErrorCodes.)
+      throw new CustomError(ErrorCodes.SOCKET_ERROR, '유효하지 않은 roomID');
     }
 
     this.rooms.delete(roomId);

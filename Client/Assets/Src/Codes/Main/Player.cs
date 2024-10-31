@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
         
-        anim.runtimeAnimatorController = animCon[GameManager.instance.playerId];
+        anim.runtimeAnimatorController = animCon[NewGameManager.instance.playerId];
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         inputVec.y = Input.GetAxisRaw("Vertical");
 
         // 위치 이동 패킷 전송 -> 서버로
-        //NetworkManager.instance.SendLocationUpdatePacket(rigid.position.x, rigid.position.y);
+        NetworkManager.instance.SendLocationUpdatePacket(rigid.position.x, rigid.position.y);
     }
 
     void FixedUpdate()

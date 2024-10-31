@@ -43,6 +43,8 @@ public class PacketHandler
         handlerMapping[ePacketID.L2C_GetRoom] = HandleRoomsPacket;
         handlerMapping[ePacketID.L2C_EnterRoomMe] = HandleEnterRoomMe;
         handlerMapping[ePacketID.L2C_EnterRoomOther] = HandleEnterRoomOther;
+        handlerMapping[ePacketID.L2C_GameStart] = HandleLobbyGameStart;
+        handlerMapping[ePacketID.B2C_GameStart] = HandleBattleGameStart;
     }
 
 
@@ -77,7 +79,7 @@ public class PacketHandler
         
         foreach(var room in pkt.Rooms)
         {
-            rooms.Add(new RoomData(room.RoomId, room.RoomName, room.CurrentCount, room.MaxCount));
+            rooms.Add(new RoomData(room.RoomId, room.RoomName, room.CurrentPlayers, room.MaxPlayers));
         }
 
         LobbyManager.instance.OnRecvRooms(rooms);
@@ -93,18 +95,23 @@ public class PacketHandler
         Debug.Log("HandleEnterRoomMe Called");
 
         Protocol.L2C_EnterRoomMe pkt = Protocol.L2C_EnterRoomMe.Parser.ParseFrom(pBuffer);
-        if(pkt.IsEntered == false)
+        if(pkt.Meta.ResponseCode != 0)
         {
+            Debug.Log("방 입장 실패" + pkt.Meta.ResponseCode);
             throw new Exception("방 입장 실패");
         }
-        
+        Debug.Log("여까지 ok");
         List<UserData> users = new List<UserData>();
         foreach(var user in pkt.Users)
         {
             users.Add(new UserData(user.UserId, user.Nickname));
         }
+        Debug.Log(pkt.RoomInfo);
+        RoomData roomData = new RoomData(pkt.RoomInfo.RoomId, pkt.RoomInfo.RoomName, pkt.RoomInfo.CurrentPlayers, pkt.RoomInfo.MaxPlayers);
+        
 
-        LobbyManager.instance.OnRecvEnterRoomMe(users);
+        Debug.Log("여까지 ok3");
+        LobbyManager.instance.OnRecvEnterRoomMe(users, roomData);
     }
 
     /*---------------------------------------------
@@ -114,5 +121,44 @@ public class PacketHandler
     static void HandleEnterRoomOther(byte[] pBuffer)
     {
         Debug.Log("HandleEnterRoomOther Called");
+
+        Protocol.L2C_EnterRoomOther pkt = Protocol.L2C_EnterRoomOther.Parser.ParseFrom(pBuffer);
+        if (pkt.Meta.ResponseCode != 0)
+        {
+            Debug.Log("실패" + pkt.Meta.ResponseCode);
+            throw new Exception("실패");
+        }
+
+        UserData user = new UserData(pkt.NewUser.UserId, pkt.NewUser.Nickname);
+        
+        Debug.Log(pkt.NewUser);
+        
+        RoomManager.instance.OnRecvEnterRoomOther(user);
+    }
+
+    /*---------------------------------------------
+    [게임 시작 1/2]
+    - 배틀 서버의 주소와 포트번호, 방 ID를 받아옴
+    - 배틀 서버에 연결
+---------------------------------------------*/
+    static void HandleLobbyGameStart(byte[] pBuffer)
+    {
+        Protocol.L2C_GameStart pkt = Protocol.L2C_GameStart.Parser.ParseFrom(pBuffer);
+        if (pkt.Meta.ResponseCode != 0) {
+            Debug.Log("실패" + pkt.Meta.ResponseCode);
+            throw new Exception("실패");
+        }
+
+        
+        NetworkManager.instance.ConnectToBattleServer(pkt.Host, pkt.Port, pkt.RoomId);
+    }
+
+    /*---------------------------------------------
+    [게임 시작 2/2]
+    - 모든 플레이어가 접속하여 게임 시작
+---------------------------------------------*/
+    static void HandleBattleGameStart(byte[] pBuffer)
+    {
+        SceneChanger.ChangeGameScene();
     }
 }

@@ -17,3 +17,8 @@ message B2C_EnterRoom
 {
     S2C_Metadata meta = 1;
 }
+
+message B2C_GameStart
+{
+   bool isStart = 1;
+}

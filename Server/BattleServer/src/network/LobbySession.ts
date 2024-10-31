@@ -5,9 +5,10 @@ import { ePacketId } from 'ServerCore/network/PacketId';
 import { Session } from 'ServerCore/network/Session';
 import { CustomError } from 'ServerCore/utils/error/CustomError';
 import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
-import { ParserUtils } from 'ServerCore/utils/parser/ParserUtils';
+import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import { battleConfig } from 'src/config/config';
-import handlerMappings from 'src/handlers';
+import lobbyHandlerMappings from 'src/handlers/lobby';
+
 import { B2L_InitialPacket, B2L_InitialPacketSchema } from 'src/protocol/server_pb';
 import { handleError } from 'src/utils/error/errorHandler';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,7 +27,7 @@ export class LobbySession extends Session {
         serverId: this.getId(),
       });
 
-      const sendBuffer: Buffer = ParserUtils.SerializePacket<B2L_InitialPacket>(packet, B2L_InitialPacketSchema, ePacketId.B2L_Init, 0);
+      const sendBuffer: Buffer = PacketUtils.SerializePacket<B2L_InitialPacket>(packet, B2L_InitialPacketSchema, ePacketId.B2L_Init, 0);
 
       this.send(sendBuffer);
     });
@@ -35,18 +36,23 @@ export class LobbySession extends Session {
     throw new Error('Method not implemented.');
   }
   protected onError(error: any): void {
-    throw new Error('Method not implemented.');
+    console.error('소켓 오류:', error);
+
+    handleError(this, new CustomError(500, `소켓 오류: ${error.message}`));
+    // 세션에서 유저 삭제
+    this.socket.destroy();
   }
   protected async handlePacket(packet: Buffer, header: PacketHeader): Promise<void> {
-    console.log('핸들러 호출');
+    console.log('핸들러 호출', header.id);
     try {
       //1. sequence 검증
       if (this.sequence != header.sequence) {
-        throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '시퀀스가 잘못되었습니다.');
+        console.log('시퀀스가 잘못되었습니다.', this.sequence, header.sequence);
+        //throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '시퀀스가 잘못되었습니다.');
       }
 
       //2. 패킷 ID에 해당하는 핸들러 확인
-      const handler = handlerMappings[header.id];
+      const handler = lobbyHandlerMappings[header.id];
 
       //2-1. 핸들러가 존재하지 않을 경우 오류 출력
       if (!handler) {

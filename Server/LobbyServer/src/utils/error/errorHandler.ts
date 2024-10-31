@@ -4,7 +4,7 @@ import { LobbySession } from 'src/network/LobbySession';
 
 import { ResponseUtils } from '../response/ResponseUtils';
 import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
-import { ParserUtils } from 'ServerCore/utils/parser/ParserUtils';
+import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import { ePacketId } from 'ServerCore/network/PacketId';
 import { S2C_Error, S2C_ErrorSchema } from 'src/protocol/server_pb';
 import { BattleSession } from 'src/network/BattleSession';
@@ -23,7 +23,7 @@ export const handleError = (session: LobbySession | BattleSession, error: any) =
   }
 
   const packet: S2C_Error = ResponseUtils.createErrorResponse(responseCode, message);
-  const sendBuffer: Buffer = ParserUtils.SerializePacket<S2C_Error>(
+  const sendBuffer: Buffer = PacketUtils.SerializePacket<S2C_Error>(
     packet,
     S2C_ErrorSchema,
     ePacketId.S2C_Error,

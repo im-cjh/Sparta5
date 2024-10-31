@@ -17,9 +17,8 @@ message C2L_EnterRoom
 message L2C_EnterRoomMe 
 {
   S2C_Metadata meta = 1;    // 공통 응답 메타 데이터
-  bool isEntered = 2;       // 방 입장 성공 여부
-  repeated UserInfo users = 3;  // 방에 있는 기존 유저 정보
-  uint32 roomId = 4;
+  repeated UserInfo users = 2;  // 방에 있는 기존 유저 정보
+  RoomInfo roomInfo =3; //방 정보(방ID, 방 이름, 현재 인원 수, 최대 인원 수)
 }
 
 //방 입장 응답 패킷(남이 입장)
@@ -62,14 +61,14 @@ message C2L_GameStart
 {
     C2S_Metadata meta = 1;
     uint32 roomId = 2;       // 입장하려는 Room ID
-    uint32 maxPlayers = 3;
 }
 
 message L2C_GameStart
 {
     S2C_Metadata meta = 1; //공통 응답 메타 데이터
     string host = 2; //ex: localhost
-    uint32 port = 3; //포트번호
+    int32 port = 3; //포트번호
+    uint32 roomId = 4;
 }
 
 message L2B_CreateRoom
@@ -81,4 +80,5 @@ message L2B_CreateRoom
 message B2L_CreateRoom
 {
   bool isCreated = 1;
+  uint32 roomId = 2;
 }

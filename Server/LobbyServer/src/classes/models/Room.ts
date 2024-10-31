@@ -1,12 +1,17 @@
-import { create, toBinary } from "@bufbuild/protobuf";
-import { RESPONSE_SUCCESS_CODE } from "ServerCore/constants";
-import { ePacketId } from "ServerCore/network/PacketId";
-import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
-import { eRoomStateId } from "src/constants/roomState";
-import { LobbySession } from "src/network/LobbySession";
-import { L2C_EnterRoomMe, L2C_EnterRoomMeSchema } from "src/protocol/room_pb";
-import { UserInfoSchema } from "src/protocol/struct_pb";
-import { ResponseUtils } from "src/utils/response/ResponseUtils";
+import { create, toBinary } from '@bufbuild/protobuf';
+import { RESPONSE_SUCCESS_CODE } from 'ServerCore/constants';
+import { ePacketId } from 'ServerCore/network/PacketId';
+import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
+import { eRoomStateId } from 'src/constants/roomState';
+import { LobbySession } from 'src/network/LobbySession';
+import {
+  L2C_EnterRoomMe,
+  L2C_EnterRoomMeSchema,
+  L2C_EnterRoomOther,
+  L2C_EnterRoomOtherSchema,
+} from 'src/protocol/room_pb';
+import { RoomInfoSchema, UserInfoSchema } from 'src/protocol/struct_pb';
+import { ResponseUtils } from 'src/utils/response/ResponseUtils';
 
 export class Room {
   /*---------------------------------------------
@@ -38,10 +43,10 @@ export class Room {
     // 4. 새 유저 입장 정보를 다른 유저들에게 알리기
 ---------------------------------------------*/
   public enterRoom(newUser: LobbySession): boolean {
-    console.log("Room::enterRoom");
+    console.log('Room::enterRoom');
     //1. 방이 가득 찼는지 확인
     if (this.users.length >= this.maxPlayerCount) {
-      console.log("풀방");
+      console.log('풀방');
       return false;
     }
 
@@ -54,23 +59,28 @@ export class Room {
           create(UserInfoSchema, {
             userId: user.getId(),
             nickname: user.getNickname(),
-          })
+          }),
         );
         //}
       }
       let packet: L2C_EnterRoomMe = create(L2C_EnterRoomMeSchema, {
         meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
-        isEntered: true,
         users: existUsers,
+        roomInfo: create(RoomInfoSchema, {
+          roomId: this.id,
+          roomName: this.roomName,
+          currentPlayers: this.getCurrentUsersCount(),
+          maxPlayers: this.maxPlayerCount,
+        }),
       });
 
-      const sendBuffer = ParserUtils.SerializePacket(
+      const sendBuffer = PacketUtils.SerializePacket(
         packet,
         L2C_EnterRoomMeSchema,
         ePacketId.L2C_EnterRoomMe,
-        newUser.getNextSequence()
+        newUser.getNextSequence(),
       );
-      console.log("Serialized packet size:", sendBuffer.length);
+      console.log('Serialized packet size:', sendBuffer.length);
       newUser.send(sendBuffer);
     }
 
@@ -84,17 +94,17 @@ export class Room {
         nickname: newUser.getNickname(),
       });
 
-      const packet: L2C_EnterRoomMe = create(L2C_EnterRoomMeSchema, {
+      console.log('아이디는 ', newUserInfo.userId);
+      const packet: L2C_EnterRoomOther = create(L2C_EnterRoomOtherSchema, {
         meta: ResponseUtils.createMetaResponse(RESPONSE_SUCCESS_CODE),
-        isEntered: true,
-        users: [newUserInfo],
+        newUser: newUserInfo,
       });
 
-      const sendBuffer: Buffer = ParserUtils.SerializePacket(
+      const sendBuffer: Buffer = PacketUtils.SerializePacket(
         packet,
-        L2C_EnterRoomMeSchema,
+        L2C_EnterRoomOtherSchema,
         ePacketId.L2C_EnterRoomOther,
-        0
+        0,
       );
 
       this.broadcast(sendBuffer);
@@ -135,7 +145,7 @@ export class Room {
   /*---------------------------------------------
     [broadcast]
 ---------------------------------------------*/
-  private broadcast(buffer: Buffer) {
+  public broadcast(buffer: Buffer) {
     for (const user of this.users) {
       user.send(buffer);
     }

@@ -26,8 +26,12 @@ export class SessionManager<T extends Session> {
   /*---------------------------------------------
     [세션 추가]
 ---------------------------------------------*/
-  addSession(uuid: string, socket: Socket): void {
-    this.sessions.set(uuid, new this.sessionFactory(socket));
+  addSession(uuid: string, socket: Socket): T {
+    let session = new this.sessionFactory(socket);
+    session.setId(uuid);
+    this.sessions.set(uuid, session);
+
+    return session;
   }
 
   /*---------------------------------------------

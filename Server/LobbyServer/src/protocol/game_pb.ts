@@ -15,7 +15,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file game.proto.
  */
 export const file_game: GenFile = /*@__PURE__*/
-  fileDesc("CgpnYW1lLnByb3RvEghQcm90b2NvbCJbChFDMkJfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIQCghuaWNrbmFtZRgDIAEoCSI1Cg1CMkNfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGFiBnByb3RvMw", [file_client, file_server, file_struct]);
+  fileDesc("CgpnYW1lLnByb3RvEghQcm90b2NvbCJbChFDMkJfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIQCghuaWNrbmFtZRgDIAEoCSI1Cg1CMkNfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGEiIAoNQjJDX0dhbWVTdGFydBIPCgdpc1N0YXJ0GAEgASgIYgZwcm90bzM", [file_client, file_server, file_struct]);
 
 /**
  * @generated from message Protocol.C2B_InitialPacket
@@ -60,4 +60,21 @@ export type B2C_EnterRoom = Message<"Protocol.B2C_EnterRoom"> & {
  */
 export const B2C_EnterRoomSchema: GenMessage<B2C_EnterRoom> = /*@__PURE__*/
   messageDesc(file_game, 1);
+
+/**
+ * @generated from message Protocol.B2C_GameStart
+ */
+export type B2C_GameStart = Message<"Protocol.B2C_GameStart"> & {
+  /**
+   * @generated from field: bool isStart = 1;
+   */
+  isStart: boolean;
+};
+
+/**
+ * Describes the message Protocol.B2C_GameStart.
+ * Use `create(B2C_GameStartSchema)` to create a new message.
+ */
+export const B2C_GameStartSchema: GenMessage<B2C_GameStart> = /*@__PURE__*/
+  messageDesc(file_game, 2);
 

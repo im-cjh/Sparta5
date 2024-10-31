@@ -16,7 +16,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file room.proto.
  */
 export const file_room: GenFile = /*@__PURE__*/
-  fileDesc("Cgpyb29tLnByb3RvEghQcm90b2NvbCJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgNIn0KD0wyQ19FbnRlclJvb21NZRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEhEKCWlzRW50ZXJlZBgCIAEoCBIhCgV1c2VycxgDIAMoCzISLlByb3RvY29sLlVzZXJJbmZvEg4KBnJvb21JZBgEIAEoDSJfChJMMkNfRW50ZXJSb29tT3RoZXISJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIjCgduZXdVc2VyGAIgASgLMhIuUHJvdG9jb2wuVXNlckluZm8iVQoNQzJMX0xlYXZlUm9vbRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIOCgZ1c2VySWQYAyABKAkiNwoPTDJDX0xlYXZlUm9vbU1lEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGEiSgoSTDJDX0xlYXZlUm9vbU90aGVyEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESDgoGdXNlcklkGAIgASgJIjQKDEMyTF9Sb29tTGlzdBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhIlcKDEwyQ19Sb29tTGlzdBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEiEKBXJvb21zGAIgAygLMhIuUHJvdG9jb2wuUm9vbUluZm8iWQoNQzJMX0dhbWVTdGFydBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRISCgptYXhQbGF5ZXJzGAMgASgNIlEKDUwyQ19HYW1lU3RhcnQSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIMCgRob3N0GAIgASgJEgwKBHBvcnQYAyABKA0iNAoOTDJCX0NyZWF0ZVJvb20SDgoGcm9vbUlkGAEgASgNEhIKCm1heFBsYXllcnMYAiABKA0iIwoOQjJMX0NyZWF0ZVJvb20SEQoJaXNDcmVhdGVkGAEgASgIYgZwcm90bzM", [file_client, file_server, file_struct]);
+  fileDesc("Cgpyb29tLnByb3RvEghQcm90b2NvbCJFCg1DMkxfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5DMlNfTWV0YWRhdGESDgoGcm9vbUlkGAIgASgNIoABCg9MMkNfRW50ZXJSb29tTWUSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIhCgV1c2VycxgCIAMoCzISLlByb3RvY29sLlVzZXJJbmZvEiQKCHJvb21JbmZvGAMgASgLMhIuUHJvdG9jb2wuUm9vbUluZm8iXwoSTDJDX0VudGVyUm9vbU90aGVyEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGESIwoHbmV3VXNlchgCIAEoCzISLlByb3RvY29sLlVzZXJJbmZvIlUKDUMyTF9MZWF2ZVJvb20SJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLkMyU19NZXRhZGF0YRIOCgZyb29tSWQYAiABKA0SDgoGdXNlcklkGAMgASgJIjcKD0wyQ19MZWF2ZVJvb21NZRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhIkoKEkwyQ19MZWF2ZVJvb21PdGhlchIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEg4KBnVzZXJJZBgCIAEoCSI0CgxDMkxfUm9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLkMyU19NZXRhZGF0YSJXCgxMMkNfUm9vbUxpc3QSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLlMyQ19NZXRhZGF0YRIhCgVyb29tcxgCIAMoCzISLlByb3RvY29sLlJvb21JbmZvIkUKDUMyTF9HYW1lU3RhcnQSJAoEbWV0YRgBIAEoCzIWLlByb3RvY29sLkMyU19NZXRhZGF0YRIOCgZyb29tSWQYAiABKA0iYQoNTDJDX0dhbWVTdGFydBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhEgwKBGhvc3QYAiABKAkSDAoEcG9ydBgDIAEoBRIOCgZyb29tSWQYBCABKA0iNAoOTDJCX0NyZWF0ZVJvb20SDgoGcm9vbUlkGAEgASgNEhIKCm1heFBsYXllcnMYAiABKA0iMwoOQjJMX0NyZWF0ZVJvb20SEQoJaXNDcmVhdGVkGAEgASgIEg4KBnJvb21JZBgCIAEoDWIGcHJvdG8z", [file_client, file_server, file_struct]);
 
 /**
  * 방 입장 요청 패킷
@@ -58,23 +58,18 @@ export type L2C_EnterRoomMe = Message<"Protocol.L2C_EnterRoomMe"> & {
   meta?: S2C_Metadata;
 
   /**
-   * 방 입장 성공 여부
-   *
-   * @generated from field: bool isEntered = 2;
-   */
-  isEntered: boolean;
-
-  /**
    * 방에 있는 기존 유저 정보
    *
-   * @generated from field: repeated Protocol.UserInfo users = 3;
+   * @generated from field: repeated Protocol.UserInfo users = 2;
    */
   users: UserInfo[];
 
   /**
-   * @generated from field: uint32 roomId = 4;
+   * 방 정보(방ID, 방 이름, 현재 인원 수, 최대 인원 수)
+   *
+   * @generated from field: Protocol.RoomInfo roomInfo = 3;
    */
-  roomId: number;
+  roomInfo?: RoomInfo;
 };
 
 /**
@@ -240,11 +235,6 @@ export type C2L_GameStart = Message<"Protocol.C2L_GameStart"> & {
    * @generated from field: uint32 roomId = 2;
    */
   roomId: number;
-
-  /**
-   * @generated from field: uint32 maxPlayers = 3;
-   */
-  maxPlayers: number;
 };
 
 /**
@@ -275,9 +265,14 @@ export type L2C_GameStart = Message<"Protocol.L2C_GameStart"> & {
   /**
    * 포트번호
    *
-   * @generated from field: uint32 port = 3;
+   * @generated from field: int32 port = 3;
    */
   port: number;
+
+  /**
+   * @generated from field: uint32 roomId = 4;
+   */
+  roomId: number;
 };
 
 /**
@@ -317,6 +312,11 @@ export type B2L_CreateRoom = Message<"Protocol.B2L_CreateRoom"> & {
    * @generated from field: bool isCreated = 1;
    */
   isCreated: boolean;
+
+  /**
+   * @generated from field: uint32 roomId = 2;
+   */
+  roomId: number;
 };
 
 /**

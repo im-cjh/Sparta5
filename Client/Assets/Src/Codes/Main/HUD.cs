@@ -18,7 +18,7 @@ public class HUD : MonoBehaviour
     void LateUpdate() {
         switch(type) {
             case InfoType.DeviceId:
-                myText.text = string.Format("{0}", GameManager.instance.deviceId);
+                myText.text = string.Format("{0}", NewGameManager.instance.deviceId);
                 break;
             case InfoType.Time:
                 int min = Mathf.FloorToInt(GameManager.instance.gameTime / 60);

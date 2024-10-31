@@ -10,10 +10,10 @@ public class RoomData
 {
     public UInt32 roomId;
     public string roomName;       // 방 이름
-    public int currentCount;      // 현재 인원 수
-    public int maxCount;          // 최대 인원 수
+    public UInt32 currentCount;      // 현재 인원 수
+    public UInt32 maxCount;          // 최대 인원 수
 
-    public RoomData(UInt32 pRoomId, string pRoomName, int pCurrentCount, int pMaxCount)
+    public RoomData(UInt32 pRoomId, string pRoomName, UInt32 pCurrentCount, UInt32 pMaxCount)
     {
         roomId = pRoomId;
         roomName = pRoomName;

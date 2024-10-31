@@ -1,25 +1,22 @@
-import { Socket } from "net";
-import { create, fromBinary } from "@bufbuild/protobuf";
-import { LobbySession } from "src/network/LobbySession";
-import { CustomError } from "ServerCore/utils/error/CustomError";
-import { ErrorCodes } from "ServerCore/utils/error/ErrorCodes";
-import { lobbyConfig } from "src/config/config";
-import { UserDb } from "src/db/user/user.db";
-import { ResponseUtils } from "src/utils/response/ResponseUtils";
-import { RESPONSE_SUCCESS_CODE } from "ServerCore/constants";
-import { ParserUtils } from "ServerCore/utils/parser/ParserUtils";
-import { ePacketId } from "ServerCore/network/PacketId";
-import {
-  C2L_InitialPacket,
-  C2L_InitialPacketSchema,
-} from "src/protocol/client_pb";
+import { Socket } from 'net';
+import { create, fromBinary } from '@bufbuild/protobuf';
+import { LobbySession } from 'src/network/LobbySession';
+import { CustomError } from 'ServerCore/utils/error/CustomError';
+import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
+import { lobbyConfig } from 'src/config/config';
+import { UserDb } from 'src/db/user/user.db';
+import { ResponseUtils } from 'src/utils/response/ResponseUtils';
+import { RESPONSE_SUCCESS_CODE } from 'ServerCore/constants';
+import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
+import { ePacketId } from 'ServerCore/network/PacketId';
+import { C2L_InitialPacket, C2L_InitialPacketSchema } from 'src/protocol/client_pb';
 import {
   B2L_InitialPacket,
   B2L_InitialPacketSchema,
   L2C_Init,
   L2C_InitSchema,
-} from "src/protocol/server_pb";
-import { battleSessionManager, sessionManager } from "src/server";
+} from 'src/protocol/server_pb';
+import { battleSessionManager, sessionManager } from 'src/server';
 
 /*---------------------------------------------
     [초기화 핸들러]
@@ -39,13 +36,9 @@ import { battleSessionManager, sessionManager } from "src/server";
         -데이터O: 기존 id반환
 
 ---------------------------------------------*/
-const initialHandler = async (
-  buffer: Buffer,
-  socket: Socket,
-  packetId: ePacketId
-) => {
-  console.log("initialHandler: called");
-  socket.removeAllListeners("data"); // 추가 청취자 제거
+const initialHandler = async (buffer: Buffer, socket: Socket, packetId: ePacketId) => {
+  console.log('initialHandler: called');
+  socket.removeAllListeners('data'); // 추가 청취자 제거
 
   //클라 접속
   if (packetId == ePacketId.C2L_Init) {
@@ -53,17 +46,14 @@ const initialHandler = async (
     try {
       packet = fromBinary(C2L_InitialPacketSchema, buffer);
     } catch (error) {
-      throw new CustomError(
-        ErrorCodes.PACKET_DECODE_ERROR,
-        "패킷 디코딩 중 오류가 발생했습니다"
-      );
+      throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다');
     }
 
     //1. 클라 버전 검증
     if (packet.meta?.clientVersion !== lobbyConfig.client.version) {
       throw new CustomError(
         ErrorCodes.CLIENT_VERSION_MISMATCH,
-        "클라이언트 버전이 일치하지 않습니다."
+        '클라이언트 버전이 일치하지 않습니다.',
       );
     }
 
@@ -89,14 +79,14 @@ const initialHandler = async (
     });
 
     //5. 유저 정보 직렬화
-    const sendBuffer: Buffer = ParserUtils.SerializePacket<L2C_Init>(
+    const sendBuffer: Buffer = PacketUtils.SerializePacket<L2C_Init>(
       initPacket,
       L2C_InitSchema,
       ePacketId.L2C_Init,
-      sessionManager.getSessionOrNull(user.id)?.getNextSequence() || 0
+      sessionManager.getSessionOrNull(user.id)?.getNextSequence() || 0,
     );
     //5. 버퍼 전송
-    console.log("Serialized sendBuffer length:", sendBuffer.length);
+    console.log('Serialized sendBuffer length:', sendBuffer.length);
     sessionManager.getSessionOrNull(user.id)?.send(sendBuffer);
   }
   //배틀 서버 접속
@@ -105,10 +95,7 @@ const initialHandler = async (
     try {
       packet = fromBinary(B2L_InitialPacketSchema, buffer);
     } catch (error) {
-      throw new CustomError(
-        ErrorCodes.PACKET_DECODE_ERROR,
-        "패킷 디코딩 중 오류가 발생했습니다"
-      );
+      throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다');
     }
     battleSessionManager.addSession(packet.serverId, socket);
   }

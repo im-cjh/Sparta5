@@ -1,7 +1,7 @@
 import { Socket } from "net";
 import { PacketHeader } from "./PacketHeader";
 import { config } from "../config/config";
-import { ParserUtils } from "../utils/parser/ParserUtils";
+import { PacketUtils } from "../utils/parser/ParserUtils";
 
 export abstract class Session {
   /*---------------------------------------------
@@ -45,21 +45,20 @@ export abstract class Session {
 ---------------------------------------------*/
   private onData(buffer: Buffer): void {
     this.buffer = Buffer.concat([this.buffer, buffer]);
-    while (true) {
-      //최소한 헤더는 파싱할 수 있어야 한다
-      if (this.buffer.length < config.packet.sizeOfHeader) {
-        break;
-      }
-
-      let header: PacketHeader = ParserUtils.readPacketHeader(this.buffer);
+    //최소한 헤더는 파싱할 수 있어야 한다
+    while (this.buffer.length >= config.packet.sizeOfHeader) {
+      let header: PacketHeader = PacketUtils.readPacketHeader(this.buffer);
       // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
       if (this.buffer.length < header.size) {
         console.log("파싱X", this.buffer.length, header.size);
         break;
       }
 
-      const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
-      this.buffer = buffer.subarray(header.size);
+      const packet = this.buffer.subarray(
+        config.packet.sizeOfHeader,
+        header.size
+      );
+      this.buffer = this.buffer.subarray(header.size);
       //패킷 조립 성공
       console.log("패킷 조립 성공", header);
 

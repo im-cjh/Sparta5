@@ -3,7 +3,7 @@ import { RESPONSE_SUCCESS_CODE } from 'ServerCore/constants';
 
 import { LobbySession } from 'src/network/LobbySession';
 import { ResponseUtils } from 'src/utils/response/ResponseUtils';
-import { ParserUtils } from 'ServerCore/utils/parser/ParserUtils';
+import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import {
   B2L_CreateRoomSchema,
   C2L_EnterRoom,
@@ -22,6 +22,7 @@ import { CustomError } from 'ServerCore/utils/error/CustomError';
 import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
 import { BattleSession } from 'src/network/BattleSession';
 import { GameRoom } from '../models/GameRoom';
+import { C2B_InitialPacketSchema } from 'src/protocol/game_pb';
 
 const MAX_ROOMS_SIZE: number = 10000;
 
@@ -34,14 +35,23 @@ class GameRoomManager {
   private rooms = new Map<number, GameRoom>();
   private availableRoomIds = Array.from({ length: MAX_ROOMS_SIZE }, (_, i) => i + 1);
 
-  constructor() {
-    const tmpRoomId: number = this.availableRoomIds.shift() || 0;
-  }
+  constructor() {}
 
   /*---------------------------------------------
     [방 입장]
+    -클라에게 B2C_EnterRoom패킷 전송
 ---------------------------------------------*/
+  public enterRoomHandler(roomId: number, session: BattleSession) {
+    console.log('enterRoomHandler');
 
+    const room: GameRoom | undefined = this.rooms.get(roomId);
+    if (room == undefined) {
+      console.log('유효하지 않은 roomId입니다.');
+      return;
+    }
+
+    room.enterRoom(session);
+  }
   /*---------------------------------------------
     [방 퇴장]
 ---------------------------------------------*/
@@ -64,13 +74,15 @@ class GameRoomManager {
     - 클라에게 배틀 서버의 주소와 포트번호, 게임 방ID 전송 
   ---------------------------------------------*/
   public createGameRoom(buffer: Buffer, session: LobbySession | BattleSession) {
-    console.log('createGameRoom');
+    console.log('createGameRoom', session.getId());
+    console.log('--------------------');
     const L2B_CreateRoomPacket = fromBinary(L2B_CreateRoomSchema, buffer);
     const roomId: number = L2B_CreateRoomPacket.roomId;
     const maxPlayerCount = L2B_CreateRoomPacket.maxPlayers;
     //roomdId가 이미 존재하는지 검증
     if (this.rooms.has(roomId)) {
       console.error(`방 ID ${roomId}가 이미 존재합니다.`);
+      console.log(this.rooms.get(roomId));
       throw new CustomError(ErrorCodes.SOCKET_ERROR, '방 ID가 이미 존재합니다.');
     }
     //해당 방이 이미 풀방인지 검증
@@ -83,13 +95,14 @@ class GameRoomManager {
     const newGameRoom: GameRoom = new GameRoom(roomId, maxPlayerCount);
     this.rooms.set(roomId, newGameRoom);
 
-    console.log('방 생성');
+    console.log('방 생성', L2B_CreateRoomPacket.roomId);
 
     const B2L_CreateRoomPacket = create(B2L_CreateRoomSchema, {
       isCreated: true,
+      roomId: L2B_CreateRoomPacket.roomId,
     });
 
-    const sendBuffer: Buffer = ParserUtils.SerializePacket(B2L_CreateRoomPacket, B2L_CreateRoomSchema, ePacketId.B2L_CreateRoom, session.getNextSequence());
+    const sendBuffer: Buffer = PacketUtils.SerializePacket(B2L_CreateRoomPacket, B2L_CreateRoomSchema, ePacketId.B2L_CreateRoom, session.getNextSequence());
     session.send(sendBuffer);
     console.log('send B2L_CreateRoom');
   }

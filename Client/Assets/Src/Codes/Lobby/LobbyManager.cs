@@ -107,21 +107,22 @@ public class LobbyManager : MonoBehaviour
         pkt.RoomId = pRoomId;
 
         byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_EnterRoom, NewGameManager.instance.GetNextSequence());
-        NetworkManager.instance.SendPacket(sendBuffer);
+        NetworkManager.instance.SendLobbyPacket(sendBuffer);
     }
 
-    public void OnRecvRooms(List<RoomData> roomData)
+    public void OnRecvRooms(List<RoomData> pRoomData)
     {
-        mRooms = roomData;
+        mRooms = pRoomData;
 
         RefreshRoomList();
     }
 
-    public void OnRecvEnterRoomMe(List<UserData> userDatas)
+    public void OnRecvEnterRoomMe(List<UserData> pUserDatas, RoomData pRoomInfo)
     {
         Debug.Log("OnRecvEnterRoomMe");
-        RoomManager.instance.OnRecvUserData(userDatas);
+        RoomManager.instance.OnRecvEnterRoomMe(pUserDatas, pRoomInfo);
     }
+
     public void RequestRoomList()
     {
         Protocol.C2L_RoomList pkt = new Protocol.C2L_RoomList();
@@ -132,6 +133,6 @@ public class LobbyManager : MonoBehaviour
         };
 
         byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2L_GetRooms, NewGameManager.instance.GetNextSequence());
-        NetworkManager.instance.SendPacket(sendBuffer);
+        NetworkManager.instance.SendLobbyPacket(sendBuffer);
     }
 }
