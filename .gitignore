@@ -1,6 +1,10 @@
 # compiled output
 /dist
-/node_modules
+
+/Client/node_modules
+/Server/ServerCore/node_modules
+/Server/LobbyServer/node_modules
+/Server/BattleServer/node_modules
 
 # Logs
 logs
@@ -33,3 +37,5 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+.env
