@@ -69,8 +69,8 @@ const initialHandler = async (buffer: Buffer, socket: Socket, packetId: ePacketI
 
     //3. sessionManager에 로비세션 추가
     // 세션이 생성되었으므로, 더 이상 주체 판별이 필요하지 않음
-    sessionManager.addSession(user.id, socket);
-    sessionManager.getSessionOrNull(user.id)?.setNickname(packet.nickname);
+    sessionManager.addSession(packet.meta.userId, socket);
+    sessionManager.getSessionOrNull(packet.meta.userId)?.setNickname(packet.nickname);
 
     //4. 유저 정보 응답 생성
     const initPacket: L2C_Init = create(L2C_InitSchema, {
@@ -83,11 +83,11 @@ const initialHandler = async (buffer: Buffer, socket: Socket, packetId: ePacketI
       initPacket,
       L2C_InitSchema,
       ePacketId.L2C_Init,
-      sessionManager.getSessionOrNull(user.id)?.getNextSequence() || 0,
+      sessionManager.getSessionOrNull(packet.meta.userId)?.getNextSequence() || 0,
     );
     //5. 버퍼 전송
     console.log('Serialized sendBuffer length:', sendBuffer.length);
-    sessionManager.getSessionOrNull(user.id)?.send(sendBuffer);
+    sessionManager.getSessionOrNull(packet.meta.userId)?.send(sendBuffer);
   }
   //배틀 서버 접속
   else if (packetId == ePacketId.B2L_Init) {

@@ -1,10 +1,10 @@
-import { create, toBinary } from '@bufbuild/protobuf';
+import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
 import { RESPONSE_SUCCESS_CODE } from 'ServerCore/constants';
 import { ePacketId } from 'ServerCore/network/PacketId';
 import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import { BattleSession } from 'src/network/BattleSession';
 import { LobbySession } from 'src/network/LobbySession';
-import { B2C_EnterRoomSchema, B2C_GameStartSchema } from 'src/protocol/game_pb';
+import { B2C_EnterRoomSchema, B2C_GameStartSchema, B2C_Move, B2C_MoveSchema, C2B_Move, C2B_MoveSchema } from 'src/protocol/game_pb';
 import { L2C_EnterRoomMe, L2C_EnterRoomMeSchema } from 'src/protocol/room_pb';
 import { UserInfoSchema } from 'src/protocol/struct_pb';
 import { ResponseUtils } from 'src/utils/response/ResponseUtils';
@@ -77,9 +77,20 @@ export class GameRoom {
 ---------------------------------------------*/
 
   /*---------------------------------------------
-    [플레이어 정보 가져오기]
+    [이동 동기화]
 ---------------------------------------------*/
+  public handleMove(buffer: Buffer) {
+    console.log('handleMove');
 
+    const packet: C2B_Move = fromBinary(C2B_MoveSchema, buffer);
+    const B2C_MovePacket: B2C_Move = create(B2C_MoveSchema, {
+      posInfo: packet.posInfo,
+      objectType: packet.objectType,
+    });
+
+    const sendBuffer: Buffer = PacketUtils.SerializePacket(B2C_MovePacket, B2C_MoveSchema, ePacketId.B2C_Move, 0);
+    this.broadcast(sendBuffer);
+  }
   /*---------------------------------------------
     [게임 시작]
 ---------------------------------------------*/

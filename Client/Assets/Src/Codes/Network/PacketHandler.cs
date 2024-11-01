@@ -45,6 +45,7 @@ public class PacketHandler
         handlerMapping[ePacketID.L2C_EnterRoomOther] = HandleEnterRoomOther;
         handlerMapping[ePacketID.L2C_GameStart] = HandleLobbyGameStart;
         handlerMapping[ePacketID.B2C_GameStart] = HandleBattleGameStart;
+        handlerMapping[ePacketID.B2C_Move] = HandleMove;
     }
 
 
@@ -100,7 +101,6 @@ public class PacketHandler
             Debug.Log("방 입장 실패" + pkt.Meta.ResponseCode);
             throw new Exception("방 입장 실패");
         }
-        Debug.Log("여까지 ok");
         List<UserData> users = new List<UserData>();
         foreach(var user in pkt.Users)
         {
@@ -108,9 +108,8 @@ public class PacketHandler
         }
         Debug.Log(pkt.RoomInfo);
         RoomData roomData = new RoomData(pkt.RoomInfo.RoomId, pkt.RoomInfo.RoomName, pkt.RoomInfo.CurrentPlayers, pkt.RoomInfo.MaxPlayers);
-        
 
-        Debug.Log("여까지 ok3");
+        NewGameManager.instance.roomId = pkt.RoomInfo.RoomId;
         LobbyManager.instance.OnRecvEnterRoomMe(users, roomData);
     }
 
@@ -160,5 +159,14 @@ public class PacketHandler
     static void HandleBattleGameStart(byte[] pBuffer)
     {
         SceneChanger.ChangeGameScene();
+    }
+
+    /*---------------------------------------------
+    [이동 동기화]
+---------------------------------------------*/
+    static void HandleMove(byte[] pBuffer)
+    {
+        Protocol.B2C_Move pkt = Protocol.B2C_Move.Parser.ParseFrom(pBuffer);
+
     }
 }

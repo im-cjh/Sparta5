@@ -22,7 +22,7 @@ import { CustomError } from 'ServerCore/utils/error/CustomError';
 import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
 import { BattleSession } from 'src/network/BattleSession';
 import { GameRoom } from '../models/GameRoom';
-import { C2B_InitialPacketSchema } from 'src/protocol/game_pb';
+import { C2B_InitialPacketSchema, C2B_MoveSchema } from 'src/protocol/game_pb';
 
 const MAX_ROOMS_SIZE: number = 10000;
 
@@ -73,7 +73,7 @@ class GameRoomManager {
     - 배틀서버에게 게임 방 생성 요청
     - 클라에게 배틀 서버의 주소와 포트번호, 게임 방ID 전송 
   ---------------------------------------------*/
-  public createGameRoom(buffer: Buffer, session: LobbySession | BattleSession) {
+  public createGameRoomHandler(buffer: Buffer, session: LobbySession | BattleSession) {
     console.log('createGameRoom', session.getId());
     console.log('--------------------');
     const L2B_CreateRoomPacket = fromBinary(L2B_CreateRoomSchema, buffer);
@@ -105,6 +105,23 @@ class GameRoomManager {
     const sendBuffer: Buffer = PacketUtils.SerializePacket(B2L_CreateRoomPacket, B2L_CreateRoomSchema, ePacketId.B2L_CreateRoom, session.getNextSequence());
     session.send(sendBuffer);
     console.log('send B2L_CreateRoom');
+  }
+
+  /*---------------------------------------------
+    [이동 동기화]
+---------------------------------------------*/
+  public moveHandler(buffer: Buffer, session: BattleSession) {
+    console.log('moveHandler');
+
+    const packet = fromBinary(C2B_MoveSchema, buffer);
+
+    const room = this.rooms.get(packet.roomId);
+    if (room == undefined) {
+      console.log('유효하지 않은 roomId');
+      throw new CustomError(ErrorCodes.SOCKET_ERROR, '유효하지 않은 roomId');
+    }
+
+    room.handleMove(buffer);
   }
   /*---------------------------------------------
     [방 ID 해제]

@@ -51,7 +51,7 @@ export type ObjectInfo = Message<"Protocol.ObjectInfo"> & {
   posInfo?: PosInfo;
 
   /**
-   * OBJECT_TYPE_CREATURE, OBJECT_TYPE_PROJECTILE, OBJECT_TYPE_ENV;
+   * CREATURE, PROJECTILE;
    *
    * @generated from field: Protocol.ObjectType objectType = 2;
    */

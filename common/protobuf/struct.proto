@@ -14,7 +14,7 @@ message PosInfo
 message ObjectInfo
 {
 	PosInfo posInfo = 1;
-	ObjectType objectType = 2; //OBJECT_TYPE_CREATURE, OBJECT_TYPE_PROJECTILE, OBJECT_TYPE_ENV;
+	ObjectType objectType = 2; //CREATURE, PROJECTILE;
 }
 
 message UserInfo

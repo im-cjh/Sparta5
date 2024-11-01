@@ -8,14 +8,17 @@ import type { C2S_Metadata } from "./client_pb";
 import { file_client } from "./client_pb";
 import type { S2C_Metadata } from "./server_pb";
 import { file_server } from "./server_pb";
+import type { PosInfo } from "./struct_pb";
 import { file_struct } from "./struct_pb";
+import type { ObjectType } from "./enum_pb";
+import { file_enum } from "./enum_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file game.proto.
  */
 export const file_game: GenFile = /*@__PURE__*/
-  fileDesc("CgpnYW1lLnByb3RvEghQcm90b2NvbCJbChFDMkJfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIQCghuaWNrbmFtZRgDIAEoCSI1Cg1CMkNfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGEiIAoNQjJDX0dhbWVTdGFydBIPCgdpc1N0YXJ0GAEgASgIYgZwcm90bzM", [file_client, file_server, file_struct]);
+  fileDesc("CgpnYW1lLnByb3RvEghQcm90b2NvbCJbChFDMkJfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIQCghuaWNrbmFtZRgDIAEoCSI1Cg1CMkNfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGEiIAoNQjJDX0dhbWVTdGFydBIPCgdpc1N0YXJ0GAEgASgIImgKCEMyQl9Nb3ZlEiIKB3Bvc0luZm8YASABKAsyES5Qcm90b2NvbC5Qb3NJbmZvEigKCm9iamVjdFR5cGUYAiABKA4yFC5Qcm90b2NvbC5PYmplY3RUeXBlEg4KBnJvb21JZBgDIAEoDSJYCghCMkNfTW92ZRIiCgdwb3NJbmZvGAEgASgLMhEuUHJvdG9jb2wuUG9zSW5mbxIoCgpvYmplY3RUeXBlGAIgASgOMhQuUHJvdG9jb2wuT2JqZWN0VHlwZWIGcHJvdG8z", [file_client, file_server, file_struct, file_enum]);
 
 /**
  * @generated from message Protocol.C2B_InitialPacket
@@ -77,4 +80,57 @@ export type B2C_GameStart = Message<"Protocol.B2C_GameStart"> & {
  */
 export const B2C_GameStartSchema: GenMessage<B2C_GameStart> = /*@__PURE__*/
   messageDesc(file_game, 2);
+
+/**
+ * @generated from message Protocol.C2B_Move
+ */
+export type C2B_Move = Message<"Protocol.C2B_Move"> & {
+  /**
+   * @generated from field: Protocol.PosInfo posInfo = 1;
+   */
+  posInfo?: PosInfo;
+
+  /**
+   * CREATURE, PROJECTILE;
+   *
+   * @generated from field: Protocol.ObjectType objectType = 2;
+   */
+  objectType: ObjectType;
+
+  /**
+   * @generated from field: uint32 roomId = 3;
+   */
+  roomId: number;
+};
+
+/**
+ * Describes the message Protocol.C2B_Move.
+ * Use `create(C2B_MoveSchema)` to create a new message.
+ */
+export const C2B_MoveSchema: GenMessage<C2B_Move> = /*@__PURE__*/
+  messageDesc(file_game, 3);
+
+/**
+ * @generated from message Protocol.B2C_Move
+ */
+export type B2C_Move = Message<"Protocol.B2C_Move"> & {
+  /**
+   * @generated from field: Protocol.PosInfo posInfo = 1;
+   */
+  posInfo?: PosInfo;
+
+  /**
+   * CREATURE, PROJECTILE; 
+   *
+   * @generated from field: Protocol.ObjectType objectType = 2;
+   */
+  objectType: ObjectType;
+};
+
+/**
+ * Describes the message Protocol.B2C_Move.
+ * Use `create(B2C_MoveSchema)` to create a new message.
+ */
+export const B2C_MoveSchema: GenMessage<B2C_Move> = /*@__PURE__*/
+  messageDesc(file_game, 4);
 

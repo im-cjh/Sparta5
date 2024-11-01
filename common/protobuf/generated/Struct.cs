@@ -369,7 +369,7 @@ namespace Protocol {
     public const int ObjectTypeFieldNumber = 2;
     private global::Protocol.ObjectType objectType_ = global::Protocol.ObjectType.Creature;
     /// <summary>
-    ///OBJECT_TYPE_CREATURE, OBJECT_TYPE_PROJECTILE, OBJECT_TYPE_ENV;
+    ///CREATURE, PROJECTILE;
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]

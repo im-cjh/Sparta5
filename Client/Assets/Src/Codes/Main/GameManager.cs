@@ -68,16 +68,19 @@ public class GameManager : MonoBehaviour
         gameTime += Time.deltaTime;
     }
 
-    void SendLocationUpdatePacket(float x, float y)
+    public void SendLocationUpdatePacket(float x, float y)
     {
-        LocationUpdatePayload locationUpdatePayload = new LocationUpdatePayload
+        Protocol.C2B_Move pkt = new Protocol.C2B_Move();
+        pkt.ObjectType = Protocol.ObjectType.Creature;
+        pkt.PosInfo = new Protocol.PosInfo
         {
-            x = x,
-            y = y,
+            ObjectId = NewGameManager.instance.deviceId,
+            X = x,
+            Y = y   
         };
-
-        byte[] sendBuffer = PacketUtils.SerializePacket() 
-        NetworkManager.instance.SendBattlePacket()
-        //NetworkManager.instance.Send(locationUpdatePayload, (uint)Packets.HandlerIds.LocationUpdate);
+        pkt.RoomId = NewGameManager.instance.roomId;
+        
+        byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2B_Move, NewGameManager.instance.GetNextSequence());
+        NetworkManager.instance.SendBattlePacket(sendBuffer);
     }
 }

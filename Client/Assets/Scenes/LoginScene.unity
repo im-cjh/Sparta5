@@ -391,6 +391,7 @@ MonoBehaviour:
   playerId: 0
   deviceId: 
   nickname: 
+  roomId: 0
 --- !u!1 &292250538
 GameObject:
   m_ObjectHideFlags: 0

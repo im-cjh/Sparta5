@@ -4,7 +4,6 @@ package Protocol;
 
 enum ObjectType
 {
-	OBJECT_TYPE_CREATURE = 0;
-	OBJECT_TYPE_PROJECTILE = 1;
-	OBJECT_TYPE_ENV = 2;
+	CREATURE = 0;
+	PROJECTILE = 1;
 }

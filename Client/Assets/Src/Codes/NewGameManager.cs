@@ -19,6 +19,7 @@ public class NewGameManager : MonoBehaviour
     public uint playerId;
     public string deviceId;
     public string nickname;
+    public UInt32 roomId;
 
     void Awake()
     {

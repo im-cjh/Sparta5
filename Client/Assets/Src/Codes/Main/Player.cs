@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         inputVec.y = Input.GetAxisRaw("Vertical");
 
         // 위치 이동 패킷 전송 -> 서버로
-        NetworkManager.instance.SendLocationUpdatePacket(rigid.position.x, rigid.position.y);
+        GameManager.instance.SendLocationUpdatePacket(rigid.position.x, rigid.position.y);
     }
 
     void FixedUpdate()
