@@ -146,7 +146,9 @@ class RoomManager {
     - 클라에게 배틀 서버의 주소와 포트번호, 게임 방ID 전송 
   ---------------------------------------------*/
   public onGameStartHandler(buffer: Buffer, sesison: LobbySession | BattleSession) {
+    console.log('------------------------------');
     console.log('onGameStartHandler');
+    console.log('------------------------------');
 
     const packet = fromBinary(B2L_CreateRoomSchema, buffer);
 

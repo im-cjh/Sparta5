@@ -82,9 +82,9 @@ public class Player : MonoBehaviour
         if (!GameManager.instance.isLive) {
             return;
         }
-        Debug.Log("----------------------------");
-        Debug.Log($"server x: {x}, y: {y}");
-        Debug.Log($"client x: {rigid.position.x}, y: {rigid.position.y}");
+        //Debug.Log("----------------------------");
+        //Debug.Log($"server x: {x}, y: {y}");
+        //Debug.Log($"client x: {rigid.position.x}, y: {rigid.position.y}");
         rigid.MovePosition(new Vector2(x, y));
     }
 

@@ -20,7 +20,7 @@ public class PacketUtils
         header.id = pMessageID;
         header.sequence = pSequence;
         
-        Debug.Log("크기: "+ pPkt.CalculateSize()+" : "+ Marshal.SizeOf(typeof(PacketHeader)));
+        //Debug.Log("크기: "+ pPkt.CalculateSize()+" : "+ Marshal.SizeOf(typeof(PacketHeader)));
 
         using (MemoryStream ret = new MemoryStream())
         {

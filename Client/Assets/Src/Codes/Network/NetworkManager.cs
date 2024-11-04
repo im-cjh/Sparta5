@@ -105,6 +105,7 @@ public class NetworkManager : MonoBehaviour
 
     public bool ConnectToBattleServer(string ip, int port, UInt32 pRoomId)
     {
+        Debug.Log("ConnectToBattleServer");
         try
         {
             mBattleTcpClient = new TcpClient(ip, port);
@@ -114,10 +115,10 @@ public class NetworkManager : MonoBehaviour
             StartBattleReceiving();
 
             Protocol.C2B_InitialPacket pkt = new Protocol.C2B_InitialPacket();
-            pkt.Meta = new Protocol.C2S_Metadata
+            pkt.PlayerInfo = new Protocol.ObjectInfo
             {
-                UserId = NewGameManager.instance.deviceId,
-                ClientVersion = NewGameManager.instance.version,
+                Posinfo = new Protocol.PosInfo { ObjectId = NewGameManager.instance.deviceId, X = 0, Y = 0 },
+                PrefabIndex = NewGameManager.instance.playerId,
             };
             pkt.RoomId = pRoomId;
             pkt.Nickname = NewGameManager.instance.nickname;
@@ -269,7 +270,7 @@ public class NetworkManager : MonoBehaviour
     {
         incompleteData.AddRange(data.AsSpan(0, length).ToArray());
 
-        Debug.Log("ProcessReceivedData" + incompleteData.Count);
+        //Debug.Log("ProcessReceivedData" + incompleteData.Count);
         //헤더는 읽을 수 있음
         while (incompleteData.Count >= Marshal.SizeOf(typeof(PacketHeader)))
         {
@@ -281,7 +282,7 @@ public class NetworkManager : MonoBehaviour
             // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
             if (incompleteData.Count < header.size)
             {
-                Debug.Log("데이터가 충분하지 않으면 반환" + incompleteData.Count + " : " + header.size);
+                //Debug.Log("데이터가 충분하지 않으면 반환" + incompleteData.Count + " : " + header.size);
                 return;
             }
 
@@ -364,30 +365,5 @@ public class NetworkManager : MonoBehaviour
             return portNumber > 0 && portNumber <= 65535;
         }
         return false;
-    }
-
-    void HandleLocationPacket(byte[] data)
-    {
-        try
-        {
-            LocationUpdate response;
-
-            if (data.Length > 0)
-            {
-                // 패킷 데이터 처리
-                response = Packets.Deserialize<LocationUpdate>(data);
-            }
-            else
-            {
-                // data가 비어있을 경우 빈 배열을 전달
-                response = new LocationUpdate { users = new List<LocationUpdate.UserLocation>() };
-            }
-
-            Spawner.instance.Spawn(response);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error HandleLocationPacket: {e.Message}");
-        }
     }
 }
