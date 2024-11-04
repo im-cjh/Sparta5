@@ -9,7 +9,7 @@ import "enum.proto";
 
 message C2B_InitialPacket
 {
-    C2S_Metadata meta = 1;
+    ObjectInfo PlayerInfo = 1;
     uint32 roomId = 2;
     string nickname = 3;
 }
@@ -22,17 +22,18 @@ message B2C_EnterRoom
 message B2C_GameStart
 {
    bool isStart = 1;
+   repeated ObjectInfo players = 2;
 }
 
 message C2B_Move
 {
-    PosInfo posInfo = 1;
+    ObjectInfo objectInfo = 1;
 	ObjectType objectType = 2; //CREATURE, PROJECTILE;
     uint32 roomId = 3;
 }
 
 message B2C_Move
 {
-    PosInfo posInfo = 1;
+    ObjectInfo objectInfo = 1;
 	ObjectType objectType = 2; //CREATURE, PROJECTILE; 
 }

@@ -24,8 +24,8 @@ namespace Protocol {
     static EnumReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgplbnVtLnByb3RvEghQcm90b2NvbCoqCgpPYmplY3RUeXBlEgwKCENSRUFU",
-            "VVJFEAASDgoKUFJPSkVDVElMRRABYgZwcm90bzM="));
+            "CgplbnVtLnByb3RvEghQcm90b2NvbCo1CgpPYmplY3RUeXBlEgoKBlBMQVlF",
+            "UhAAEgsKB01PTlNURVIQARIOCgpQUk9KRUNUSUxFEAJiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Protocol.ObjectType), }, null, null));
@@ -35,8 +35,9 @@ namespace Protocol {
   }
   #region Enums
   public enum ObjectType {
-    [pbr::OriginalName("CREATURE")] Creature = 0,
-    [pbr::OriginalName("PROJECTILE")] Projectile = 1,
+    [pbr::OriginalName("PLAYER")] Player = 0,
+    [pbr::OriginalName("MONSTER")] Monster = 1,
+    [pbr::OriginalName("PROJECTILE")] Projectile = 2,
   }
 
   #endregion

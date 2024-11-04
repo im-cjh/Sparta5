@@ -28,7 +28,7 @@ export class BattleSession extends Session {
     try {
       //1. sequence 검증
       if (this.sequence != header.sequence) {
-        console.log('시퀀스가 잘못되었습니다.', this.sequence, header.sequence);
+        //console.log('시퀀스가 잘못되었습니다.', this.sequence, header.sequence);
         //throw new CustomError(ErrorCodes.INVALID_SEQUENCE, '시퀀스가 잘못되었습니다.');
       }
 

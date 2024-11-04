@@ -16,10 +16,13 @@ public class NewGameManager : MonoBehaviour
     public UInt32 sequence = 0;
 
     [Header("# Player Info")]
-    public uint playerId;
+    public UInt32 playerId;
     public string deviceId;
     public string nickname;
     public UInt32 roomId;
+
+    //음... 이게 맞나?
+    public Protocol.B2C_GameStart tmp_gameStartPacket;
 
     void Awake()
     {

@@ -12,14 +12,15 @@ public class GameManager : MonoBehaviour
     [Header("# Game Control")]
     public bool isLive;
     public float gameTime;
-    
+
     [Header("# Game Object")]
     public PoolManager pool;
     public Player player;
     public GameObject hud;
     public GameObject GameStartUI;
 
-    void Awake() {
+    void Awake()
+    {
         instance = this;
     }
 
@@ -29,7 +30,8 @@ public class GameManager : MonoBehaviour
     }
 
     //public void GameStart(InitialData data) {
-    public void GameStart() {
+    public void GameStart()
+    {
         //player.UpdatePosition(data.x, data.y);
         player.gameObject.SetActive(true);
         hud.SetActive(true);
@@ -40,11 +42,13 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
-    public void GameOver() {
+    public void GameOver()
+    {
         StartCoroutine(GameOverRoutine());
     }
 
-    IEnumerator GameOverRoutine() {
+    IEnumerator GameOverRoutine()
+    {
         isLive = false;
         yield return new WaitForSeconds(0.5f);
 
@@ -52,17 +56,20 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
     }
 
-    public void GameRetry() {
+    public void GameRetry()
+    {
         SceneManager.LoadScene(0);
     }
 
-    public void GameQuit() {
+    public void GameQuit()
+    {
         Application.Quit();
     }
 
     void Update()
     {
-        if (!isLive) {
+        if (!isLive)
+        {
             return;
         }
         gameTime += Time.deltaTime;
@@ -71,16 +78,25 @@ public class GameManager : MonoBehaviour
     public void SendLocationUpdatePacket(float x, float y)
     {
         Protocol.C2B_Move pkt = new Protocol.C2B_Move();
-        pkt.ObjectType = Protocol.ObjectType.Creature;
-        pkt.PosInfo = new Protocol.PosInfo
+        pkt.ObjectType = Protocol.ObjectType.Player;
+        pkt.ObjectInfo = new Protocol.ObjectInfo
         {
-            ObjectId = NewGameManager.instance.deviceId,
-            X = x,
-            Y = y   
+            Posinfo = new Protocol.PosInfo
+            {
+                ObjectId = NewGameManager.instance.deviceId,
+                X = x,
+                Y = y
+            },
+            PrefabIndex = NewGameManager.instance.playerId,
         };
         pkt.RoomId = NewGameManager.instance.roomId;
-        
+
         byte[] sendBuffer = PacketUtils.SerializePacket(pkt, ePacketID.C2B_Move, NewGameManager.instance.GetNextSequence());
         NetworkManager.instance.SendBattlePacket(sendBuffer);
+    }
+
+    public Player GetPlayer()
+    {
+        return player;
     }
 }

@@ -23,6 +23,7 @@ import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
 import { BattleSession } from 'src/network/BattleSession';
 import { GameRoom } from '../models/GameRoom';
 import { C2B_InitialPacketSchema, C2B_MoveSchema } from 'src/protocol/game_pb';
+import { GamePlayer } from '../models/GamePlayer';
 
 const MAX_ROOMS_SIZE: number = 10000;
 
@@ -41,7 +42,7 @@ class GameRoomManager {
     [방 입장]
     -클라에게 B2C_EnterRoom패킷 전송
 ---------------------------------------------*/
-  public enterRoomHandler(roomId: number, session: BattleSession) {
+  public enterRoomHandler(roomId: number, player: GamePlayer) {
     console.log('enterRoomHandler');
 
     const room: GameRoom | undefined = this.rooms.get(roomId);
@@ -50,7 +51,7 @@ class GameRoomManager {
       return;
     }
 
-    room.enterRoom(session);
+    room.enterRoom(player);
   }
   /*---------------------------------------------
     [방 퇴장]
@@ -111,7 +112,7 @@ class GameRoomManager {
     [이동 동기화]
 ---------------------------------------------*/
   public moveHandler(buffer: Buffer, session: BattleSession) {
-    console.log('moveHandler');
+    //console.log('moveHandler');
 
     const packet = fromBinary(C2B_MoveSchema, buffer);
 

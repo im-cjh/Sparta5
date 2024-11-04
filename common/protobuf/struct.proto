@@ -11,12 +11,6 @@ message PosInfo
 	float y = 3;
 }
 
-message ObjectInfo
-{
-	PosInfo posInfo = 1;
-	ObjectType objectType = 2; //CREATURE, PROJECTILE;
-}
-
 message UserInfo
 {
 	string userId = 1;             // 유저 ID (UUID, 16바이트)
@@ -29,4 +23,10 @@ message RoomInfo
 	string roomName = 2; // 방 이름
 	uint32 currentPlayers = 3; //현재 인원 수
 	uint32 maxPlayers = 4; //최대 인원 수
+}
+
+message ObjectInfo
+{
+	PosInfo posinfo = 1;
+	uint32 prefabIndex = 2;
 }

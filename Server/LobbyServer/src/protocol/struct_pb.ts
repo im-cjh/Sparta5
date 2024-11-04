@@ -4,7 +4,6 @@
 
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv1";
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv1";
-import type { ObjectType } from "./enum_pb";
 import { file_enum } from "./enum_pb";
 import type { Message } from "@bufbuild/protobuf";
 
@@ -12,7 +11,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file struct.proto.
  */
 export const file_struct: GenFile = /*@__PURE__*/
-  fileDesc("CgxzdHJ1Y3QucHJvdG8SCFByb3RvY29sIjEKB1Bvc0luZm8SEAoIb2JqZWN0SWQYASABKAkSCQoBeBgCIAEoAhIJCgF5GAMgASgCIloKCk9iamVjdEluZm8SIgoHcG9zSW5mbxgBIAEoCzIRLlByb3RvY29sLlBvc0luZm8SKAoKb2JqZWN0VHlwZRgCIAEoDjIULlByb3RvY29sLk9iamVjdFR5cGUiLAoIVXNlckluZm8SDgoGdXNlcklkGAEgASgJEhAKCG5pY2tuYW1lGAIgASgJIlgKCFJvb21JbmZvEg4KBnJvb21JZBgBIAEoDRIQCghyb29tTmFtZRgCIAEoCRIWCg5jdXJyZW50UGxheWVycxgDIAEoDRISCgptYXhQbGF5ZXJzGAQgASgNYgZwcm90bzM", [file_enum]);
+  fileDesc("CgxzdHJ1Y3QucHJvdG8SCFByb3RvY29sIjEKB1Bvc0luZm8SEAoIb2JqZWN0SWQYASABKAkSCQoBeBgCIAEoAhIJCgF5GAMgASgCIiwKCFVzZXJJbmZvEg4KBnVzZXJJZBgBIAEoCRIQCghuaWNrbmFtZRgCIAEoCSJYCghSb29tSW5mbxIOCgZyb29tSWQYASABKA0SEAoIcm9vbU5hbWUYAiABKAkSFgoOY3VycmVudFBsYXllcnMYAyABKA0SEgoKbWF4UGxheWVycxgEIAEoDSJFCgpPYmplY3RJbmZvEiIKB3Bvc2luZm8YASABKAsyES5Qcm90b2NvbC5Qb3NJbmZvEhMKC3ByZWZhYkluZGV4GAIgASgNYgZwcm90bzM", [file_enum]);
 
 /**
  * @generated from message Protocol.PosInfo
@@ -42,30 +41,6 @@ export const PosInfoSchema: GenMessage<PosInfo> = /*@__PURE__*/
   messageDesc(file_struct, 0);
 
 /**
- * @generated from message Protocol.ObjectInfo
- */
-export type ObjectInfo = Message<"Protocol.ObjectInfo"> & {
-  /**
-   * @generated from field: Protocol.PosInfo posInfo = 1;
-   */
-  posInfo?: PosInfo;
-
-  /**
-   * CREATURE, PROJECTILE;
-   *
-   * @generated from field: Protocol.ObjectType objectType = 2;
-   */
-  objectType: ObjectType;
-};
-
-/**
- * Describes the message Protocol.ObjectInfo.
- * Use `create(ObjectInfoSchema)` to create a new message.
- */
-export const ObjectInfoSchema: GenMessage<ObjectInfo> = /*@__PURE__*/
-  messageDesc(file_struct, 1);
-
-/**
  * @generated from message Protocol.UserInfo
  */
 export type UserInfo = Message<"Protocol.UserInfo"> & {
@@ -89,7 +64,7 @@ export type UserInfo = Message<"Protocol.UserInfo"> & {
  * Use `create(UserInfoSchema)` to create a new message.
  */
 export const UserInfoSchema: GenMessage<UserInfo> = /*@__PURE__*/
-  messageDesc(file_struct, 2);
+  messageDesc(file_struct, 1);
 
 /**
  * @generated from message Protocol.RoomInfo
@@ -129,5 +104,27 @@ export type RoomInfo = Message<"Protocol.RoomInfo"> & {
  * Use `create(RoomInfoSchema)` to create a new message.
  */
 export const RoomInfoSchema: GenMessage<RoomInfo> = /*@__PURE__*/
+  messageDesc(file_struct, 2);
+
+/**
+ * @generated from message Protocol.ObjectInfo
+ */
+export type ObjectInfo = Message<"Protocol.ObjectInfo"> & {
+  /**
+   * @generated from field: Protocol.PosInfo posinfo = 1;
+   */
+  posinfo?: PosInfo;
+
+  /**
+   * @generated from field: uint32 prefabIndex = 2;
+   */
+  prefabIndex: number;
+};
+
+/**
+ * Describes the message Protocol.ObjectInfo.
+ * Use `create(ObjectInfoSchema)` to create a new message.
+ */
+export const ObjectInfoSchema: GenMessage<ObjectInfo> = /*@__PURE__*/
   messageDesc(file_struct, 3);
 

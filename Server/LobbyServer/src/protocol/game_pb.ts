@@ -4,11 +4,10 @@
 
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv1";
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv1";
-import type { C2S_Metadata } from "./client_pb";
 import { file_client } from "./client_pb";
 import type { S2C_Metadata } from "./server_pb";
 import { file_server } from "./server_pb";
-import type { PosInfo } from "./struct_pb";
+import type { ObjectInfo } from "./struct_pb";
 import { file_struct } from "./struct_pb";
 import type { ObjectType } from "./enum_pb";
 import { file_enum } from "./enum_pb";
@@ -18,16 +17,16 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file game.proto.
  */
 export const file_game: GenFile = /*@__PURE__*/
-  fileDesc("CgpnYW1lLnByb3RvEghQcm90b2NvbCJbChFDMkJfSW5pdGlhbFBhY2tldBIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuQzJTX01ldGFkYXRhEg4KBnJvb21JZBgCIAEoDRIQCghuaWNrbmFtZRgDIAEoCSI1Cg1CMkNfRW50ZXJSb29tEiQKBG1ldGEYASABKAsyFi5Qcm90b2NvbC5TMkNfTWV0YWRhdGEiIAoNQjJDX0dhbWVTdGFydBIPCgdpc1N0YXJ0GAEgASgIImgKCEMyQl9Nb3ZlEiIKB3Bvc0luZm8YASABKAsyES5Qcm90b2NvbC5Qb3NJbmZvEigKCm9iamVjdFR5cGUYAiABKA4yFC5Qcm90b2NvbC5PYmplY3RUeXBlEg4KBnJvb21JZBgDIAEoDSJYCghCMkNfTW92ZRIiCgdwb3NJbmZvGAEgASgLMhEuUHJvdG9jb2wuUG9zSW5mbxIoCgpvYmplY3RUeXBlGAIgASgOMhQuUHJvdG9jb2wuT2JqZWN0VHlwZWIGcHJvdG8z", [file_client, file_server, file_struct, file_enum]);
+  fileDesc("CgpnYW1lLnByb3RvEghQcm90b2NvbCJfChFDMkJfSW5pdGlhbFBhY2tldBIoCgpQbGF5ZXJJbmZvGAEgASgLMhQuUHJvdG9jb2wuT2JqZWN0SW5mbxIOCgZyb29tSWQYAiABKA0SEAoIbmlja25hbWUYAyABKAkiNQoNQjJDX0VudGVyUm9vbRIkCgRtZXRhGAEgASgLMhYuUHJvdG9jb2wuUzJDX01ldGFkYXRhIkcKDUIyQ19HYW1lU3RhcnQSDwoHaXNTdGFydBgBIAEoCBIlCgdwbGF5ZXJzGAIgAygLMhQuUHJvdG9jb2wuT2JqZWN0SW5mbyJuCghDMkJfTW92ZRIoCgpvYmplY3RJbmZvGAEgASgLMhQuUHJvdG9jb2wuT2JqZWN0SW5mbxIoCgpvYmplY3RUeXBlGAIgASgOMhQuUHJvdG9jb2wuT2JqZWN0VHlwZRIOCgZyb29tSWQYAyABKA0iXgoIQjJDX01vdmUSKAoKb2JqZWN0SW5mbxgBIAEoCzIULlByb3RvY29sLk9iamVjdEluZm8SKAoKb2JqZWN0VHlwZRgCIAEoDjIULlByb3RvY29sLk9iamVjdFR5cGViBnByb3RvMw", [file_client, file_server, file_struct, file_enum]);
 
 /**
  * @generated from message Protocol.C2B_InitialPacket
  */
 export type C2B_InitialPacket = Message<"Protocol.C2B_InitialPacket"> & {
   /**
-   * @generated from field: Protocol.C2S_Metadata meta = 1;
+   * @generated from field: Protocol.ObjectInfo PlayerInfo = 1;
    */
-  meta?: C2S_Metadata;
+  PlayerInfo?: ObjectInfo;
 
   /**
    * @generated from field: uint32 roomId = 2;
@@ -72,6 +71,11 @@ export type B2C_GameStart = Message<"Protocol.B2C_GameStart"> & {
    * @generated from field: bool isStart = 1;
    */
   isStart: boolean;
+
+  /**
+   * @generated from field: repeated Protocol.ObjectInfo players = 2;
+   */
+  players: ObjectInfo[];
 };
 
 /**
@@ -86,9 +90,9 @@ export const B2C_GameStartSchema: GenMessage<B2C_GameStart> = /*@__PURE__*/
  */
 export type C2B_Move = Message<"Protocol.C2B_Move"> & {
   /**
-   * @generated from field: Protocol.PosInfo posInfo = 1;
+   * @generated from field: Protocol.ObjectInfo objectInfo = 1;
    */
-  posInfo?: PosInfo;
+  objectInfo?: ObjectInfo;
 
   /**
    * CREATURE, PROJECTILE;
@@ -115,9 +119,9 @@ export const C2B_MoveSchema: GenMessage<C2B_Move> = /*@__PURE__*/
  */
 export type B2C_Move = Message<"Protocol.B2C_Move"> & {
   /**
-   * @generated from field: Protocol.PosInfo posInfo = 1;
+   * @generated from field: Protocol.ObjectInfo objectInfo = 1;
    */
-  posInfo?: PosInfo;
+  objectInfo?: ObjectInfo;
 
   /**
    * CREATURE, PROJECTILE; 

@@ -14,6 +14,7 @@ import { B2C_EnterRoom, B2C_EnterRoomSchema, C2B_InitialPacket, C2B_InitialPacke
 import { create, fromBinary } from '@bufbuild/protobuf';
 import { gameRoomManager } from 'src/classes/managers/GameRoomManager';
 import { BattleSession } from 'src/network/BattleSession';
+import { GamePlayer } from 'src/classes/models/GamePlayer';
 
 /*---------------------------------------------
     [초기화 핸들러]
@@ -43,17 +44,19 @@ const initialHandler = async (buffer: Buffer, socket: Socket) => {
     throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다');
   }
 
-  //1. 클라 버전 검증
-  if (packet.meta?.clientVersion !== battleConfig.client.version) {
-    throw new CustomError(ErrorCodes.CLIENT_VERSION_MISMATCH, '클라이언트 버전이 일치하지 않습니다.');
+  //3. sessionManager에 세션 추가
+  let session: BattleSession;
+  // 세션이 생성되었으므로, 더 이상 주체 판별이 필요하지 않음
+  if (packet.PlayerInfo && packet.PlayerInfo.posinfo) {
+    session = sessionManager.addSession(packet.PlayerInfo.posinfo.objectId, socket);
+  } else {
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, '패킷 디코딩 중 오류가 발생했습니다');
   }
 
-  //3. sessionManager에 세션 추가
-  // 세션이 생성되었으므로, 더 이상 주체 판별이 필요하지 않음
-  const session: BattleSession = sessionManager.addSession(packet.meta.userId, socket);
-  sessionManager.getSessionOrNull(packet.meta.userId)?.setNickname(packet.nickname);
+  sessionManager.getSessionOrNull(packet.PlayerInfo.posinfo.objectId)?.setNickname(packet.nickname);
 
-  gameRoomManager.enterRoomHandler(packet.roomId, session);
+  const player = new GamePlayer(session, packet.PlayerInfo);
+  gameRoomManager.enterRoomHandler(packet.roomId, player);
 };
 
 export default initialHandler;

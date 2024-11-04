@@ -60,7 +60,7 @@ export abstract class Session {
       );
       this.buffer = this.buffer.subarray(header.size);
       //패킷 조립 성공
-      console.log("패킷 조립 성공", header);
+      //console.log("패킷 조립 성공", header);
 
       this.handlePacket(packet, header);
     }

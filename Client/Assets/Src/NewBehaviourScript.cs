@@ -2,12 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectManager : MonoBehaviour
+public class NewBehaviourScript : MonoBehaviour
 {
-    // 프리펩을 보관할 변수
-    public GameObject[] prefabs;
-    Dictionary<string, GameObject> userDictionary = new Dictionary<string, GameObject>();
-
+    // Start is called before the first frame update
     void Start()
     {
         

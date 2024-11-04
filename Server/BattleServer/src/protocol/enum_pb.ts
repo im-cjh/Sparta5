@@ -9,21 +9,26 @@ import { enumDesc, fileDesc } from "@bufbuild/protobuf/codegenv1";
  * Describes the file enum.proto.
  */
 export const file_enum: GenFile = /*@__PURE__*/
-  fileDesc("CgplbnVtLnByb3RvEghQcm90b2NvbCoqCgpPYmplY3RUeXBlEgwKCENSRUFUVVJFEAASDgoKUFJPSkVDVElMRRABYgZwcm90bzM");
+  fileDesc("CgplbnVtLnByb3RvEghQcm90b2NvbCo1CgpPYmplY3RUeXBlEgoKBlBMQVlFUhAAEgsKB01PTlNURVIQARIOCgpQUk9KRUNUSUxFEAJiBnByb3RvMw");
 
 /**
  * @generated from enum Protocol.ObjectType
  */
 export enum ObjectType {
   /**
-   * @generated from enum value: CREATURE = 0;
+   * @generated from enum value: PLAYER = 0;
    */
-  CREATURE = 0,
+  PLAYER = 0,
 
   /**
-   * @generated from enum value: PROJECTILE = 1;
+   * @generated from enum value: MONSTER = 1;
    */
-  PROJECTILE = 1,
+  MONSTER = 1,
+
+  /**
+   * @generated from enum value: PROJECTILE = 2;
+   */
+  PROJECTILE = 2,
 }
 
 /**
