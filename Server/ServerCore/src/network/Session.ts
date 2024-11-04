@@ -28,6 +28,7 @@ export abstract class Session {
     3. error: 예외 상황을 적절히 처리하고 로그를 남기거나 대응을 하기
 ---------------------------------------------*/
   private init() {
+    this.socket.removeAllListeners();
     this.socket.on("data", (data: Buffer) => this.onData(data));
     this.socket.on("end", () => this.onEnd());
     this.socket.on("error", (error: any) => this.onError(error));

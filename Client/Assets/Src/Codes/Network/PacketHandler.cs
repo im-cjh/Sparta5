@@ -159,6 +159,7 @@ public class PacketHandler
 ---------------------------------------------*/
     static void HandleBattleGameStart(byte[] pBuffer)
     {
+        Debug.Log("끄어어억");
         Protocol.B2C_GameStart pkt = Protocol.B2C_GameStart.Parser.ParseFrom(pBuffer);
         NewGameManager.instance.tmp_gameStartPacket = pkt;
 
@@ -177,7 +178,7 @@ public class PacketHandler
 ---------------------------------------------*/
     static void HandleMove(byte[] pBuffer)
     {
-        Debug.Log("HandleMove");
+        //Debug.Log("HandleMove");
         try
         {
             Protocol.B2C_Move response = Protocol.B2C_Move.Parser.ParseFrom(pBuffer);

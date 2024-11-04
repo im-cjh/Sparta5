@@ -35,7 +35,7 @@ import { GamePlayer } from 'src/classes/models/GamePlayer';
 
 ---------------------------------------------*/
 const initialHandler = async (buffer: Buffer, socket: Socket) => {
-  console.log('initialHandler: called');
+  console.log('initialHandler: called', socket.remoteAddress, socket.remotePort);
 
   let packet: C2B_InitialPacket;
   try {

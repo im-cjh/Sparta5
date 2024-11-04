@@ -105,6 +105,7 @@ public class NetworkManager : MonoBehaviour
 
     public bool ConnectToBattleServer(string ip, int port, UInt32 pRoomId)
     {
+        Debug.Log("ConnectToBattleServer");
         try
         {
             mBattleTcpClient = new TcpClient(ip, port);
@@ -269,7 +270,7 @@ public class NetworkManager : MonoBehaviour
     {
         incompleteData.AddRange(data.AsSpan(0, length).ToArray());
 
-        Debug.Log("ProcessReceivedData" + incompleteData.Count);
+        //Debug.Log("ProcessReceivedData" + incompleteData.Count);
         //헤더는 읽을 수 있음
         while (incompleteData.Count >= Marshal.SizeOf(typeof(PacketHeader)))
         {
@@ -281,7 +282,7 @@ public class NetworkManager : MonoBehaviour
             // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
             if (incompleteData.Count < header.size)
             {
-                Debug.Log("데이터가 충분하지 않으면 반환" + incompleteData.Count + " : " + header.size);
+                //Debug.Log("데이터가 충분하지 않으면 반환" + incompleteData.Count + " : " + header.size);
                 return;
             }
 

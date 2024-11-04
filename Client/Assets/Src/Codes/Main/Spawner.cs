@@ -26,7 +26,7 @@ public class Spawner : MonoBehaviour
         string objectId = posInfo.ObjectId;
         float x = posInfo.X;
         float y = posInfo.Y;
-        Debug.Log(objectId + " : " + NewGameManager.instance.deviceId);
+        //Debug.Log(objectId + " : " + NewGameManager.instance.deviceId);
 
         // 내가 보낸 정보
         if (objectId == NewGameManager.instance.deviceId)
@@ -43,7 +43,7 @@ public class Spawner : MonoBehaviour
             {
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
                 playerScript.UpdatePosition(x, y);
-                Debug.Log("찾음");
+                //Debug.Log("찾음");
             }
             else Debug.Log("못찾음");
         }
