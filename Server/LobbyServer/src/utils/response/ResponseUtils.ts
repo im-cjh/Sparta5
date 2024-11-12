@@ -1,10 +1,10 @@
-import { create } from "@bufbuild/protobuf";
+import { create } from '@bufbuild/protobuf';
 import {
   S2C_Error,
   S2C_ErrorSchema,
   S2C_Metadata,
   S2C_MetadataSchema,
-} from "src/protocol/server_pb";
+} from 'src/Protocol/server_pb';
 
 export class ResponseUtils {
   static createMetaResponse(responseCode: number): S2C_Metadata {
