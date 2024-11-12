@@ -1,15 +1,16 @@
 import net, { Server, Socket } from 'net';
 import { v4 as uuidv4 } from 'uuid';
-import { SessionManager } from 'ServerCore/classes/managers/SessionManager';
-import { onConnection } from './events/onConnection';
-import { BattleSession } from './network/BattleSession';
-import { LobbySession } from './network/LobbySession';
+
+import { onConnection } from './Main/onConnection';
+import { BattleSession } from './Main/network/BattleSession';
+import { LobbySession } from './Main/network/LobbySession';
 import { battleConfig } from './config/config';
-import initServer from './init';
+import initServer from './Main';
 import { B2L_InitialPacket, B2L_InitialPacketSchema } from './protocol/server_pb';
 import { create } from '@bufbuild/protobuf';
 import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import { ePacketId } from 'ServerCore/network/PacketId';
+import { SessionManager } from 'ServerCore/network/SessionManager';
 
 const server: Server = net.createServer(onConnection);
 /*---------------------------------------------

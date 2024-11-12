@@ -1,13 +1,13 @@
 import { Socket } from 'net';
 import { create } from '@bufbuild/protobuf';
-import { LobbySession } from 'src/network/LobbySession';
+import { LobbySession } from 'src/Main/LobbySession';
 
 import { ResponseUtils } from '../response/ResponseUtils';
 import { ErrorCodes } from 'ServerCore/utils/error/ErrorCodes';
 import { PacketUtils } from 'ServerCore/utils/parser/ParserUtils';
 import { ePacketId } from 'ServerCore/network/PacketId';
-import { S2C_Error, S2C_ErrorSchema } from 'src/protocol/server_pb';
-import { BattleSession } from 'src/network/BattleSession';
+import { S2C_Error, S2C_ErrorSchema } from 'src/Protocol/server_pb';
+import { BattleSession } from 'src/Main/BattleSession';
 
 export const handleError = (session: LobbySession | BattleSession, error: any) => {
   let responseCode: number;

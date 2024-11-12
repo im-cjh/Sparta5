@@ -1,13 +1,8 @@
-import mysql, {
-  FieldPacket,
-  Pool,
-  QueryOptions,
-  QueryResult,
-} from "mysql2/promise";
-import { lobbyConfig } from "../config/config";
+import mysql, { FieldPacket, Pool, QueryOptions, QueryResult } from 'mysql2/promise';
+import { lobbyConfig } from '../config/config';
 
-import { DbConfig } from "ServerCore/classes/interfaces/DbConfig";
-import { Utils } from "ServerCore/utils/Utils";
+import { DbConfig } from 'ServerCore/config/DbConfig';
+import { Utils } from 'ServerCore/utils/Utils';
 
 const { database } = lobbyConfig;
 
@@ -28,16 +23,16 @@ const createPool = (dbConfig: DbConfig): Pool => {
 
   pool.query = <T extends QueryResult>(
     sql: string | QueryOptions,
-    params?: any[]
+    params?: any[],
   ): Promise<[T, FieldPacket[]]> => {
     const date = new Date();
     // 쿼리 실행시 로그
     console.log(
       `[${Utils.formatDate(date)}] Executing query: ${sql} ${
         params ? `, ${JSON.stringify(params)}` : ``
-      }`
+      }`,
     );
-    if (typeof sql === "string") {
+    if (typeof sql === 'string') {
       return originalQuery(sql, params); // 문자열 SQL 쿼리 처리
     } else {
       return originalQuery(sql); // QueryOptions 객체 처리
